@@ -1,0 +1,98 @@
+export const packagesData = [
+  {
+    id: "cultural-odyssey",
+    name: "Cultural Odyssey",
+    slug: "cultural-odyssey",
+    description:
+      "Immerse yourself in Bhutan's rich cultural heritage with visits to ancient dzongs, monasteries, and participation in traditional festivals.",
+    image: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=2940&auto=format&fit=crop",
+    duration: "7 days / 6 nights",
+    price: "$3,500",
+    destinations: ["Paro", "Thimphu", "Punakha"],
+    highlights: [
+      "Tiger's Nest Monastery Trek",
+      "Punakha Dzong Visit",
+      "Traditional Arts & Crafts School",
+      "Local Home Visit",
+    ],
+    included: [
+      "Accommodation",
+      "All Meals",
+      "Guide & Driver",
+      "Entrance Fees",
+      "SDF (Sustainable Development Fee)",
+    ],
+  },
+  {
+    id: "himalayan-adventure",
+    name: "Himalayan Adventure",
+    slug: "himalayan-adventure",
+    description:
+      "For the adventurous soul, this package combines trekking, cultural exploration, and outdoor activities in the stunning Himalayan landscape.",
+    image: "https://images.unsplash.com/photo-1546708973-b3396c0531f0?q=80&w=2940&auto=format&fit=crop",
+    duration: "10 days / 9 nights",
+    price: "$4,800",
+    destinations: ["Paro", "Thimphu", "Bumthang", "Gangtey"],
+    highlights: [
+      "Druk Path Trek",
+      "Phobjikha Valley",
+      "Black-Necked Crane Observation",
+      "Bumthang Cultural Tour",
+    ],
+    included: [
+      "Camping Equipment",
+      "All Meals",
+      "Trekking Guide",
+      "Permits",
+      "SDF",
+    ],
+  },
+  {
+    id: "wellness-retreat",
+    name: "Wellness Retreat",
+    slug: "wellness-retreat",
+    description:
+      "Rejuvenate your mind, body, and spirit with traditional wellness practices, meditation, and yoga in serene mountain settings.",
+    image: "https://images.unsplash.com/photo-1600618528240-fb9fc964b853?q=80&w=2940&auto=format&fit=crop",
+    duration: "5 days / 4 nights",
+    price: "$4,200",
+    destinations: ["Paro", "Thimphu"],
+    highlights: [
+      "Daily Yoga & Meditation",
+      "Traditional Hot Stone Bath",
+      "Spa Treatments",
+      "Monastery Visits",
+    ],
+    included: [
+      "Luxury Accommodation",
+      "Organic Meals",
+      "Wellness Activities",
+      "Private Guide",
+      "SDF",
+    ],
+  },
+  {
+    id: "family-discovery",
+    name: "Family Discovery",
+    slug: "family-discovery",
+    description:
+      "Perfect for families, this package offers a balance of cultural exploration, outdoor activities, and child-friendly experiences.",
+    image: "https://images.unsplash.com/photo-1609137144813-7d9921338f24?q=80&w=2940&auto=format&fit=crop",
+    duration: "8 days / 7 nights",
+    price: "$3,200",
+    destinations: ["Paro", "Thimphu", "Punakha"],
+    highlights: [
+      "Archery Lessons",
+      "Farmhouse Visit",
+      "Easy Nature Walks",
+      "Traditional Games",
+    ],
+    included: [
+      "Family Rooms",
+      "All Meals",
+      "Kid-Friendly Activities",
+      "Private Transport",
+      "SDF",
+    ],
+  },
+];

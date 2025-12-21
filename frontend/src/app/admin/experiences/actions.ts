@@ -1,0 +1,261 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { PaginatedExperiences, Experience } from "./schema";
+import * as db from "@/lib/data/experiences";
+import { auth } from "@/auth";
+import { uploadImage } from "@/lib/upload";
+
+export async function getExperiences(
+  page: number = 1,
+  pageSize: number = 10
+): Promise<PaginatedExperiences> {
+  try {
+    const data = await db.listExperiences(page, pageSize);
+    return data as PaginatedExperiences;
+  } catch (error) {
+    console.error("Error fetching experiences:", error);
+    return {
+      items: [],
+      page: 1,
+      page_size: pageSize,
+      total_pages: 0,
+      has_next: false,
+      has_prev: false,
+    };
+  }
+}
+
+export async function getExperienceBySlug(slug: string): Promise<Experience | null> {
+  try {
+    const experience = await db.getExperienceBySlug(slug);
+    return experience as Experience | null;
+  } catch (error) {
+    console.error("Error fetching experience:", error);
+    return null;
+  }
+}
+
+export async function createExperience(prevState: any, formData: FormData) {
+  console.log("Action: createExperience called");
+  console.log("Action: Checking auth session...");
+  const session = await auth();
+  console.log("Action: Auth session:", session ? "Authenticated as " + session.user?.email : "Not authenticated");
+
+  if (!session) {
+    console.error("Action: Unauthorized access attempt");
+    return { success: false, message: "Unauthorized" };
+  }
+
+  try {
+    console.log("Action: createExperience start");
+    const title = formData.get("title") as string;
+    const slug = formData.get("slug") as string;
+    const category = formData.get("category") as string;
+    const description = formData.get("description") as string;
+    const duration = formData.get("duration") as string;
+    const difficulty = formData.get("difficulty") as string;
+
+    const latStr = formData.get("latitude") as string;
+    const lngStr = formData.get("longitude") as string;
+    const latitude = latStr ? parseFloat(latStr) : undefined;
+    const longitude = lngStr ? parseFloat(lngStr) : undefined;
+
+    const destinationsStr = formData.get("destinations") as string;
+    console.log("Action: Received destinations string:", destinationsStr);
+    const destinations = JSON.parse(destinationsStr || "[]");
+
+    // Handle image field correctly. formData.get("image") returns a File object if uploaded.
+    const imageInput = formData.get("image");
+    console.log("Action: Image input type:", typeof imageInput);
+    let imageUrl = "https://images.unsplash.com/photo-1581330560232-474c3e8a4a58"; // Fallback placeholder
+
+    if (imageInput instanceof File && imageInput.size > 0) {
+      console.log("Action: Uploading image...");
+      const uploadedPath = await uploadImage(imageInput);
+      if (uploadedPath) {
+        imageUrl = uploadedPath;
+      }
+    }
+
+    // Handle gallery images
+    const galleryFiles = formData.getAll("gallery");
+    const galleryUrls: string[] = [];
+    
+    for (const file of galleryFiles) {
+      if (file instanceof File && file.size > 0) {
+        console.log("Action: Uploading gallery image...");
+        const uploadedPath = await uploadImage(file);
+        if (uploadedPath) {
+          galleryUrls.push(uploadedPath);
+        }
+      }
+    }
+
+    const experienceData: any = {
+      title,
+      slug,
+      category,
+      description,
+      duration,
+      difficulty: difficulty as any,
+      destinations,
+      image: imageUrl,
+    };
+
+    if (galleryUrls.length > 0) {
+      experienceData.gallery = galleryUrls;
+    }
+
+    if (latitude !== undefined && longitude !== undefined && !isNaN(latitude) && !isNaN(longitude)) {
+      experienceData.coordinates = [latitude, longitude];
+    }
+
+    console.log("Action: Saving to DB:", experienceData);
+    const result = await db.createExperience(experienceData);
+    console.log("Action: DB Result:", result);
+
+    revalidatePath("/admin/experiences");
+
+    return {
+      success: true,
+      message: "Experience created successfully",
+    };
+  } catch (error) {
+    console.error("Error creating experience:", error);
+    return {
+      success: false,
+      message: "Failed to create experience",
+    };
+  }
+}
+
+export async function updateExperience(
+  slug: string,
+  prevState: any,
+  formData: FormData
+) {
+  console.log("Action: updateExperience called for slug:", slug);
+  const session = await auth();
+  if (!session) {
+    console.error("Action: Unauthorized access attempt");
+    return { success: false, message: "Unauthorized" };
+  }
+
+  try {
+    const title = formData.get("title") as string;
+    const category = formData.get("category") as string;
+    const description = formData.get("description") as string;
+    const duration = formData.get("duration") as string;
+    const difficulty = formData.get("difficulty") as string;
+
+    const latStr = formData.get("latitude") as string;
+    const lngStr = formData.get("longitude") as string;
+    const latitude = latStr ? parseFloat(latStr) : undefined;
+    const longitude = lngStr ? parseFloat(lngStr) : undefined;
+
+    const destinationsStr = formData.get("destinations") as string;
+    const destinations = JSON.parse(destinationsStr || "[]");
+
+    const imageInput = formData.get("image");
+    // Get existing experience to keep image if not changed
+    const existingExperience = await db.getExperienceBySlug(slug);
+    let imageUrl = existingExperience?.image || "https://images.unsplash.com/photo-1581330560232-474c3e8a4a58";
+
+    if (imageInput instanceof File && imageInput.size > 0) {
+      console.log("Action: Uploading new image...");
+      const uploadedPath = await uploadImage(imageInput);
+      if (uploadedPath) {
+        imageUrl = uploadedPath;
+      }
+    }
+
+    // Handle gallery images
+    const existingGalleryStr = formData.get("existingGallery") as string;
+    const existingGallery = JSON.parse(existingGalleryStr || "[]");
+    
+    const newGalleryFiles = formData.getAll("gallery");
+    const newGalleryUrls: string[] = [];
+    
+    for (const file of newGalleryFiles) {
+      if (file instanceof File && file.size > 0) {
+        console.log("Action: Uploading gallery image...");
+        const uploadedPath = await uploadImage(file);
+        if (uploadedPath) {
+          newGalleryUrls.push(uploadedPath);
+        }
+      }
+    }
+    
+    // Combine existing and new gallery images
+    const galleryUrls = [...existingGallery, ...newGalleryUrls];
+
+    const experienceData: any = {
+      title,
+      category,
+      description,
+      duration,
+      difficulty: difficulty as any,
+      destinations,
+      image: imageUrl,
+    };
+
+    if (galleryUrls.length > 0) {
+      experienceData.gallery = galleryUrls;
+    }
+
+    if (latitude !== undefined && longitude !== undefined && !isNaN(latitude) && !isNaN(longitude)) {
+      experienceData.coordinates = [latitude, longitude];
+    } else {
+      experienceData.coordinates = null; // or keep existing? Usually explicitly clearing is better if cleared in form
+    }
+
+    console.log("Action: Updating in DB:", slug, experienceData);
+    const result = await db.updateExperience(slug, experienceData);
+    console.log("Action: Update result:", result.modifiedCount, "documents modified");
+
+    revalidatePath("/admin/experiences");
+    revalidatePath(`/admin/experiences/${slug}/edit`);
+
+    return {
+      success: true,
+      message: "Experience updated successfully",
+    };
+  } catch (error) {
+    console.error("Error updating experience:", error);
+    return {
+      success: false,
+      message: "Failed to update experience",
+    };
+  }
+}
+
+
+
+export async function deleteExperience(slug: string) {
+  const session = await auth();
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  try {
+    await db.deleteExperience(slug);
+
+    revalidatePath("/admin/experiences");
+
+    return {
+      success: true,
+      message: "Experience deleted successfully",
+    };
+  } catch (error) {
+    console.error("Error deleting experience:", error);
+    return {
+      success: false,
+      message: "Failed to delete experience",
+    };
+  }
+}
+
+export async function getCategoriesForDropdown() {
+  return db.getCategoriesForDropdown();
+}
