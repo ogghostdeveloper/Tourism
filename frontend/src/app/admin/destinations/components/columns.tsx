@@ -66,7 +66,7 @@ export const columns: ColumnDef<Destination>[] = [
     cell: ({ row }) => {
       const highlights = row.original.highlights;
       return (
-        <div className="max-w-[250px] truncate text-sm text-gray-600">
+        <div className="max-w-[250px] truncate text-sm text-black">
           {highlights.slice(0, 2).join(", ")}
           {highlights.length > 2 && "..."}
         </div>
@@ -111,7 +111,7 @@ export const columns: ColumnDef<Destination>[] = [
       if (!date) return null;
       try {
         return (
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-black">
             {format(new Date(date), "MMM dd, yyyy")}
           </div>
         );

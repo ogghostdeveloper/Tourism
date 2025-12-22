@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AnimatedArrowLeft } from "@/components/ui/animated-arrow-left";
 import type { AnimatedArrowLeftHandle } from "@/components/ui/animated-arrow-left";
-import { getAllDestinations } from "@/lib/data";
+import { getAllDestinations } from "@/app/admin/destinations/actions";
 import { getExperienceBySlug, updateExperience } from "../../actions";
 
 export default function EditExperiencePage({
@@ -47,6 +47,8 @@ export default function EditExperiencePage({
   const [difficulty, setDifficulty] = React.useState("");
   const [latitude, setLatitude] = React.useState("");
   const [longitude, setLongitude] = React.useState("");
+  const [startDate, setStartDate] = React.useState("");
+  const [endDate, setEndDate] = React.useState("");
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -70,6 +72,8 @@ export default function EditExperiencePage({
           setDescription(experience.description);
           setDuration(experience.duration || "");
           setDifficulty(experience.difficulty || "");
+          setStartDate(experience.startDate || "");
+          setEndDate(experience.endDate || "");
           setPreviewUrl(experience.image);
 
           if (experience.coordinates) {
@@ -142,7 +146,7 @@ export default function EditExperiencePage({
     if (e.target.files) {
       const files = Array.from(e.target.files).filter(file => file.type.startsWith("image/"));
       setGalleryFiles(prev => [...prev, ...files]);
-      
+
       const newPreviews = files.map(file => URL.createObjectURL(file));
       setGalleryPreviews(prev => [...prev, ...newPreviews]);
     }
@@ -172,7 +176,7 @@ export default function EditExperiencePage({
 
     // Add existing gallery URLs
     formData.set("existingGallery", JSON.stringify(existingGallery));
-    
+
     // Add new gallery images
     galleryFiles.forEach((file) => {
       formData.append(`gallery`, file);
@@ -276,6 +280,32 @@ export default function EditExperiencePage({
                 value={duration}
                 onChange={(e) => setDuration(e.target.value)}
                 className="text-black"
+              />
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="startDate" className="text-black">Start Date (For Culture/Festivals)</Label>
+              <Input
+                id="startDate"
+                name="startDate"
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="text-black shadow-none"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="endDate" className="text-black">End Date (For Culture/Festivals)</Label>
+              <Input
+                id="endDate"
+                name="endDate"
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="text-black shadow-none"
               />
             </div>
           </div>
@@ -429,7 +459,7 @@ export default function EditExperiencePage({
                 accept="image/*"
                 multiple
               />
-              
+
               {galleryPreviews.length > 0 && (
                 <div className="grid grid-cols-3 gap-4 mb-4">
                   {galleryPreviews.map((preview, index) => (
@@ -450,7 +480,7 @@ export default function EditExperiencePage({
                   ))}
                 </div>
               )}
-              
+
               <button
                 type="button"
                 onClick={() => galleryInputRef.current?.click()}

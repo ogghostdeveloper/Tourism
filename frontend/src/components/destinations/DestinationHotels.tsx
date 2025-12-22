@@ -15,7 +15,7 @@ export function DestinationHotels({ hotels }: DestinationHotelsProps) {
     <section className="py-24 bg-white">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <span className="block text-xs font-bold tracking-[0.2em] text-gray-400 uppercase mb-4">
+          <span className="block text-xs font-bold tracking-[0.2em] text-black uppercase mb-4">
             Accommodation
           </span>
           <h2 className="text-3xl md:text-5xl font-light">Where to Rest</h2>
@@ -31,7 +31,7 @@ export function DestinationHotels({ hotels }: DestinationHotelsProps) {
               transition={{ delay: index * 0.1, duration: 0.6 }}
               className="group block"
             >
-              <div className="relative aspect-[16/10] overflow-hidden mb-6">
+              <div className="relative aspect-16/10 overflow-hidden mb-6">
                 <img
                   src={hotel.image}
                   alt={hotel.name}
@@ -55,7 +55,7 @@ export function DestinationHotels({ hotels }: DestinationHotelsProps) {
                 ))}
               </div>
 
-              <p className="text-sm text-gray-500 leading-relaxed">
+              <p className="text-sm text-black leading-relaxed">
                 {hotel.description}
               </p>
             </motion.div>

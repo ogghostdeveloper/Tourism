@@ -15,9 +15,13 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "plus.unsplash.com",
       },
+      {
+        protocol: "http",
+        hostname: "localhost",
+      },
     ],
   },
-   experimental: {
+  experimental: {
     serverActions: {
       bodySizeLimit: '20mb',
     },

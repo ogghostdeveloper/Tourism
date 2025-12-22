@@ -9,12 +9,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AboutHero } from "@/app/(site)/about-us/components/AboutHero";
-import { OurStory } from "@/app/(site)/about-us/components/OurStory";
-import { OurMission } from "@/app/(site)/about-us/components/OurMission";
-import { OurPurpose } from "@/app/(site)/about-us/components/OurPurpose";
-import { SustainableTravel } from "@/app/(site)/about-us/components/SustainableTravel";
-import { WhyBhutan } from "@/app/(site)/about-us/components/WhyBhutan";
+import { AboutHero } from "@/app/(website)/about-us/components/AboutHero";
+import { OurStory } from "@/app/(website)/about-us/components/OurStory";
+import { OurMission } from "@/app/(website)/about-us/components/OurMission";
+import { OurPurpose } from "@/app/(website)/about-us/components/OurPurpose";
+import { SustainableTravel } from "@/app/(website)/about-us/components/SustainableTravel";
+import { WhyBhutan } from "@/app/(website)/about-us/components/WhyBhutan";
 import { getAboutContent, updateAboutContent } from "./actions";
 
 export default function AboutUsPage() {

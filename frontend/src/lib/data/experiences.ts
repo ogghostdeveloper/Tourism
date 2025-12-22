@@ -44,6 +44,15 @@ export async function getExperienceBySlug(slug: string) {
     return formatDoc(doc);
 }
 
+export async function getAllExperiences() {
+    const client = await clientPromise;
+    const items = await client.db(DB).collection<Experience>(COLLECTION)
+        .find({})
+        .sort({ title: 1 })
+        .toArray();
+    return items.map(formatDoc);
+}
+
 export async function createExperience(data: Partial<Experience>) {
     console.log("DB Layer: createExperience called");
     const client = await clientPromise;

@@ -10,7 +10,7 @@ export async function getTopDestinations(limit: number = 4) {
   try {
     // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 100));
-    
+
     return destinationsData.slice(0, limit);
   } catch (error) {
     console.error("Error fetching top destinations:", error);
@@ -22,7 +22,7 @@ export async function getTopExperiences(limit: number = 3) {
   try {
     // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 100));
-    
+
     return experiencesData.slice(0, limit);
   } catch (error) {
     console.error("Error fetching top experiences:", error);
@@ -30,14 +30,13 @@ export async function getTopExperiences(limit: number = 3) {
   }
 }
 
+import * as hotelDb from "@/lib/data/hotels";
+
 export async function getBestHotels(limit: number = 6) {
   try {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    
-    // Return hotels sorted by rating, limited to specified count
-    return hotelsData
-      .sort((a, b) => b.rating - a.rating)
+    const all = await hotelDb.getAllHotels();
+    return all
+      .sort((a, b) => (b.rating || 0) - (a.rating || 0))
       .slice(0, limit);
   } catch (error) {
     console.error("Error fetching best hotels:", error);
@@ -49,7 +48,7 @@ export async function getFeaturedPackages(limit: number = 3) {
   try {
     // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 100));
-    
+
     return packagesData.slice(0, limit);
   } catch (error) {
     console.error("Error fetching featured packages:", error);
@@ -61,7 +60,7 @@ export async function getCompanyInfo() {
   try {
     // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 100));
-    
+
     return {
       name: "Bhutan Travel Co.",
       tagline: "Discover the Kingdom of Happiness",

@@ -60,7 +60,7 @@ export function DataTableRowActions<TData>({
           </Link>
           <DropdownMenuItem
             onClick={handleCopy}
-            className="text-gray-500 focus:text-gray-500 data-[variant=default]:text-gray-500 data-[variant=default]:focus:bg-gray-100"
+            className="text-black focus:text-black data-[variant=default]:text-black data-[variant=default]:focus:bg-gray-100"
           >
             Copy Name
           </DropdownMenuItem>

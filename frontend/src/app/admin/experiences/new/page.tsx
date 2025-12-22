@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AnimatedArrowLeft } from "@/components/ui/animated-arrow-left";
 import type { AnimatedArrowLeftHandle } from "@/components/ui/animated-arrow-left";
-import { getAllDestinations } from "@/lib/data";
+import { getAllDestinations } from "@/app/admin/destinations/actions";
 import { createExperience } from "../actions";
 
 export default function CreateExperiencePage() {
@@ -91,7 +91,7 @@ export default function CreateExperiencePage() {
     if (e.target.files) {
       const files = Array.from(e.target.files).filter(file => file.type.startsWith("image/"));
       setGalleryFiles(prev => [...prev, ...files]);
-      
+
       const newPreviews = files.map(file => URL.createObjectURL(file));
       setGalleryPreviews(prev => [...prev, ...newPreviews]);
     }
@@ -196,6 +196,28 @@ export default function CreateExperiencePage() {
                 name="duration"
                 placeholder="e.g., 5 Hours, Full Day"
                 className="text-black"
+              />
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="startDate" className="text-black">Start Date (For Culture/Festivals)</Label>
+              <Input
+                id="startDate"
+                name="startDate"
+                type="date"
+                className="text-black shadow-none"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="endDate" className="text-black">End Date (For Culture/Festivals)</Label>
+              <Input
+                id="endDate"
+                name="endDate"
+                type="date"
+                className="text-black shadow-none"
               />
             </div>
           </div>
@@ -342,7 +364,7 @@ export default function CreateExperiencePage() {
                 accept="image/*"
                 multiple
               />
-              
+
               {galleryPreviews.length > 0 && (
                 <div className="grid grid-cols-3 gap-4 mb-4">
                   {galleryPreviews.map((preview, index) => (
@@ -363,7 +385,7 @@ export default function CreateExperiencePage() {
                   ))}
                 </div>
               )}
-              
+
               <button
                 type="button"
                 onClick={() => galleryInputRef.current?.click()}

@@ -40,6 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# uploads
-/public/uploads/*
-!/public/uploads/.gitkeep
+# uploads directory (outside public for production compatibility)
+/uploads/*
+!/uploads/.gitkeep

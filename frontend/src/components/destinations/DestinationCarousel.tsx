@@ -30,7 +30,7 @@ export function DestinationCarousel({
     <section className="py-24 bg-gray-50 border-t border-gray-200">
       <div className="container mx-auto px-6 relative">
         <div className="mb-12">
-          <span className="block text-xs font-bold tracking-[0.2em] text-gray-400 uppercase mb-4">
+          <span className="block text-xs font-bold tracking-[0.2em] text-black uppercase mb-4">
             Explore
           </span>
           <h2 className="text-3xl md:text-5xl font-light">
@@ -62,7 +62,7 @@ export function DestinationCarousel({
                     href={`/destinations/${dest.slug}`}
                     className="block h-full"
                   >
-                    <div className="aspect-[3/2] overflow-hidden mb-4 relative">
+                    <div className="aspect-3/2 overflow-hidden mb-4 relative">
                       <img
                         src={dest.image}
                         alt={dest.name}
@@ -71,7 +71,7 @@ export function DestinationCarousel({
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
                     </div>
                     <h3 className="text-2xl font-light mb-1">{dest.name}</h3>
-                    <span className="text-xs font-bold text-gray-400 uppercase tracking-widest group-hover:text-black transition-colors">
+                    <span className="text-xs font-bold text-black uppercase tracking-widest group-hover:text-black/80 transition-colors">
                       {dest.region}
                     </span>
                   </Link>

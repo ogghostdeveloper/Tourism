@@ -34,7 +34,7 @@ export function DestinationMap({ name, coordinates }: DestinationMapProps) {
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
-          <span className="block text-xs font-bold tracking-[0.2em] text-gray-400 uppercase mb-4">
+          <span className="block text-xs font-bold tracking-[0.2em] text-black uppercase mb-4">
             Location
           </span>
           <h2 className="text-3xl md:text-5xl font-light">Where is {name}?</h2>
@@ -55,7 +55,7 @@ export function DestinationMap({ name, coordinates }: DestinationMapProps) {
                 {name}
               </span>
             </div>
-            <span className="block text-[8px] text-gray-400 font-normal mt-1 tracking-normal pl-6">
+            <span className="block text-[8px] text-black font-normal mt-1 tracking-normal pl-6">
               {coordinates[0].toFixed(4)}° N, {coordinates[1].toFixed(4)}° E
             </span>
           </motion.div>

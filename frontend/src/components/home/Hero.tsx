@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowDown, ArrowRight } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import Link from "next/link";
 
 export function Hero() {
@@ -9,7 +9,8 @@ export function Hero() {
     <section className="relative h-screen w-full overflow-hidden">
       {/* Background Video/Image */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-black/30 z-10" />
+        <div className="absolute inset-0 bg-black/10 z-10" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-black/20 z-10" />
         <video
           autoPlay
           loop
@@ -28,13 +29,13 @@ export function Hero() {
       {/* Content */}
       <div className="relative z-20 h-full flex flex-col items-center justify-center text-white px-6 text-center">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <h2 className="text-sm md:text-base font-medium tracking-[0.3em] uppercase mb-4">
-            Welcome to the Kingdom of Happiness
-          </h2>
+          <span className="font-mono text-xs md:text-sm font-medium tracking-[0.5em] uppercase text-white/90 mb-8 block drop-shadow-md">
+                // welcome to the kingdom
+          </span>
         </motion.div>
 
         <motion.div
@@ -42,8 +43,8 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          <h1 className="text-5xl md:text-7xl lg:text-9xl font-light tracking-tight mb-8">
-            BHUTAN
+          <h1 className="text-6xl md:text-9xl font-light text-white tracking-tighter mb-12 uppercase mix-blend-overlay opacity-90">
+            Bhutan
           </h1>
         </motion.div>
 
@@ -52,24 +53,14 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <p className="max-w-xl text-lg md:text-xl text-gray-200 font-light leading-relaxed mb-10">
-            Discover a land where ancient traditions blend seamlessly with
-            modern life, surrounded by the majestic Himalayas.
-          </p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-        >
-          <Link
-            href="/destinations"
-            className="group inline-flex items-center gap-3 bg-white text-black px-8 py-4 text-sm font-medium tracking-wider uppercase hover:bg-gray-100 transition-all"
-          >
-            Explore Destinations
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
+          <div className="flex flex-col md:flex-row gap-6 mt-8">
+            <Link
+              href="/destinations"
+              className="bg-white/10 backdrop-blur-md border border-white/20 text-white px-10 py-4 font-mono text-xs uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all duration-500"
+            >
+              Explore Regions
+            </Link>
+          </div>
         </motion.div>
       </div>
 
@@ -78,15 +69,12 @@ export function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 text-white flex flex-col items-center gap-2"
+        className="absolute bottom-12 left-0 right-0 z-20 flex justify-center"
       >
-        <span className="text-[10px] tracking-[0.2em] uppercase">Scroll</span>
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <ArrowDown className="w-5 h-5" />
-        </motion.div>
+        <div className="flex flex-col items-center gap-4">
+          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/60">Scroll to Discover</span>
+          <div className="w-px h-12 bg-linear-to-b from-white/0 via-white/40 to-white/0" />
+        </div>
       </motion.div>
     </section>
   );

@@ -21,7 +21,7 @@ export function DestinationExperiences({
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
           <div>
-            <span className="block text-xs font-bold tracking-[0.2em] text-gray-400 uppercase mb-4">
+            <span className="block text-xs font-bold tracking-[0.2em] text-black uppercase mb-4">
               Experiences
             </span>
             <h2 className="text-3xl md:text-5xl font-light">
@@ -40,7 +40,7 @@ export function DestinationExperiences({
               transition={{ delay: index * 0.1, duration: 0.6 }}
             >
               <Link href={`/experiences/${exp.slug}`} className="group block">
-                <div className="relative aspect-[4/3] overflow-hidden mb-6 bg-gray-100">
+                <div className="relative aspect-4/3 overflow-hidden mb-6 bg-gray-100">
                   <img
                     src={exp.image}
                     alt={exp.title}
@@ -56,7 +56,7 @@ export function DestinationExperiences({
                     <h3 className="text-xl font-medium mb-2 group-hover:text-gray-600 transition-colors">
                       {exp.title}
                     </h3>
-                    <p className="text-sm text-gray-500 line-clamp-2">
+                    <p className="text-sm text-black line-clamp-2">
                       {exp.description}
                     </p>
                   </div>

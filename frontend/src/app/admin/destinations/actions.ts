@@ -2,31 +2,17 @@
 
 import { revalidatePath } from "next/cache";
 import { PaginatedDestinations, Destination } from "./schema";
-import { destinationsData } from "./data/destinations-data";
+import * as db from "@/lib/data/destinations";
+import { auth } from "@/auth";
+import { uploadImage } from "@/lib/upload";
 
 export async function getDestinations(
   page: number = 1,
   pageSize: number = 10
 ): Promise<PaginatedDestinations> {
   try {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    const totalItems = destinationsData.length;
-    const totalPages = Math.ceil(totalItems / pageSize);
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-
-    const items = destinationsData.slice(startIndex, endIndex);
-
-    return {
-      items,
-      page,
-      page_size: pageSize,
-      total_pages: totalPages,
-      has_next: page < totalPages,
-      has_prev: page > 1,
-    };
+    const data = await db.listDestinations(page, pageSize);
+    return data as PaginatedDestinations;
   } catch (error) {
     console.error("Error fetching destinations:", error);
     return {
@@ -42,41 +28,78 @@ export async function getDestinations(
 
 export async function getDestinationBySlug(slug: string): Promise<Destination | null> {
   try {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    const destination = destinationsData.find((d) => d.slug === slug);
-    return destination || null;
+    const destination = await db.getDestinationBySlug(slug);
+    return destination as Destination | null;
   } catch (error) {
     console.error("Error fetching destination:", error);
     return null;
   }
 }
 
-export async function createDestination(prevState: any, formData: FormData) {
+export async function getAllDestinations() {
   try {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    const destinations = await db.getAllDestinations();
+    return destinations;
+  } catch (error) {
+    console.error("Error fetching all destinations:", error);
+    return [];
+  }
+}
 
+export async function createDestination(prevState: any, formData: FormData) {
+  const session = await auth();
+  if (!session) {
+    return { success: false, message: "Unauthorized" };
+  }
+
+  try {
     const name = formData.get("name") as string;
     const slug = formData.get("slug") as string;
     const region = formData.get("region") as string;
     const description = formData.get("description") as string;
-    const latitude = parseFloat(formData.get("latitude") as string);
-    const longitude = parseFloat(formData.get("longitude") as string);
-    const experiences = JSON.parse(formData.get("experiences") as string || "[]");
-    const hotels = JSON.parse(formData.get("hotels") as string || "[]");
+    const highlightsStr = formData.get("highlights") as string;
+    const highlights = highlightsStr ? highlightsStr.split("\n").filter(h => h.trim()) : [];
 
-    // In a real app, this would save to database
-    console.log("Creating destination:", {
+    const latStr = formData.get("latitude") as string;
+    const lngStr = formData.get("longitude") as string;
+    const latitude = latStr ? parseFloat(latStr) : undefined;
+    const longitude = lngStr ? parseFloat(lngStr) : undefined;
+
+    const experiencesStr = formData.get("experiences") as string;
+    const experiences = JSON.parse(experiencesStr || "[]");
+
+    const hotelsStr = formData.get("hotels") as string;
+    const hotels = JSON.parse(hotelsStr || "[]");
+
+    const topExperienceSlug = formData.get("topExperienceSlug") as string;
+
+    const imageInput = formData.get("image");
+    let imageUrl = "https://images.unsplash.com/photo-1578500263628-936ddec022cf";
+
+    if (imageInput instanceof File && imageInput.size > 0) {
+      const uploadedPath = await uploadImage(imageInput);
+      if (uploadedPath) {
+        imageUrl = uploadedPath;
+      }
+    }
+
+    const destinationData: any = {
       name,
       slug,
       region,
       description,
-      coordinates: [latitude, longitude],
+      highlights,
       experiences,
       hotels,
-    });
+      topExperienceSlug,
+      image: imageUrl,
+    };
+
+    if (latitude !== undefined && longitude !== undefined && !isNaN(latitude) && !isNaN(longitude)) {
+      destinationData.coordinates = [latitude, longitude];
+    }
+
+    await db.createDestination(destinationData);
 
     revalidatePath("/admin/destinations");
 
@@ -98,27 +121,58 @@ export async function updateDestination(
   prevState: any,
   formData: FormData
 ) {
-  try {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
+  const session = await auth();
+  if (!session) {
+    return { success: false, message: "Unauthorized" };
+  }
 
+  try {
     const name = formData.get("name") as string;
     const region = formData.get("region") as string;
     const description = formData.get("description") as string;
-    const latitude = parseFloat(formData.get("latitude") as string);
-    const longitude = parseFloat(formData.get("longitude") as string);
-    const experiences = JSON.parse(formData.get("experiences") as string || "[]");
-    const hotels = JSON.parse(formData.get("hotels") as string || "[]");
+    const highlightsStr = formData.get("highlights") as string;
+    const highlights = highlightsStr ? highlightsStr.split("\n").filter(h => h.trim()) : [];
 
-    // In a real app, this would update in database
-    console.log("Updating destination:", slug, {
+    const latStr = formData.get("latitude") as string;
+    const lngStr = formData.get("longitude") as string;
+    const latitude = latStr ? parseFloat(latStr) : undefined;
+    const longitude = lngStr ? parseFloat(lngStr) : undefined;
+
+    const experiencesStr = formData.get("experiences") as string;
+    const experiences = JSON.parse(experiencesStr || "[]");
+
+    const hotelsStr = formData.get("hotels") as string;
+    const hotels = JSON.parse(hotelsStr || "[]");
+
+    const topExperienceSlug = formData.get("topExperienceSlug") as string;
+
+    const imageInput = formData.get("image");
+    const existingDestination = await db.getDestinationBySlug(slug);
+    let imageUrl = existingDestination?.image || "https://images.unsplash.com/photo-1578500263628-936ddec022cf";
+
+    if (imageInput instanceof File && imageInput.size > 0) {
+      const uploadedPath = await uploadImage(imageInput);
+      if (uploadedPath) {
+        imageUrl = uploadedPath;
+      }
+    }
+
+    const destinationData: any = {
       name,
       region,
       description,
-      coordinates: [latitude, longitude],
+      highlights,
       experiences,
       hotels,
-    });
+      topExperienceSlug,
+      image: imageUrl,
+    };
+
+    if (latitude !== undefined && longitude !== undefined && !isNaN(latitude) && !isNaN(longitude)) {
+      destinationData.coordinates = [latitude, longitude];
+    }
+
+    await db.updateDestination(slug, destinationData);
 
     revalidatePath("/admin/destinations");
     revalidatePath(`/admin/destinations/${slug}/edit`);
@@ -137,13 +191,13 @@ export async function updateDestination(
 }
 
 export async function deleteDestination(slug: string) {
+  const session = await auth();
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
   try {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 300));
-
-    // In a real app, this would delete from database
-    console.log("Deleting destination:", slug);
-
+    await db.deleteDestination(slug);
     revalidatePath("/admin/destinations");
 
     return {
@@ -158,3 +212,4 @@ export async function deleteDestination(slug: string) {
     };
   }
 }
+

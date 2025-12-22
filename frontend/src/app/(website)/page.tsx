@@ -9,9 +9,12 @@ import CallToAction from "@/components/shared/CallToAction";
 import { getFeaturedTour } from "./tours/actions";
 import { getBestHotels } from "./actions";
 
+import { getFeaturedExperiences } from "./experiences/actions";
+
 export default async function Home() {
   const featuredTour = await getFeaturedTour();
   const bestHotels = await getBestHotels(6);
+  const featuredExperiences = await getFeaturedExperiences(3);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -20,7 +23,7 @@ export default async function Home() {
       <FeaturedItinerary itinerary={featuredTour} />
       <ExperienceTypes />
       <Destinations />
-      <Experiences />
+      <Experiences experiences={featuredExperiences} />
       <BestHotels hotels={bestHotels} />
       <CallToAction />
     </div>

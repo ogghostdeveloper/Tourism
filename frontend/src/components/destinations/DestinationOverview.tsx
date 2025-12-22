@@ -23,13 +23,13 @@ export function DestinationOverview({
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <span className="block text-xs font-bold tracking-[0.2em] text-gray-400 uppercase mb-4">
+            <span className="block text-xs font-bold tracking-[0.2em] text-black uppercase mb-4">
               Overview
             </span>
             <h2 className="text-3xl md:text-5xl font-light leading-tight mb-8">
               Discovering {name}
             </h2>
-            <p className="text-lg text-gray-600 leading-relaxed font-light">
+            <p className="text-lg text-black leading-relaxed font-light">
               {description}
             </p>
           </motion.div>
@@ -47,8 +47,8 @@ export function DestinationOverview({
             <ul className="space-y-6">
               {highlights.map((highlight, index) => (
                 <li key={index} className="flex items-start gap-4 group">
-                  <span className="mt-2 w-1.5 h-1.5 bg-gray-300 rounded-full group-hover:bg-black transition-colors" />
-                  <span className="text-lg text-gray-600 group-hover:text-black transition-colors font-light">
+                  <span className="mt-2 w-1.5 h-1.5 bg-black rounded-full transition-colors" />
+                  <span className="text-lg text-black transition-colors font-light">
                     {highlight}
                   </span>
                 </li>

@@ -12,48 +12,63 @@ interface TourTimelineProps {
 
 export function TourTimeline({ days, slug }: TourTimelineProps) {
   return (
-    <div className="relative border-l border-gray-200 ml-4 md:ml-12 space-y-16 py-12">
+    <div className="relative space-y-32 py-12">
       {days.map((day, index) => (
         <Link
           key={day.day}
           href={`/tours/${slug}/day/${day.day}`}
-          className="block"
+          className="block group"
         >
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: index * 0.1 }}
-            className="relative pl-8 md:pl-16 group cursor-pointer"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.8, delay: index * 0.1 }}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start"
           >
-            {/* Timeline Dot */}
-            <span className="absolute -left-[5px] top-2 w-2.5 h-2.5 rounded-full bg-black ring-4 ring-white group-hover:scale-150 transition-transform duration-300" />
+            {/* Day Number Label */}
+            <div className="lg:col-span-1">
+              <span className="font-mono text-xs text-amber-600 uppercase tracking-[0.4em] block sticky top-40 font-bold">
+                // day {day.day < 10 ? `0${day.day}` : day.day}
+              </span>
+            </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            {/* Content Area */}
+            <div className="lg:col-span-11 grid grid-cols-1 md:grid-cols-2 gap-12 items-start border-l border-black/5 pl-12 pb-24 group-hover:border-amber-500/30 transition-colors duration-700">
               <div>
-                <div className="flex items-center gap-4 mb-2">
-                  <span className="text-sm font-bold tracking-[0.2em] uppercase text-gray-400 block">
-                    Day {day.day}
-                  </span>
-                  <span className="opacity-0 group-hover:opacity-100 transition-opacity text-xs uppercase tracking-widest text-black flex items-center gap-1">
-                    <Plus className="w-3 h-3" /> View Details
+                <div className="flex items-center gap-4 mb-4">
+                  <span className="font-mono text-[10px] text-gray-500 uppercase tracking-widest px-3 py-1 border border-black/5 rounded-full font-bold">
+                    Route Authentication Verified
                   </span>
                 </div>
-                <h3 className="text-2xl font-light mb-4 group-hover:text-gray-600 transition-colors">
+
+                <h3 className="text-4xl font-light mb-6 group-hover:italic transition-all duration-500 uppercase tracking-tight">
                   {day.title}
                 </h3>
-                <p className="text-gray-600 leading-relaxed text-lg line-clamp-3">
-                  {day.description}
+
+                <p className="text-gray-600 leading-relaxed font-light italic text-lg mb-8 line-clamp-4">
+                  "{day.description}"
                 </p>
+
+                <div className="flex items-center gap-2 font-mono text-[10px] text-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-500 font-bold">
+                  <Plus className="w-4 h-4 text-amber-600" /> [ Read Detailed Briefing ]
+                </div>
               </div>
 
               {day.image && (
-                <div className="aspect-video overflow-hidden bg-gray-100">
+                <div className="relative aspect-video overflow-hidden rounded-sm border border-black/5">
                   <img
                     src={day.image}
                     alt={day.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-cover saturate-[0.6] brightness-[1.05] contrast-[0.95] transition-all duration-1000 group-hover:saturate-[1.1] group-hover:brightness-100 group-hover:contrast-100 group-hover:scale-105"
                   />
+                  <div className="absolute inset-0 bg-white/30 group-hover:bg-transparent transition-colors duration-700" />
+
+                  <div className="absolute bottom-4 left-4">
+                    <span className="font-mono text-[10px] text-white tracking-widest uppercase bg-black/40 backdrop-blur-md px-3 py-1.5 font-bold">
+                      Visual Record // FRM-{day.day}
+                    </span>
+                  </div>
                 </div>
               )}
             </div>

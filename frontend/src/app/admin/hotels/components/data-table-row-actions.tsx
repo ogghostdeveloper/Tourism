@@ -23,7 +23,14 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const hotel = hotelSchema.parse(row.original);
+  const parseResult = hotelSchema.safeParse(row.original);
+  if (!parseResult.success) {
+    console.error("Zod validation failed for hotel row:", {
+      errors: parseResult.error.flatten().fieldErrors,
+      data: row.original
+    });
+  }
+  const hotel = parseResult.success ? parseResult.data : (row.original as any);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const editRef = useRef<AnimatedArrowLeftHandle>(null);
 
@@ -60,7 +67,7 @@ export function DataTableRowActions<TData>({
           </Link>
           <DropdownMenuItem
             onClick={handleCopy}
-            className="text-gray-500 focus:text-gray-500 data-[variant=default]:text-gray-500 data-[variant=default]:focus:bg-gray-100"
+            className="text-black focus:text-black data-[variant=default]:text-black data-[variant=default]:focus:bg-gray-100"
           >
             Copy Name
           </DropdownMenuItem>

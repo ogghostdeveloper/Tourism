@@ -14,8 +14,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AnimatedArrowLeft } from "@/components/ui/animated-arrow-left";
 import type { AnimatedArrowLeftHandle } from "@/components/ui/animated-arrow-left";
-import { getAllExperiences, getAllHotels } from "@/lib/data";
-import { getDestinationBySlug } from "../../actions";
+import { getAllExperiences } from "@/app/admin/experiences/actions";
+import { getAllHotels } from "@/app/admin/hotels/actions";
+import { getDestinationBySlug, updateDestination } from "../../actions";
 
 export default function EditDestinationPage({
   params,
@@ -43,6 +44,8 @@ export default function EditDestinationPage({
   const [description, setDescription] = React.useState("");
   const [latitude, setLatitude] = React.useState("");
   const [longitude, setLongitude] = React.useState("");
+  const [highlights, setHighlights] = React.useState("");
+  const [topExperienceSlug, setTopExperienceSlug] = React.useState("");
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -72,21 +75,17 @@ export default function EditDestinationPage({
           setSlug(destination.slug);
           setRegion(destination.region);
           setDescription(destination.description);
+          setHighlights(destination.highlights ? destination.highlights.join("\n") : "");
+          setTopExperienceSlug(destination.topExperienceSlug || "");
           setPreviewUrl(destination.image);
-          setLatitude(destination.coordinates[0].toString());
-          setLongitude(destination.coordinates[1].toString());
 
-          // Set selected experiences
-          const destExperiences = experiences
-            .filter((exp) => exp.destinationSlug === id)
-            .map((exp) => exp.slug);
-          setSelectedExperiences(destExperiences);
+          if (destination.coordinates) {
+            setLatitude(destination.coordinates[0].toString());
+            setLongitude(destination.coordinates[1].toString());
+          }
 
-          // Set selected hotels
-          const destHotels = hotels
-            .filter((hotel) => hotel.destinationSlug === id)
-            .map((hotel) => hotel.id);
-          setSelectedHotels(destHotels);
+          setSelectedExperiences(destination.experiences || []);
+          setSelectedHotels(destination.hotels || []);
         }
       } catch (error) {
         toast.error("Failed to fetch destination data");
@@ -139,21 +138,26 @@ export default function EditDestinationPage({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    
+
     // Add selected experiences and hotels to formData
     formData.set("experiences", JSON.stringify(selectedExperiences));
     formData.set("hotels", JSON.stringify(selectedHotels));
 
     startTransition(async () => {
       try {
-        // TODO: Replace with actual API call
-        // const result = await updateDestination(id, formData);
-        
-        // Simulating API call
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        
-        toast.success("Destination updated successfully");
-        router.push("/admin/destinations");
+        formData.set("highlights", highlights);
+        formData.set("experiences", JSON.stringify(selectedExperiences));
+        formData.set("hotels", JSON.stringify(selectedHotels));
+        formData.set("topExperienceSlug", topExperienceSlug);
+
+        const result = await updateDestination(slug, null, formData);
+
+        if (result.success) {
+          toast.success("Destination updated successfully");
+          router.push("/admin/destinations");
+        } else {
+          toast.error(result.message || "Failed to update destination");
+        }
       } catch (error) {
         toast.error("Failed to update destination");
       }
@@ -200,6 +204,7 @@ export default function EditDestinationPage({
                 placeholder="Enter destination name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                className="text-black"
               />
             </div>
 
@@ -212,6 +217,7 @@ export default function EditDestinationPage({
                 placeholder="destination-slug"
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
+                className="text-black"
               />
             </div>
           </div>
@@ -225,6 +231,7 @@ export default function EditDestinationPage({
               placeholder="e.g., Western Bhutan"
               value={region}
               onChange={(e) => setRegion(e.target.value)}
+              className="text-black"
             />
           </div>
 
@@ -235,27 +242,61 @@ export default function EditDestinationPage({
               name="description"
               required
               placeholder="Describe the destination..."
-              className="min-h-[200px] resize-none"
-              rows={8}
+              className="min-h-[150px] resize-none text-black"
+              rows={5}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
 
+          <div className="space-y-2">
+            <Label htmlFor="highlights" className="text-black">Highlights (One per line) *</Label>
+            <Textarea
+              id="highlights"
+              name="highlights"
+              required
+              placeholder="Enter highlights, one per line..."
+              className="min-h-[150px] resize-none text-black"
+              rows={5}
+              value={highlights}
+              onChange={(e) => setHighlights(e.target.value)}
+            />
+          </div>
+
           <div className="border p-4 space-y-4">
             <h3 className="font-semibold text-black">Experiences</h3>
-            <div className="space-y-2">
-              <Label className="text-black">Select Experiences</Label>
-              <MultiSelect
-                options={experienceOptions}
-                selected={selectedExperiences}
-                onChange={setSelectedExperiences}
-                placeholder="Select experiences..."
-              />
-              <p className="text-xs text-gray-500">
-                Choose experiences available at this destination
-              </p>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-black">Select Experiences</Label>
+                <MultiSelect
+                  options={experienceOptions}
+                  selected={selectedExperiences}
+                  onChange={setSelectedExperiences}
+                  placeholder="Select experiences..."
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="topExperienceSlug" className="text-black">Top Experience (Key Highlight)</Label>
+                <select
+                  id="topExperienceSlug"
+                  name="topExperienceSlug"
+                  value={topExperienceSlug}
+                  onChange={(e) => setTopExperienceSlug(e.target.value)}
+                  className="w-full h-10 px-3 bg-white border border-gray-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-black text-black"
+                >
+                  <option value="">Select top experience...</option>
+                  {experienceOptions
+                    .filter(opt => selectedExperiences.includes(opt.value))
+                    .map(opt => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))
+                  }
+                </select>
+              </div>
             </div>
+            <p className="text-xs text-black">
+              Choose experiences available at this destination and pick one as the primary highlight.
+            </p>
           </div>
 
           <div className="border p-4 space-y-4">
@@ -268,7 +309,7 @@ export default function EditDestinationPage({
                 onChange={setSelectedHotels}
                 placeholder="Select hotels..."
               />
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-black">
                 Choose hotels located in this destination
               </p>
             </div>
@@ -288,6 +329,7 @@ export default function EditDestinationPage({
                   placeholder="27.4728"
                   value={latitude}
                   onChange={(e) => setLatitude(e.target.value)}
+                  className="text-black"
                 />
               </div>
 
@@ -302,6 +344,7 @@ export default function EditDestinationPage({
                   placeholder="89.6393"
                   value={longitude}
                   onChange={(e) => setLongitude(e.target.value)}
+                  className="text-black"
                 />
               </div>
             </div>
@@ -310,11 +353,10 @@ export default function EditDestinationPage({
           <div className="space-y-2">
             <Label className="text-black">Cover Image *</Label>
             <div
-              className={`relative flex flex-col items-center justify-center border-2 border-dashed transition-colors ${
-                dragActive
-                  ? "border-primary bg-primary/10"
-                  : "border-muted-foreground/25"
-              } ${previewUrl ? "h-auto p-2" : "h-32"}`}
+              className={`relative flex flex-col items-center justify-center border-2 border-dashed transition-colors ${dragActive
+                ? "border-primary bg-primary/10"
+                : "border-muted-foreground/25"
+                } ${previewUrl ? "h-auto p-2" : "h-32"}`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
               onDragOver={handleDrag}
@@ -345,10 +387,10 @@ export default function EditDestinationPage({
                     <Upload className="h-4 w-4 text-muted-foreground" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium">
+                    <p className="text-sm font-medium text-black">
                       Click to upload or drag and drop
                     </p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-black">
                       PNG, JPG, JPEG up to 5MB
                     </p>
                   </div>

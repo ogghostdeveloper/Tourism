@@ -13,10 +13,10 @@ export function CompanyIntro() {
           transition={{ duration: 0.8 }}
           className="max-w-4xl mx-auto text-center"
         >
-          <h2 className="text-sm font-bold tracking-[0.2em] uppercase text-gray-500 mb-8">
-            Our Story
-          </h2>
-          <p className="text-xl md:text-2xl font-light text-black leading-relaxed">
+          <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-8 block">
+            // our story
+          </span>
+          <p className="text-xl md:text-3xl font-light text-black leading-relaxed">
             We are dedicated to crafting transformative journeys that honor
             Bhutan's rich cultural heritage, pristine environment, and the
             philosophy of Gross National Happiness. Each experience is

@@ -1,4 +1,5 @@
 import { Experience } from "../../schema";
+import { ArrowUpRight } from "lucide-react";
 
 interface ExperienceCardProps {
   experience: Experience;
@@ -7,24 +8,42 @@ interface ExperienceCardProps {
 export function ExperienceCard({ experience }: ExperienceCardProps) {
   return (
     <div className="group cursor-pointer">
-      <div className="aspect-[4/3] overflow-hidden mb-4 relative">
-        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors z-10" />
+      <div className="relative aspect-16/10 overflow-hidden rounded-sm bg-neutral-100 border border-black/5 mb-8">
         <img
           src={experience.image}
           alt={experience.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+          className="w-full h-full object-cover transition-all duration-1000 saturate-[0.7] brightness-[1.05] group-hover:saturate-[1.2] group-hover:scale-110"
         />
+        <div className="absolute inset-0 bg-white/40 group-hover:bg-transparent transition-colors duration-700" />
+        <div className="absolute inset-0 bg-linear-to-t from-white via-white/5 to-transparent opacity-60 group-hover:opacity-20 transition-opacity duration-700" />
+
         {experience.category && (
-          <span className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-bold uppercase tracking-widest z-20">
-            {experience.category}
-          </span>
+          <div className="absolute top-6 left-6">
+            <span className="font-mono text-[9px] text-amber-600 uppercase tracking-[0.4em] bg-white/80 backdrop-blur-md px-3 py-1 border border-black/5">
+              {experience.category}
+            </span>
+          </div>
         )}
+
+        <div className="absolute bottom-6 left-6 flex items-center gap-4">
+          <span className="h-px w-8 bg-amber-500/50" />
+          <span className="font-mono text-[9px] text-white uppercase tracking-widest drop-shadow-md">
+            Visual Record // BHU-EXP
+          </span>
+        </div>
       </div>
-      <h4 className="text-xl font-medium mb-2 group-hover:text-gray-600 transition-colors">
-        {experience.title}
-      </h4>
-      <p className="text-gray-600 text-sm leading-relaxed">
-        {experience.description}
+
+      <div className="flex justify-between items-start">
+        <h4 className="text-3xl font-light tracking-tighter text-black group-hover:italic transition-all duration-500 uppercase">
+          {experience.title}
+        </h4>
+        <div className="w-10 h-10 rounded-full border border-black/10 flex items-center justify-center group-hover:border-amber-500 transition-colors shrink-0 ml-4">
+          <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+        </div>
+      </div>
+
+      <p className="mt-4 text-gray-500 font-light leading-relaxed line-clamp-2 italic text-sm">
+        "{experience.description}"
       </p>
     </div>
   );

@@ -11,7 +11,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AnimatedArrowLeft } from "@/components/ui/animated-arrow-left";
 import type { AnimatedArrowLeftHandle } from "@/components/ui/animated-arrow-left";
-
+import { DZONGKHAGS } from "@/constants/dzongkhags";
+import { createHotel } from "../actions";
 export default function CreateHotelPage() {
   const router = useRouter();
   const [isPending, startTransition] = React.useTransition();
@@ -22,6 +23,7 @@ export default function CreateHotelPage() {
   const [amenityInput, setAmenityInput] = React.useState("");
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const iconRef = React.useRef<AnimatedArrowLeftHandle>(null);
+
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -76,20 +78,20 @@ export default function CreateHotelPage() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    
-    // Add amenities to formData
-    formData.set("amenities", JSON.stringify(amenities));
+
+    // Add amenities as a newline-separated string
+    formData.set("amenities", amenities.join("\n"));
 
     startTransition(async () => {
       try {
-        // TODO: Replace with actual API call
-        // const result = await createHotel(formData);
-        
-        // Simulating API call
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        
-        toast.success("Hotel created successfully");
-        router.push("/admin/hotels");
+        const result = await createHotel(null, formData);
+
+        if (result.success) {
+          toast.success("Hotel created successfully");
+          router.push("/admin/hotels");
+        } else {
+          toast.error(result.message || "Failed to create hotel");
+        }
       } catch (error) {
         toast.error("Failed to create hotel");
       }
@@ -124,17 +126,37 @@ export default function CreateHotelPage() {
                 name="name"
                 required
                 placeholder="Enter hotel name"
+                className="text-black"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="location" className="text-black">Location *</Label>
-              <Input
-                id="location"
-                name="location"
-                required
-                placeholder="e.g., Thimphu, Paro"
-              />
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="destinationSlug" className="text-black">Destination *</Label>
+                <select
+                  id="destinationSlug"
+                  name="destinationSlug"
+                  required
+                  className="w-full h-10 px-3 bg-white border border-gray-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-black text-black"
+                >
+                  <option value="">Select destination...</option>
+                  {DZONGKHAGS.map((dzongkhag) => (
+                    <option key={dzongkhag} value={dzongkhag.toLowerCase()}>
+                      {dzongkhag}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="location" className="text-black">Location (Sub-area/Address)</Label>
+                <Input
+                  id="location"
+                  name="location"
+                  placeholder="e.g., Near Clock Tower"
+                  className="text-black"
+                />
+              </div>
             </div>
           </div>
 
@@ -150,6 +172,7 @@ export default function CreateHotelPage() {
                 step="0.1"
                 required
                 placeholder="4.5"
+                className="text-black"
               />
             </div>
 
@@ -162,17 +185,23 @@ export default function CreateHotelPage() {
                 min="1"
                 required
                 placeholder="50"
+                className="text-black"
               />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="priceRange" className="text-black">Price Range *</Label>
-              <Input
+              <select
                 id="priceRange"
                 name="priceRange"
                 required
-                placeholder="$$$"
-              />
+                className="w-full h-10 px-3 bg-white border border-gray-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-black text-black"
+              >
+                <option value="">Select price range...</option>
+                <option value="$$">$$ (Economy)</option>
+                <option value="$$$">$$$ (Standard)</option>
+                <option value="$$$$">$$$$ (Luxury)</option>
+              </select>
             </div>
           </div>
 
@@ -183,7 +212,7 @@ export default function CreateHotelPage() {
               name="description"
               required
               placeholder="Describe the hotel..."
-              className="min-h-[200px] resize-none"
+              className="min-h-[200px] resize-none text-black"
               rows={8}
             />
           </div>
@@ -203,6 +232,7 @@ export default function CreateHotelPage() {
                     }
                   }}
                   placeholder="e.g., WiFi, Spa, Restaurant"
+                  className="text-black"
                 />
                 <Button type="button" onClick={addAmenity}>
                   Add
@@ -212,7 +242,7 @@ export default function CreateHotelPage() {
                 {amenities.map((amenity) => (
                   <div
                     key={amenity}
-                    className="inline-flex items-center gap-1 bg-gray-100 px-3 py-1 text-sm"
+                    className="inline-flex items-center gap-1 bg-gray-100 px-3 py-1 text-sm text-black"
                   >
                     {amenity}
                     <button
@@ -239,6 +269,7 @@ export default function CreateHotelPage() {
                   type="number"
                   step="any"
                   placeholder="27.4728"
+                  className="text-black"
                 />
               </div>
 
@@ -250,6 +281,7 @@ export default function CreateHotelPage() {
                   type="number"
                   step="any"
                   placeholder="89.6393"
+                  className="text-black"
                 />
               </div>
             </div>
@@ -258,11 +290,10 @@ export default function CreateHotelPage() {
           <div className="space-y-2">
             <Label className="text-black">Cover Image *</Label>
             <div
-              className={`relative flex flex-col items-center justify-center border-2 border-dashed transition-colors ${
-                dragActive
-                  ? "border-primary bg-primary/10"
-                  : "border-muted-foreground/25"
-              } ${previewUrl ? "h-auto p-2" : "h-32"}`}
+              className={`relative flex flex-col items-center justify-center border-2 border-dashed transition-colors ${dragActive
+                ? "border-primary bg-primary/10"
+                : "border-muted-foreground/25"
+                } ${previewUrl ? "h-auto p-2" : "h-32"}`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
               onDragOver={handleDrag}
@@ -293,10 +324,10 @@ export default function CreateHotelPage() {
                     <Upload className="h-4 w-4 text-muted-foreground" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium">
+                    <p className="text-sm font-medium text-black">
                       Click to upload or drag and drop
                     </p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-black">
                       PNG, JPG, JPEG up to 5MB
                     </p>
                   </div>

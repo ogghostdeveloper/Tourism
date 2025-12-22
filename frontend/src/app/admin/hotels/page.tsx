@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { columns } from "./components/columns";
 import { DataTable } from "./components/data-table";
 import { getHotels } from "./actions";
@@ -61,10 +63,15 @@ export default function HotelsPage({
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-black">Hotels</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-black mt-1">
             Manage hotels and accommodations
           </p>
         </div>
+        <Link href="/admin/hotels/create">
+          <Button className="bg-black text-white hover:bg-black/90">
+            Add Hotel
+          </Button>
+        </Link>
       </div>
 
       <DataTable

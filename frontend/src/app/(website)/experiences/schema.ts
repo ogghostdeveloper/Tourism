@@ -14,3 +14,9 @@ export const experienceSchema = z.object({
 });
 
 export type Experience = z.infer<typeof experienceSchema>;
+
+export type ActionResponse = {
+  success: boolean;
+  message: string;
+  data?: any;
+};

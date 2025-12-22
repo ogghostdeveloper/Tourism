@@ -1,7 +1,7 @@
-import { getAllHotels } from "@/lib/data/packages";
+import { getHotelById } from "../actions";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Pencil, MapPin, DollarSign, Star } from "lucide-react";
+import { ArrowLeft, Pencil, MapPin, DollarSign, Star, Bed } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface PageProps {
@@ -16,11 +16,10 @@ export default async function HotelViewPage({
   const { id } = await params;
 
   if (id === "new") {
-    redirect("/admin/hotels/new/edit");
+    redirect("/admin/hotels/create");
   }
 
-  const hotels = await getAllHotels();
-  const hotel = hotels.find((h) => h.id === id);
+  const hotel = await getHotelById(id);
 
   if (!hotel) {
     notFound();
@@ -56,7 +55,7 @@ export default async function HotelViewPage({
       <div className="container mx-auto px-6 py-12">
         <Link
           href="/admin/hotels"
-          className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-wider text-gray-500 hover:text-black transition-colors mb-12"
+          className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-wider text-black hover:text-black/80 transition-colors mb-12"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Hotels
         </Link>
@@ -64,36 +63,43 @@ export default async function HotelViewPage({
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
           <div className="lg:col-span-2">
             <div className="flex flex-wrap gap-4 mb-8">
-              <span className="flex items-center gap-2 text-gray-600 bg-gray-100 px-3 py-1 text-sm font-medium">
+              <span className="flex items-center gap-2 text-black bg-gray-100 px-3 py-1 text-sm font-medium">
                 <MapPin className="w-4 h-4" />
-                {hotel.location}
+                {hotel.location || "Not specified"}
               </span>
-              <span className="flex items-center gap-2 text-gray-600 bg-gray-100 px-3 py-1 text-sm font-medium">
+              <span className="flex items-center gap-2 text-black bg-gray-100 px-3 py-1 text-sm font-medium">
                 <DollarSign className="w-4 h-4" />
-                {hotel.pricePerNight}
+                Price: {hotel.priceRange}
               </span>
-              <span className="flex items-center gap-2 text-gray-600 bg-gray-100 px-3 py-1 text-sm font-medium">
+              <span className="flex items-center gap-2 text-black bg-gray-100 px-3 py-1 text-sm font-medium">
+                <Bed className="w-4 h-4" />
+                {hotel.rooms} Rooms
+              </span>
+              <span className="flex items-center gap-2 text-black bg-gray-100 px-3 py-1 text-sm font-medium">
                 <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                 {hotel.rating} Stars
               </span>
             </div>
 
             <h2 className="text-3xl font-light mb-8">Overview</h2>
-            <p className="text-xl text-gray-600 leading-relaxed mb-12">
+            <p className="text-xl text-black leading-relaxed mb-12">
               {hotel.description}
             </p>
 
             <h3 className="text-2xl font-light mb-6">Amenities</h3>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {hotel.amenities.map((amenity, index) => (
+              {hotel.amenities?.map((amenity, index) => (
                 <li
                   key={index}
-                  className="flex items-center gap-4 text-gray-600"
+                  className="flex items-center gap-4 text-black"
                 >
                   <span className="w-2 h-2 bg-black rounded-full" />
                   {amenity}
                 </li>
               ))}
+              {(!hotel.amenities || hotel.amenities.length === 0) && (
+                <li className="text-black italic">No amenities listed</li>
+              )}
             </ul>
           </div>
 
@@ -103,19 +109,21 @@ export default async function HotelViewPage({
             </h3>
             <div className="space-y-4">
               <div>
-                <span className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">
-                  Category
+                <span className="block text-xs font-bold uppercase tracking-wider text-black mb-1">
+                  Destination
                 </span>
-                <span className="text-lg">{hotel.category}</span>
+                <span className="text-lg capitalize">{hotel.destinationSlug}</span>
               </div>
-              <div>
-                <span className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">
-                  Slug
-                </span>
-                <span className="text-sm font-mono text-gray-600">
-                  {hotel.slug}
-                </span>
-              </div>
+              {hotel.coordinates && (
+                <div>
+                  <span className="block text-xs font-bold uppercase tracking-wider text-black mb-1">
+                    Coordinates
+                  </span>
+                  <span className="text-sm font-mono text-black">
+                    {hotel.coordinates[0]}, {hotel.coordinates[1]}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </div>

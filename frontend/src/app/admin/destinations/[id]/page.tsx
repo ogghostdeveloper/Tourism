@@ -71,7 +71,7 @@ export default async function DestinationViewPage({
       <div className="container mx-auto px-6 py-12">
         <Link
           href="/admin/destinations"
-          className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-wider text-gray-500 hover:text-black transition-colors mb-12"
+          className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-wider text-black hover:text-black/80 transition-colors mb-12"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Destinations
         </Link>

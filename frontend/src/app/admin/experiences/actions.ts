@@ -36,6 +36,16 @@ export async function getExperienceBySlug(slug: string): Promise<Experience | nu
   }
 }
 
+export async function getAllExperiences() {
+  try {
+    const experiences = await db.getAllExperiences();
+    return experiences;
+  } catch (error) {
+    console.error("Error fetching all experiences:", error);
+    return [];
+  }
+}
+
 export async function createExperience(prevState: any, formData: FormData) {
   console.log("Action: createExperience called");
   console.log("Action: Checking auth session...");
@@ -55,6 +65,8 @@ export async function createExperience(prevState: any, formData: FormData) {
     const description = formData.get("description") as string;
     const duration = formData.get("duration") as string;
     const difficulty = formData.get("difficulty") as string;
+    const startDate = formData.get("startDate") as string;
+    const endDate = formData.get("endDate") as string;
 
     const latStr = formData.get("latitude") as string;
     const lngStr = formData.get("longitude") as string;
@@ -81,7 +93,7 @@ export async function createExperience(prevState: any, formData: FormData) {
     // Handle gallery images
     const galleryFiles = formData.getAll("gallery");
     const galleryUrls: string[] = [];
-    
+
     for (const file of galleryFiles) {
       if (file instanceof File && file.size > 0) {
         console.log("Action: Uploading gallery image...");
@@ -101,6 +113,8 @@ export async function createExperience(prevState: any, formData: FormData) {
       difficulty: difficulty as any,
       destinations,
       image: imageUrl,
+      startDate,
+      endDate,
     };
 
     if (galleryUrls.length > 0) {
@@ -148,6 +162,8 @@ export async function updateExperience(
     const description = formData.get("description") as string;
     const duration = formData.get("duration") as string;
     const difficulty = formData.get("difficulty") as string;
+    const startDate = formData.get("startDate") as string;
+    const endDate = formData.get("endDate") as string;
 
     const latStr = formData.get("latitude") as string;
     const lngStr = formData.get("longitude") as string;
@@ -173,10 +189,10 @@ export async function updateExperience(
     // Handle gallery images
     const existingGalleryStr = formData.get("existingGallery") as string;
     const existingGallery = JSON.parse(existingGalleryStr || "[]");
-    
+
     const newGalleryFiles = formData.getAll("gallery");
     const newGalleryUrls: string[] = [];
-    
+
     for (const file of newGalleryFiles) {
       if (file instanceof File && file.size > 0) {
         console.log("Action: Uploading gallery image...");
@@ -186,7 +202,7 @@ export async function updateExperience(
         }
       }
     }
-    
+
     // Combine existing and new gallery images
     const galleryUrls = [...existingGallery, ...newGalleryUrls];
 
@@ -198,6 +214,8 @@ export async function updateExperience(
       difficulty: difficulty as any,
       destinations,
       image: imageUrl,
+      startDate,
+      endDate,
     };
 
     if (galleryUrls.length > 0) {

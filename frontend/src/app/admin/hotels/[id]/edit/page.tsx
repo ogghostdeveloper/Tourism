@@ -12,7 +12,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AnimatedArrowLeft } from "@/components/ui/animated-arrow-left";
 import type { AnimatedArrowLeftHandle } from "@/components/ui/animated-arrow-left";
-import { getHotelById } from "../../actions";
+import { DZONGKHAGS } from "@/constants/dzongkhags";
+import { getHotelById, updateHotel } from "../../actions";
 
 export default function EditHotelPage({
   params,
@@ -40,6 +41,7 @@ export default function EditHotelPage({
   const [description, setDescription] = React.useState("");
   const [latitude, setLatitude] = React.useState("");
   const [longitude, setLongitude] = React.useState("");
+  const [destinationSlug, setDestinationSlug] = React.useState("");
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -48,13 +50,14 @@ export default function EditHotelPage({
 
         if (hotel) {
           setName(hotel.name);
-          setLocation(hotel.location);
+          setLocation(hotel.location || "");
           setRating(hotel.rating.toString());
-          setRooms(hotel.rooms.toString());
+          setRooms(hotel.rooms?.toString() || "");
           setPriceRange(hotel.priceRange);
+          setDestinationSlug(hotel.destinationSlug);
           setDescription(hotel.description);
           setPreviewUrl(hotel.image);
-          setAmenities(hotel.amenities);
+          setAmenities(hotel.amenities || []);
 
           if (hotel.coordinates) {
             setLatitude(hotel.coordinates[0].toString());
@@ -123,20 +126,20 @@ export default function EditHotelPage({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    
-    // Add amenities to formData
-    formData.set("amenities", JSON.stringify(amenities));
+
+    // Add amenities as a newline-separated string
+    formData.set("amenities", amenities.join("\n"));
 
     startTransition(async () => {
       try {
-        // TODO: Replace with actual API call
-        // const result = await updateHotel(id, formData);
-        
-        // Simulating API call
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        
-        toast.success("Hotel updated successfully");
-        router.push("/admin/hotels");
+        const result = await updateHotel(id, null, formData);
+
+        if (result.success) {
+          toast.success("Hotel updated successfully");
+          router.push("/admin/hotels");
+        } else {
+          toast.error(result.message || "Failed to update hotel");
+        }
       } catch (error) {
         toast.error("Failed to update hotel");
       }
@@ -173,7 +176,7 @@ export default function EditHotelPage({
       </div>
       <div>
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             <div className="space-y-2">
               <Label htmlFor="name" className="text-black">Hotel Name *</Label>
               <Input
@@ -183,18 +186,39 @@ export default function EditHotelPage({
                 placeholder="Enter hotel name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                className="text-black"
               />
+            </div>
+          </div>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="destinationSlug" className="text-black">Destination *</Label>
+              <select
+                id="destinationSlug"
+                name="destinationSlug"
+                required
+                value={destinationSlug}
+                onChange={(e) => setDestinationSlug(e.target.value)}
+                className="w-full h-10 px-3 bg-white border border-gray-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-black text-black"
+              >
+                <option value="">Select destination...</option>
+                {DZONGKHAGS.map((dzongkhag) => (
+                  <option key={dzongkhag} value={dzongkhag.toLowerCase()}>
+                    {dzongkhag}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="location" className="text-black">Location *</Label>
+              <Label htmlFor="location" className="text-black">Location (Sub-area/Address)</Label>
               <Input
                 id="location"
                 name="location"
-                required
-                placeholder="e.g., Thimphu, Paro"
+                placeholder="e.g., Near Clock Tower"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
+                className="text-black"
               />
             </div>
           </div>
@@ -213,6 +237,7 @@ export default function EditHotelPage({
                 placeholder="4.5"
                 value={rating}
                 onChange={(e) => setRating(e.target.value)}
+                className="text-black"
               />
             </div>
 
@@ -227,19 +252,25 @@ export default function EditHotelPage({
                 placeholder="50"
                 value={rooms}
                 onChange={(e) => setRooms(e.target.value)}
+                className="text-black"
               />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="priceRange" className="text-black">Price Range *</Label>
-              <Input
+              <select
                 id="priceRange"
                 name="priceRange"
                 required
-                placeholder="$$$"
                 value={priceRange}
                 onChange={(e) => setPriceRange(e.target.value)}
-              />
+                className="w-full h-10 px-3 bg-white border border-gray-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-black text-black"
+              >
+                <option value="">Select price range...</option>
+                <option value="$$">$$ (Economy)</option>
+                <option value="$$$">$$$ (Standard)</option>
+                <option value="$$$$">$$$$ (Luxury)</option>
+              </select>
             </div>
           </div>
 
@@ -250,7 +281,7 @@ export default function EditHotelPage({
               name="description"
               required
               placeholder="Describe the hotel..."
-              className="min-h-[200px] resize-none"
+              className="min-h-[200px] resize-none text-black"
               rows={8}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -272,6 +303,7 @@ export default function EditHotelPage({
                     }
                   }}
                   placeholder="e.g., WiFi, Spa, Restaurant"
+                  className="text-black"
                 />
                 <Button type="button" onClick={addAmenity}>
                   Add
@@ -281,7 +313,7 @@ export default function EditHotelPage({
                 {amenities.map((amenity) => (
                   <div
                     key={amenity}
-                    className="inline-flex items-center gap-1 bg-gray-100 px-3 py-1 text-sm"
+                    className="inline-flex items-center gap-1 bg-gray-100 px-3 py-1 text-sm text-black"
                   >
                     {amenity}
                     <button
@@ -310,6 +342,7 @@ export default function EditHotelPage({
                   placeholder="27.4728"
                   value={latitude}
                   onChange={(e) => setLatitude(e.target.value)}
+                  className="text-black"
                 />
               </div>
 
@@ -323,6 +356,7 @@ export default function EditHotelPage({
                   placeholder="89.6393"
                   value={longitude}
                   onChange={(e) => setLongitude(e.target.value)}
+                  className="text-black"
                 />
               </div>
             </div>
@@ -331,11 +365,10 @@ export default function EditHotelPage({
           <div className="space-y-2">
             <Label className="text-black">Cover Image</Label>
             <div
-              className={`relative flex flex-col items-center justify-center border-2 border-dashed transition-colors ${
-                dragActive
-                  ? "border-primary bg-primary/10"
-                  : "border-muted-foreground/25"
-              } ${previewUrl ? "h-auto p-2" : "h-32"}`}
+              className={`relative flex flex-col items-center justify-center border-2 border-dashed transition-colors ${dragActive
+                ? "border-primary bg-primary/10"
+                : "border-muted-foreground/25"
+                } ${previewUrl ? "h-auto p-2" : "h-32"}`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
               onDragOver={handleDrag}
@@ -366,10 +399,10 @@ export default function EditHotelPage({
                     <Upload className="h-4 w-4 text-muted-foreground" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium">
+                    <p className="text-sm font-medium text-black">
                       Click to upload or drag and drop
                     </p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-black">
                       PNG, JPG, JPEG up to 5MB
                     </p>
                   </div>

@@ -50,6 +50,20 @@ export const columns: ColumnDef<Hotel>[] = [
     },
   },
   {
+    accessorKey: "destinationSlug",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Destination" />
+    ),
+    cell: ({ row }) => {
+      const slug = row.getValue("destinationSlug") as string;
+      return (
+        <div className="text-black capitalize">
+          {slug}
+        </div>
+      );
+    },
+  },
+  {
     accessorKey: "location",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Location" />
@@ -57,7 +71,7 @@ export const columns: ColumnDef<Hotel>[] = [
     cell: ({ row }) => {
       return (
         <div className="max-w-[200px] truncate text-black">
-          {row.getValue("location")}
+          {row.getValue("location") || "-"}
         </div>
       );
     },
@@ -94,9 +108,10 @@ export const columns: ColumnDef<Hotel>[] = [
       <DataTableColumnHeader column={column} title="Rooms" />
     ),
     cell: ({ row }) => {
+      const rooms = row.getValue("rooms");
       return (
         <div className="text-sm text-black">
-          {row.getValue("rooms")} rooms
+          {rooms ? `${rooms} rooms` : "-"}
         </div>
       );
     },
@@ -105,11 +120,12 @@ export const columns: ColumnDef<Hotel>[] = [
     accessorKey: "amenities",
     header: "Amenities",
     cell: ({ row }) => {
-      const amenities = row.original.amenities;
+      const amenities = row.original.amenities || [];
       return (
-        <div className="max-w-[250px] truncate text-sm text-gray-600">
+        <div className="max-w-[250px] truncate text-sm text-black">
           {amenities.slice(0, 3).join(", ")}
           {amenities.length > 3 && "..."}
+          {amenities.length === 0 && "-"}
         </div>
       );
     },
@@ -124,7 +140,7 @@ export const columns: ColumnDef<Hotel>[] = [
       if (!date) return null;
       try {
         return (
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-black">
             {format(new Date(date), "MMM dd, yyyy")}
           </div>
         );

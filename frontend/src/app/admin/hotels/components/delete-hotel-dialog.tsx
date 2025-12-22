@@ -50,8 +50,8 @@ export function DeleteHotelDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-          <AlertDialogDescription>
+          <AlertDialogTitle className="text-black">Are you sure?</AlertDialogTitle>
+          <AlertDialogDescription className="text-black">
             This action cannot be undone. This will permanently delete the
             hotel <strong>{hotel.name}</strong>.
           </AlertDialogDescription>

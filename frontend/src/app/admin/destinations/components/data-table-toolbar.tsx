@@ -54,7 +54,7 @@ export function DataTableToolbar<TData>({
               className={
                 view === "list"
                   ? "bg-black text-white"
-                  : "text-gray-600 hover:text-black hover:bg-gray-100"
+                  : "text-black hover:text-black hover:bg-gray-100"
               }
             >
               <List className="w-4 h-4" />
@@ -66,7 +66,7 @@ export function DataTableToolbar<TData>({
               className={
                 view === "grid"
                   ? "bg-black text-white"
-                  : "text-gray-600 hover:text-black hover:bg-gray-100"
+                  : "text-black hover:text-black hover:bg-gray-100"
               }
             >
               <LayoutGrid className="w-4 h-4" />
