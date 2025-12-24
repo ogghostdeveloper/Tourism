@@ -1,0 +1,215 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { PaginatedDestinations, Destination } from "./schema";
+import * as db from "@/lib/data/destinations";
+import { auth } from "@/auth";
+import { uploadImage } from "@/lib/upload";
+
+export async function getDestinations(
+  page: number = 1,
+  pageSize: number = 10
+): Promise<PaginatedDestinations> {
+  try {
+    const data = await db.listDestinations(page, pageSize);
+    return data as PaginatedDestinations;
+  } catch (error) {
+    console.error("Error fetching destinations:", error);
+    return {
+      items: [],
+      page: 1,
+      page_size: pageSize,
+      total_pages: 0,
+      has_next: false,
+      has_prev: false,
+    };
+  }
+}
+
+export async function getDestinationBySlug(slug: string): Promise<Destination | null> {
+  try {
+    const destination = await db.getDestinationBySlug(slug);
+    return destination as Destination | null;
+  } catch (error) {
+    console.error("Error fetching destination:", error);
+    return null;
+  }
+}
+
+export async function getAllDestinations() {
+  try {
+    const destinations = await db.getAllDestinations();
+    return destinations;
+  } catch (error) {
+    console.error("Error fetching all destinations:", error);
+    return [];
+  }
+}
+
+export async function createDestination(prevState: any, formData: FormData) {
+  const session = await auth();
+  if (!session) {
+    return { success: false, message: "Unauthorized" };
+  }
+
+  try {
+    const name = formData.get("name") as string;
+    const slug = formData.get("slug") as string;
+    const region = formData.get("region") as string;
+    const description = formData.get("description") as string;
+    const highlightsStr = formData.get("highlights") as string;
+    const highlights = highlightsStr ? highlightsStr.split("\n").filter(h => h.trim()) : [];
+
+    const latStr = formData.get("latitude") as string;
+    const lngStr = formData.get("longitude") as string;
+    const latitude = latStr ? parseFloat(latStr) : undefined;
+    const longitude = lngStr ? parseFloat(lngStr) : undefined;
+
+    const experiencesStr = formData.get("experiences") as string;
+    const experiences = JSON.parse(experiencesStr || "[]");
+
+    const hotelsStr = formData.get("hotels") as string;
+    const hotels = JSON.parse(hotelsStr || "[]");
+
+    const topExperienceSlug = formData.get("topExperienceSlug") as string;
+
+    const imageInput = formData.get("image");
+    let imageUrl = "https://images.unsplash.com/photo-1578500263628-936ddec022cf";
+
+    if (imageInput instanceof File && imageInput.size > 0) {
+      const uploadedPath = await uploadImage(imageInput);
+      if (uploadedPath) {
+        imageUrl = uploadedPath;
+      }
+    }
+
+    const destinationData: any = {
+      name,
+      slug,
+      region,
+      description,
+      highlights,
+      experiences,
+      hotels,
+      topExperienceSlug,
+      image: imageUrl,
+    };
+
+    if (latitude !== undefined && longitude !== undefined && !isNaN(latitude) && !isNaN(longitude)) {
+      destinationData.coordinates = [latitude, longitude];
+    }
+
+    await db.createDestination(destinationData);
+
+    revalidatePath("/admin/destinations");
+
+    return {
+      success: true,
+      message: "Destination created successfully",
+    };
+  } catch (error) {
+    console.error("Error creating destination:", error);
+    return {
+      success: false,
+      message: "Failed to create destination",
+    };
+  }
+}
+
+export async function updateDestination(
+  slug: string,
+  prevState: any,
+  formData: FormData
+) {
+  const session = await auth();
+  if (!session) {
+    return { success: false, message: "Unauthorized" };
+  }
+
+  try {
+    const name = formData.get("name") as string;
+    const region = formData.get("region") as string;
+    const description = formData.get("description") as string;
+    const highlightsStr = formData.get("highlights") as string;
+    const highlights = highlightsStr ? highlightsStr.split("\n").filter(h => h.trim()) : [];
+
+    const latStr = formData.get("latitude") as string;
+    const lngStr = formData.get("longitude") as string;
+    const latitude = latStr ? parseFloat(latStr) : undefined;
+    const longitude = lngStr ? parseFloat(lngStr) : undefined;
+
+    const experiencesStr = formData.get("experiences") as string;
+    const experiences = JSON.parse(experiencesStr || "[]");
+
+    const hotelsStr = formData.get("hotels") as string;
+    const hotels = JSON.parse(hotelsStr || "[]");
+
+    const topExperienceSlug = formData.get("topExperienceSlug") as string;
+
+    const imageInput = formData.get("image");
+    const existingDestination = await db.getDestinationBySlug(slug);
+    let imageUrl = existingDestination?.image || "https://images.unsplash.com/photo-1578500263628-936ddec022cf";
+
+    if (imageInput instanceof File && imageInput.size > 0) {
+      const uploadedPath = await uploadImage(imageInput);
+      if (uploadedPath) {
+        imageUrl = uploadedPath;
+      }
+    }
+
+    const destinationData: any = {
+      name,
+      region,
+      description,
+      highlights,
+      experiences,
+      hotels,
+      topExperienceSlug,
+      image: imageUrl,
+    };
+
+    if (latitude !== undefined && longitude !== undefined && !isNaN(latitude) && !isNaN(longitude)) {
+      destinationData.coordinates = [latitude, longitude];
+    }
+
+    await db.updateDestination(slug, destinationData);
+
+    revalidatePath("/admin/destinations");
+    revalidatePath(`/admin/destinations/${slug}/edit`);
+
+    return {
+      success: true,
+      message: "Destination updated successfully",
+    };
+  } catch (error) {
+    console.error("Error updating destination:", error);
+    return {
+      success: false,
+      message: "Failed to update destination",
+    };
+  }
+}
+
+export async function deleteDestination(slug: string) {
+  const session = await auth();
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  try {
+    await db.deleteDestination(slug);
+    revalidatePath("/admin/destinations");
+
+    return {
+      success: true,
+      message: "Destination deleted successfully",
+    };
+  } catch (error) {
+    console.error("Error deleting destination:", error);
+    return {
+      success: false,
+      message: "Failed to delete destination",
+    };
+  }
+}
+

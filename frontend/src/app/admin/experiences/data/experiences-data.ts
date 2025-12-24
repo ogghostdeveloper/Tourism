@@ -1,0 +1,92 @@
+export const experiencesData = [
+  {
+    slug: "wellness",
+    title: "Wellness & Rejuvenation",
+    category: "Relaxation",
+    description: "Bhutan is a sanctuary for the soul. Immerse yourself in traditional healing practices, from hot stone baths to meditation retreats in serene monasteries. Our wellness journeys are designed to restore balance to your mind, body, and spirit.",
+    image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=2940&auto=format&fit=crop",
+    coordinates: [27.4728, 89.6393] as [number, number],
+    destinationSlug: "thimphu",
+    destinations: ["thimphu"],
+    gallery: [
+      "https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=2940&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600334129128-685c5426d605?q=80&w=2940&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2931&auto=format&fit=crop"
+    ],
+    createdAt: "2024-12-01T10:00:00Z",
+    updatedAt: "2024-12-10T15:30:00Z",
+  },
+  {
+    slug: "festivals",
+    title: "Festivals & Culture",
+    category: "Culture",
+    description: "Experience the vibrant heartbeat of Bhutan through its Tshechus. Witness masked dances, receive blessings, and join locals in celebrating their rich heritage. These festivals are a riot of color and spiritual energy.",
+    image: "https://images.unsplash.com/photo-1605649988358-3cc42c676451?q=80&w=2940&auto=format&fit=crop",
+    coordinates: [27.5921, 90.4183] as [number, number],
+    destinationSlug: "bumthang",
+    destinations: ["bumthang"],
+    gallery: [
+      "https://images.unsplash.com/photo-1580133318324-f2f76d44503b?q=80&w=2835&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1563297129-e33719b33a7e?q=80&w=2940&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1620037169426-34d283626786?q=80&w=2938&auto=format&fit=crop"
+    ],
+    createdAt: "2024-12-02T10:00:00Z",
+    updatedAt: "2024-12-11T12:00:00Z",
+  },
+  {
+    slug: "nature",
+    title: "Nature & Wildlife",
+    category: "Nature",
+    description: "As the world's only carbon-negative country, Bhutan offers untouched landscapes. Explore pristine forests, spot rare wildlife like the black-necked crane, and breathe the purest air in the Himalayas.",
+    image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=2940&auto=format&fit=crop",
+    duration: "Full Day",
+    difficulty: "Easy" as const,
+    coordinates: [27.4526, 90.1917] as [number, number],
+    destinationSlug: "gangtey",
+    destinations: ["gangtey"],
+    gallery: [
+      "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?q=80&w=2940&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1472396961693-142e62a81e00?q=80&w=2894&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2940&auto=format&fit=crop"
+    ],
+    createdAt: "2024-12-03T10:00:00Z",
+    updatedAt: "2024-12-12T09:45:00Z",
+  },
+  {
+    slug: "tiger-nest-hike",
+    title: "Hike to Tiger's Nest",
+    category: "Adventure",
+    description: "A pilgrimage to the most sacred site in Bhutan, perched on a cliff 900 meters above the Paro valley.",
+    image: "https://images.unsplash.com/photo-1620037169426-34d283626786?q=80&w=2938&auto=format&fit=crop",
+    duration: "5 Hours",
+    difficulty: "Moderate" as const,
+    coordinates: [27.4919, 89.3635] as [number, number],
+    destinationSlug: "paro",
+    destinations: ["paro"],
+    gallery: [
+      "https://images.unsplash.com/photo-1589139268846-5e5d1668e14d?q=80&w=2940&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1428515613728-6b4607e44363?q=80&w=2940&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=2984&auto=format&fit=crop"
+    ],
+    createdAt: "2024-12-04T10:00:00Z",
+    updatedAt: "2024-12-13T14:20:00Z",
+  },
+  {
+    slug: "rafting",
+    title: "River Rafting Adventure",
+    category: "Adventure",
+    description: "Experience thrilling white-water rafting on the pristine rivers of Bhutan, surrounded by stunning mountain scenery.",
+    image: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=2940&auto=format&fit=crop",
+    duration: "Half Day",
+    difficulty: "Moderate" as const,
+    coordinates: [27.5921, 89.8797] as [number, number],
+    destinationSlug: "punakha",
+    destinations: ["punakha"],
+    gallery: [
+      "https://images.unsplash.com/photo-1464278533981-50106e6176b1?q=80&w=2874&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=2940&auto=format&fit=crop"
+    ],
+    createdAt: "2024-12-05T10:00:00Z",
+    updatedAt: "2024-12-14T11:15:00Z",
+  },
+];
