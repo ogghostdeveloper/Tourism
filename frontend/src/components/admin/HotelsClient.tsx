@@ -26,7 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { HotelCard } from "@/components/admin/HotelCard";
 import { Pagination } from "@/components/admin/Pagination";
-import { Hotel } from "@/lib/data/packages";
+import { Hotel } from "@/app/(website)/hotels/schema";
 
 interface HotelsClientProps {
   hotels: Hotel[];
@@ -159,9 +159,6 @@ export function HotelsClient({ hotels }: HotelsClientProps) {
                         <div className="font-medium text-black text-sm">
                           {hotel.name}
                         </div>
-                        <div className="text-xs text-gray-500 mt-0.5">
-                          {hotel.slug}
-                        </div>
                       </div>
                     </div>
                   </TableCell>
@@ -175,14 +172,14 @@ export function HotelsClient({ hotels }: HotelsClientProps) {
                   </TableCell>
                   <TableCell className="py-4">
                     <span className="bg-gray-100 px-2.5 py-1 text-xs text-gray-700 font-medium border border-gray-200">
-                      {hotel.category}
+                      {hotel.destinationSlug}
                     </span>
                   </TableCell>
                   <TableCell className="py-4">
                     <div className="flex items-center gap-1.5 text-gray-600">
                       <DollarSign className="w-3.5 h-3.5" />
                       <span className="text-sm font-medium">
-                        {hotel.pricePerNight}
+                        {hotel.priceRange}
                       </span>
                     </div>
                   </TableCell>

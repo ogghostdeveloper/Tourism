@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const experienceSchema = z.object({
+  _id: z.string().optional(),
   slug: z.string(),
   title: z.string(),
   category: z.string(),

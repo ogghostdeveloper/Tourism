@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const destinationSchema = z.object({
+  _id: z.string().optional(),
   slug: z.string(),
   name: z.string(),
   description: z.string(),

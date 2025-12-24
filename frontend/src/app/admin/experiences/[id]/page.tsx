@@ -3,8 +3,8 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Pencil, Clock, Mountain } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import ExperienceMap from "@/components/experiences/ExperienceMap";
-import ExperienceGallery from "@/components/experiences/ExperienceGallery";
+import { ExperienceMap } from "@/app/(website)/experiences/[slug]/components/ExperienceMap";
+import { ExperienceGallery } from "@/app/(website)/experiences/[slug]/components/ExperienceGallery";
 
 interface PageProps {
   params: { id: string };
@@ -122,7 +122,7 @@ export default async function ExperienceViewPage({
 
       {/* Gallery Section */}
       {experience.gallery && experience.gallery.length > 0 && (
-        <ExperienceGallery images={experience.gallery} />
+        <ExperienceGallery experience={experience} />
       )}
     </div>
   );

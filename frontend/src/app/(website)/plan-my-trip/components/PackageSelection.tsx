@@ -4,49 +4,14 @@ import { motion } from "framer-motion";
 import { ArrowRight, Check } from "lucide-react";
 import Link from "next/link";
 
+import { Tour } from "../../tours/schema";
+
 interface PackageSelectionProps {
+    packages: Tour[];
     onBack: () => void;
 }
 
-export function PackageSelection({ onBack }: PackageSelectionProps) {
-    const packages = [
-        {
-            id: "1",
-            name: "Cultural Immersion",
-            duration: "7 Days",
-            price: "From $4,500 pp",
-            image: "https://loremflickr.com/1200/800/bhutan,culture?random=30",
-            description: "A deep descent into the heart of Bhutanese heritage, weaving through ancient dzongs and hidden valley traditions.",
-            highlights: ["Sacred Festival access", "Private Monastery rituals", "Artisan textile workshops"]
-        },
-        {
-            id: "2",
-            name: "Adventure Seeker",
-            duration: "10 Days",
-            price: "From $6,800 pp",
-            image: "https://loremflickr.com/1200/800/trekking,mountains?random=31",
-            description: "Ascend the high Himalayan passes and traverse untamed landscapes where the air is thin and the spirits are high.",
-            highlights: ["Bespoke Alpine treks", "River canyon rafting", "Himalayan Ridge biking"]
-        },
-        {
-            id: "3",
-            name: "Wellness & Rejuvenation",
-            duration: "5 Days",
-            price: "From $3,200 pp",
-            image: "https://loremflickr.com/1200/800/spa,wellness?random=32",
-            description: "A sanctuary for the soul. Restore your inner balance with traditional healing and meditative silence.",
-            highlights: ["Ancestral Hot Stone baths", "Sunrise meditation sessions", "Forest therapy immersion"]
-        },
-        {
-            id: "4",
-            name: "Luxury Escape",
-            duration: "12 Days",
-            price: "From $15,000 pp",
-            image: "https://loremflickr.com/1200/800/luxury,resort?random=33",
-            description: "The ultimate indulgence. Experience the Kingdom through the eyes of royalty in total seclusion and comfort.",
-            highlights: ["Six Senses & Amankora stays", "Private Helicopter sky-tours", "Royal household dinning"]
-        }
-    ];
+export function PackageSelection({ packages, onBack }: PackageSelectionProps) {
 
     return (
         <motion.div
@@ -76,7 +41,7 @@ export function PackageSelection({ onBack }: PackageSelectionProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
                 {packages.map((pkg, index) => (
                     <motion.div
-                        key={pkg.id}
+                        key={pkg._id || index}
                         initial={{ opacity: 0, y: 40 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
@@ -86,7 +51,7 @@ export function PackageSelection({ onBack }: PackageSelectionProps) {
                         <div className="relative aspect-3/2 overflow-hidden mb-8">
                             <img
                                 src={pkg.image}
-                                alt={pkg.name}
+                                alt={pkg.title}
                                 className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105"
                             />
                             <div className="absolute inset-x-0 bottom-0 p-8 flex justify-between items-end bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -96,7 +61,7 @@ export function PackageSelection({ onBack }: PackageSelectionProps) {
 
                         <div className="space-y-6">
                             <div className="flex justify-between items-start">
-                                <h3 className="text-3xl font-light tracking-tighter uppercase">{pkg.name}</h3>
+                                <h3 className="text-3xl font-light tracking-tighter uppercase">{pkg.title}</h3>
                                 <span className="text-amber-600 font-mono text-xs font-bold tracking-widest">{pkg.price}</span>
                             </div>
 
@@ -105,7 +70,7 @@ export function PackageSelection({ onBack }: PackageSelectionProps) {
                             </p>
 
                             <div className="flex flex-wrap gap-x-8 gap-y-4 pt-4">
-                                {pkg.highlights.map((highlight, i) => (
+                                {pkg.highlights?.slice(0, 3).map((highlight, i) => (
                                     <div key={i} className="flex items-center gap-3">
                                         <div className="w-1.5 h-1.5 bg-amber-600 rounded-full" />
                                         <span className="text-[10px] font-bold uppercase tracking-widest text-black/60">{highlight}</span>

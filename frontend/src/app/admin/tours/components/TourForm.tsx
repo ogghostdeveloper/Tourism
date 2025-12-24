@@ -31,7 +31,7 @@ export function TourForm({ initialData }: TourFormProps) {
         formState: { errors },
         setValue,
         watch,
-    } = useForm<Tour>({
+    } = useForm({
         resolver: zodResolver(tourSchema),
         defaultValues: initialData || {
             title: "",

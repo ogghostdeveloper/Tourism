@@ -5,11 +5,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ChevronDown, MapPin, Sparkles, Hotel } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+import { Destination } from "../../destinations/schema";
+import { Experience } from "../../experiences/schema";
+
 interface CustomItineraryBuilderProps {
+    experiences: Experience[];
+    destinations: Destination[];
     onBack: () => void;
 }
 
-export function CustomItineraryBuilder({ onBack }: CustomItineraryBuilderProps) {
+export function CustomItineraryBuilder({ experiences, destinations, onBack }: CustomItineraryBuilderProps) {
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({
         duration: "",
@@ -21,22 +26,6 @@ export function CustomItineraryBuilder({ onBack }: CustomItineraryBuilderProps) 
         specialRequests: ""
     });
 
-    const experienceOptions = [
-        { id: "wellness", name: "Wellness & Spa", icon: "🧘" },
-        { id: "culture", name: "Culture & Festivals", icon: "🎭" },
-        { id: "adventure", name: "Adventure & Trekking", icon: "⛰️" },
-        { id: "nature", name: "Nature & Wildlife", icon: "🦅" },
-        { id: "spiritual", name: "Spiritual Journey", icon: "🙏" },
-        { id: "luxury", name: "Luxury Experiences", icon: "✨" }
-    ];
-
-    const destinationOptions = [
-        { id: "paro", name: "Paro", description: "Tiger's Nest & Historic Valley" },
-        { id: "thimphu", name: "Thimphu", description: "The Cosmopolitan Capital" },
-        { id: "punakha", name: "Punakha", description: "The Subtropical Ancient Capital" },
-        { id: "bumthang", name: "Bumthang", description: "Spiritual Heartland & Valleys" },
-        { id: "gangtey", name: "Gangtey", description: "The Valley of Black-Necked Cranes" }
-    ];
 
     const hotelCategories = [
         { id: "ultra", name: "Ultra Luxury", price: "$1,500+ /night", detail: "Aman, Six Senses, Como" },
@@ -199,19 +188,21 @@ export function CustomItineraryBuilder({ onBack }: CustomItineraryBuilderProps) 
                         >
                             <h3 className="text-3xl font-light tracking-tighter uppercase text-center italic font-serif">Select Your Essence</h3>
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                                {experienceOptions.map((exp) => (
+                                {experiences.map((exp) => (
                                     <button
-                                        key={exp.id}
-                                        onClick={() => toggleSelection("experiences", exp.id)}
+                                        key={exp._id || exp.slug}
+                                        onClick={() => toggleSelection("experiences", exp._id || exp.slug)}
                                         className={cn(
                                             "p-8 border transition-all duration-700 text-center flex flex-col items-center gap-4 hover:border-amber-600",
-                                            formData.experiences.includes(exp.id)
+                                            formData.experiences.includes(exp._id || exp.slug)
                                                 ? "bg-black border-black text-white"
                                                 : "bg-white border-black/5 text-gray-400"
                                         )}
                                     >
-                                        <span className="text-4xl filter grayscale group-hover:grayscale-0">{exp.icon}</span>
-                                        <span className="text-[9px] font-bold uppercase tracking-widest">{exp.name}</span>
+                                        <div className="w-16 h-16 relative overflow-hidden rounded-full mb-2">
+                                            <img src={exp.image} alt={exp.title} className="w-full h-full object-cover" />
+                                        </div>
+                                        <span className="text-[9px] font-bold uppercase tracking-widest">{exp.title}</span>
                                     </button>
                                 ))}
                             </div>
@@ -229,18 +220,18 @@ export function CustomItineraryBuilder({ onBack }: CustomItineraryBuilderProps) 
                         >
                             <h3 className="text-3xl font-light tracking-tighter uppercase text-center italic font-serif">Choose Your Terrain</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {destinationOptions.map((dest) => (
+                                {destinations.map((dest) => (
                                     <button
-                                        key={dest.id}
-                                        onClick={() => toggleSelection("destinations", dest.id)}
+                                        key={dest._id || dest.slug}
+                                        onClick={() => toggleSelection("destinations", dest._id || dest.slug)}
                                         className={cn(
                                             "p-10 border transition-all duration-700 text-left relative overflow-hidden group hover:border-amber-600",
-                                            formData.destinations.includes(dest.id)
+                                            formData.destinations.includes(dest._id || dest.slug)
                                                 ? "bg-black border-black text-white shadow-xl"
                                                 : "bg-white border-black/5 text-gray-500"
                                         )}
                                     >
-                                        <MapPin className={cn("w-6 h-6 mb-4", formData.destinations.includes(dest.id) ? "text-amber-600" : "text-black/10")} />
+                                        <MapPin className={cn("w-6 h-6 mb-4", formData.destinations.includes(dest._id || dest.slug) ? "text-amber-600" : "text-black/10")} />
                                         <h4 className="text-xl font-light tracking-tight mb-2 uppercase">{dest.name}</h4>
                                         <p className="text-[10px] font-light leading-relaxed tracking-widest uppercase opacity-60 italic">{dest.description}</p>
                                     </button>
