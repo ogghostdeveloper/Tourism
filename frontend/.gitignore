@@ -43,3 +43,5 @@ next-env.d.ts
 # uploads directory (outside public for production compatibility)
 /uploads/*
 !/uploads/.gitkeep
+# Large video files - should be hosted on CDN
+public/videos/*.mp4
