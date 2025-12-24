@@ -44,7 +44,7 @@ export function ExperienceHero({
 
     const dateRange = formatDateRange(startDate, endDate);
     return (
-        <div className="h-[90vh] relative overflow-hidden bg-white">
+        <div className="h-screen relative overflow-hidden bg-white">
             {/* Background Image with Color Reveal */}
             <motion.div
                 initial={{ scale: 1.2, opacity: 0 }}
@@ -94,50 +94,72 @@ export function ExperienceHero({
                     </motion.span>
                     <h1 className="text-7xl md:text-[10rem] font-light tracking-tighter leading-none mb-12 uppercase drop-shadow-2xl">
                         {title.split(' ').map((word, i) => (
-                            <span key={i} className={i % 2 !== 0 ? "italic font-serif normal-case text-amber-100" : "text-white"}>
+                            <span key={i} className={i % 2 !== 0 ? "italic font-serif normal-case text-amber-500" : "text-white"}>
                                 {word}{' '}
                             </span>
                         ))}
                     </h1>
 
-                    <div className="flex flex-wrap items-center justify-center gap-12 mt-12 bg-black/20 backdrop-blur-md border border-white/5 p-8 rounded-sm">
+                    <div className={`
+                        flex flex-wrap items-center justify-center gap-8 md:gap-16 mt-12 
+                        ${category?.toLowerCase() === 'festival' ? 'bg-black/50 border-amber-500/40 shadow-2xl' : 'bg-black/30 border-white/10'} 
+                        backdrop-blur-2xl border p-10 md:p-12 rounded-sm transition-all duration-700
+                    `}>
                         {duration && (
-                            <div className="flex items-center gap-4 group">
-                                <div className="w-10 h-10 rounded-full border border-amber-500/20 flex items-center justify-center group-hover:border-amber-500 transition-colors">
-                                    <Clock className="w-4 h-4 text-amber-500" />
+                            <div className="flex items-center gap-6 group">
+                                <div className={`
+                                    w-14 h-14 rounded-full border flex items-center justify-center transition-all duration-500
+                                    ${category?.toLowerCase() === 'festival' ? 'border-amber-500/40 bg-amber-500/10' : 'border-white/10 bg-white/5'}
+                                    group-hover:border-amber-500/60
+                                `}>
+                                    <Clock className="w-6 h-6 text-amber-500" />
                                 </div>
                                 <div className="text-left">
-                                    <span className="block font-mono text-[8px] text-gray-500 uppercase tracking-widest">Duration</span>
-                                    <span className="font-light tracking-widest text-sm uppercase">{duration}</span>
+                                    <span className="block font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-1">Duration</span>
+                                    <span className="font-light tracking-widest text-lg md:text-xl uppercase text-white">{duration}</span>
                                 </div>
                             </div>
                         )}
 
-                        {(category === "Culture" || category === "Festival" || dateRange) && dateRange && (
+                        {(category?.toLowerCase() === "culture" || category?.toLowerCase() === "festival" || dateRange) && dateRange && (
                             <>
-                                <div className="h-12 w-px bg-white/10 hidden md:block" />
-                                <div className="flex items-center gap-4 group">
-                                    <div className="w-10 h-10 rounded-full border border-amber-500/20 flex items-center justify-center group-hover:border-amber-500 transition-colors">
-                                        <Calendar className="w-4 h-4 text-amber-500" />
+                                <div className="h-16 w-px bg-white/10 hidden md:block" />
+                                <div className="flex items-center gap-6 group">
+                                    <div className={`
+                                        w-14 h-14 rounded-full border flex items-center justify-center transition-all duration-500
+                                        ${category?.toLowerCase() === 'festival' ? 'border-amber-500 bg-amber-500/30 scale-110 shadow-[0_0_20px_rgba(251,191,36,0.3)]' : 'border-white/10 bg-white/5'}
+                                        group-hover:border-amber-500/60
+                                    `}>
+                                        <Calendar className="w-6 h-6 text-amber-500" />
                                     </div>
                                     <div className="text-left">
-                                        <span className="block font-mono text-[8px] text-gray-500 uppercase tracking-widest">Event Dates</span>
-                                        <span className="font-light tracking-widest text-sm uppercase text-amber-100">{dateRange}</span>
+                                        <span className={`
+                                            block font-mono text-[10px] uppercase tracking-widest mb-1
+                                            ${category?.toLowerCase() === 'festival' ? 'text-amber-500' : 'text-gray-400'}
+                                        `}>Event Dates</span>
+                                        <span className={`
+                                            font-light tracking-widest text-lg md:text-xl uppercase
+                                            ${category?.toLowerCase() === 'festival' ? 'text-amber-400 font-semibold' : 'text-amber-100'}
+                                        `}>{dateRange}</span>
                                     </div>
                                 </div>
                             </>
                         )}
 
-                        <div className="h-12 w-px bg-white/10 hidden md:block" />
+                        <div className="h-16 w-px bg-white/10 hidden md:block" />
 
                         {difficulty && (
-                            <div className="flex items-center gap-4 group">
-                                <div className="w-10 h-10 rounded-full border border-amber-500/20 flex items-center justify-center group-hover:border-amber-500 transition-colors">
-                                    <Mountain className="w-4 h-4 text-amber-500" />
+                            <div className="flex items-center gap-6 group">
+                                <div className={`
+                                    w-14 h-14 rounded-full border flex items-center justify-center transition-all duration-500
+                                    ${category?.toLowerCase() === 'festival' ? 'border-amber-500/40 bg-amber-500/10' : 'border-white/10 bg-white/5'}
+                                    group-hover:border-amber-500/60
+                                `}>
+                                    <Mountain className="w-6 h-6 text-amber-500" />
                                 </div>
                                 <div className="text-left">
-                                    <span className="block font-mono text-[8px] text-gray-500 uppercase tracking-widest">Intensity</span>
-                                    <span className="font-light tracking-widest text-sm uppercase">{difficulty}</span>
+                                    <span className="block font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-1">Intensity</span>
+                                    <span className="font-light tracking-widest text-lg md:text-xl uppercase text-white">{difficulty}</span>
                                 </div>
                             </div>
                         )}

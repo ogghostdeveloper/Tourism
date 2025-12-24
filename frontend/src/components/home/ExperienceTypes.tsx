@@ -31,7 +31,7 @@ export function ExperienceTypes() {
                 // curate your experience
                         </span>
                         <h2 className="text-5xl md:text-7xl font-light text-black tracking-tighter leading-tight uppercase">
-                            Experience <span className="italic font-serif normal-case">Types</span>
+                            Experience <span className="italic font-serif normal-case text-amber-600">Types</span>
                         </h2>
                     </motion.div>
 
@@ -73,8 +73,6 @@ export function ExperienceTypes() {
                                             alt={experience.title}
                                             className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                                         />
-                                        {/* Removed opacity overlay */}
-                                        <div className="absolute inset-0 bg-linear-to-t from-white via-white/20 to-transparent opacity-80 group-hover:opacity-40 transition-opacity duration-700" />
 
                                         <div className="absolute top-6 left-6 right-6 flex justify-between items-start">
                                             <span className="bg-white/80 backdrop-blur-md px-3 py-1 font-mono text-[9px] tracking-widest border border-black/10 text-black">

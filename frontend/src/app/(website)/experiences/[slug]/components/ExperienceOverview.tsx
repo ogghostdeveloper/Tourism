@@ -25,7 +25,7 @@ export function ExperienceOverview({
                     // experience overview
                 </span>
                 <h2 className="text-5xl md:text-7xl font-light tracking-tighter leading-tight mb-12 uppercase">
-                    The <span className="italic font-serif normal-case">Essence</span> <br />of {title}
+                    The <span className="italic font-serif normal-case text-amber-600">Essence</span> <br />of {title}
                 </h2>
                 <div className="relative pl-8 border-l border-black/10">
                     <p className="text-xl text-gray-500 leading-relaxed font-light italic">

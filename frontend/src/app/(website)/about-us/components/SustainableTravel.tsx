@@ -9,26 +9,28 @@ interface SustainableTravelProps {
 
 export function SustainableTravel({ items }: SustainableTravelProps) {
   return (
-    <section className="py-24 bg-white">
-      <div className="container mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h3 className="text-sm font-bold tracking-[0.2em] uppercase text-gray-500 mb-4">
-            Sustainability
-          </h3>
-          <h2 className="text-4xl md:text-5xl font-light text-black mb-8">
-            Committed to Sustainable Travel
+    <section className="py-40 bg-neutral-900 text-white relative overflow-hidden">
+      {/* Background Glow */}
+      <div className="absolute bottom-0 left-0 w-full h-[50vh] bg-linear-to-t from-amber-500/10 to-transparent pointer-events-none" />
+
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="text-center mb-32">
+          <motion.span
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="block font-mono text-amber-500 text-xs uppercase tracking-[0.5em] mb-6"
+          >
+            // philosophical framework
+          </motion.span>
+          <h2 className="text-5xl md:text-8xl font-light tracking-tighter uppercase leading-tight mb-8">
+            Conservation <span className="italic font-serif normal-case text-amber-500">Protocol</span>
           </h2>
-          <p className="max-w-3xl mx-auto text-gray-700 leading-relaxed">
-            Bhutan's approach to tourism is built on sustainability. We're proud
-            to uphold and enhance these principles in every journey we create.
+          <p className="max-w-3xl mx-auto text-xl text-gray-400 font-light leading-relaxed italic">
+            "Bhutan's approach to tourism is built on sustainability. We're proud
+            to uphold and enhance these principles in every journey we create."
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {items.map((item, index) => (
@@ -37,20 +39,23 @@ export function SustainableTravel({ items }: SustainableTravelProps) {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="text-center"
+              transition={{ duration: 1, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="group relative p-10 border border-white/5 bg-white/2 hover:border-amber-500/30 transition-all duration-700"
             >
-              <div className="mb-6">
-                <div className="w-16 h-16 bg-black rounded-full mx-auto flex items-center justify-center text-white text-2xl font-light">
-                  {item.order}
-                </div>
+              <div className="mb-10 flex items-center justify-between">
+                <div className="font-mono text-[10px] text-amber-500/40">REF: 00{item.order}</div>
+                <div className="w-1.5 h-1.5 bg-amber-500 rounded-full group-hover:animate-ping opacity-20 group-hover:opacity-100" />
               </div>
-              <h4 className="text-xl font-light text-black mb-4">
+
+              <h4 className="text-2xl font-light text-white mb-6 uppercase tracking-tight group-hover:text-amber-500 transition-colors">
                 {item.title}
               </h4>
-              <p className="text-gray-600 leading-relaxed text-sm">
+              <p className="text-gray-400 leading-relaxed font-light text-sm group-hover:text-gray-200 transition-colors">
                 {item.description}
               </p>
+
+              {/* Decorative Line */}
+              <div className="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-white/5 to-transparent group-hover:via-amber-500/30 transition-all duration-700" />
             </motion.div>
           ))}
         </div>
@@ -58,3 +63,4 @@ export function SustainableTravel({ items }: SustainableTravelProps) {
     </section>
   );
 }
+

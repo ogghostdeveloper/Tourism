@@ -6,24 +6,27 @@ import { Experiences } from "@/components/home/Experiences";
 import { BestHotels } from "./components/BestHotels";
 import { FeaturedItinerary } from "@/components/home/FeaturedItinerary";
 import CallToAction from "@/components/shared/CallToAction";
-import { getFeaturedTour } from "./tours/actions";
-import { getBestHotels } from "./actions";
-
+import { getFeaturedTours } from "./tours/actions";
+import { getBestHotels } from "./hotels/actions";
 import { getFeaturedExperiences } from "./experiences/actions";
+import { getFeaturedDestinations } from "./destinations/actions";
+import { LuxuryBridge } from "./components/LuxuryBridge";
 
 export default async function Home() {
-  const featuredTour = await getFeaturedTour();
+  const featuredTours = await getFeaturedTours();
   const bestHotels = await getBestHotels(6);
-  const featuredExperiences = await getFeaturedExperiences(3);
+  const featuredExperiences = await getFeaturedExperiences(6);
+  const featuredDestinations = await getFeaturedDestinations(6);
 
   return (
     <div className="flex flex-col min-h-screen">
       <Hero />
-      <CompanyIntro />
-      <FeaturedItinerary itinerary={featuredTour} />
+      <LuxuryBridge />
+      <FeaturedItinerary itineraries={featuredTours.slice(0, 5)} />
       <ExperienceTypes />
-      <Destinations />
+      <Destinations destinations={featuredDestinations} />
       <Experiences experiences={featuredExperiences} />
+      <CompanyIntro />
       <BestHotels hotels={bestHotels} />
       <CallToAction />
     </div>

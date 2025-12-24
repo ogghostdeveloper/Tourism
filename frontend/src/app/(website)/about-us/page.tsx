@@ -67,14 +67,16 @@ export default async function AboutPage() {
   const whyBhutan = await getWhyBhutanItems();
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <main className="flex flex-col min-h-screen bg-white">
       <AboutHero hero={heroProps} />
-      <OurStory story={storyProps} />
-      <OurMission items={missionProps} />
-      <OurPurpose purpose={purposeProps} />
-      <SustainableTravel items={sustainabilityProps} />
-      <WhyBhutan items={whyBhutan} />
+      <div className="relative">
+        <OurStory story={storyProps} />
+        <OurMission items={missionProps} />
+        <OurPurpose purpose={purposeProps} />
+        <SustainableTravel items={sustainabilityProps} />
+        <WhyBhutan items={whyBhutan} />
+      </div>
       <CallToAction />
-    </div>
+    </main>
   );
 }

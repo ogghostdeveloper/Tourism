@@ -25,8 +25,8 @@ export function DayHero({ dayNumber, title, image, tourTitle }: DayHeroProps) {
                     className="w-full h-full object-cover saturate-[0.7] brightness-[1.05]"
                 />
                 {/* Cinematic Overlays - Light Theme */}
-                <div className="absolute inset-0 bg-linear-to-b from-white/40 via-transparent to-white/80" />
-                <div className="absolute inset-0 bg-linear-to-t from-white/60 via-transparent to-transparent opacity-80" />
+                <div className="absolute inset-0 bg-linear-to-b from-black/80 via-transparent to-white via-90%" />
+                <div className="absolute inset-0 bg-linear-to-tr from-amber-500/5 via-transparent to-blue-500/5 mix-blend-overlay" />
             </motion.div>
 
             <div className="container mx-auto px-6 h-full flex flex-col justify-end pb-24 relative z-10">
@@ -47,7 +47,7 @@ export function DayHero({ dayNumber, title, image, tourTitle }: DayHeroProps) {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1, delay: 0.7 }}
-                        className="text-6xl md:text-8xl font-light tracking-tighter leading-none mb-4 uppercase text-black"
+                        className="text-6xl md:text-8xl font-light tracking-tighter leading-none mb-4 uppercase text-white"
                     >
                         {title}
                     </motion.h1>
@@ -58,7 +58,7 @@ export function DayHero({ dayNumber, title, image, tourTitle }: DayHeroProps) {
                         transition={{ duration: 1, delay: 1 }}
                         className="flex items-center gap-4"
                     >
-                        <span className="font-mono text-[11px] text-gray-500 uppercase tracking-widest bg-black/5 px-4 py-1.5 rounded-full font-bold">
+                        <span className="font-mono text-[11px] text-white uppercase tracking-widest bg-black/5 px-4 py-1.5 rounded-full font-bold">
                             Route Sequence Verified
                         </span>
                     </motion.div>
@@ -67,7 +67,7 @@ export function DayHero({ dayNumber, title, image, tourTitle }: DayHeroProps) {
 
             {/* Decorative ID */}
             <div className="absolute top-48 right-12 hidden lg:block">
-                <span className="font-mono text-[10px] text-gray-400 uppercase tracking-[0.8em] writing-mode-vertical-rl rotate-180 opacity-70 font-bold">
+                <span className="font-mono text-[10px] text-white uppercase tracking-[0.8em] writing-mode-vertical-rl rotate-180 opacity-70 font-bold">
                     LOG // BHU-DAY-{dayNumber}
                 </span>
             </div>

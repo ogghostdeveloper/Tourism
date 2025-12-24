@@ -5,13 +5,23 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
-import { Experience } from "@/app/admin/experiences/schema";
+import { ExperienceCard } from "@/components/common/ExperienceCard";
+
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface ExperiencesProps {
-  experiences: Experience[];
+  experiences: any[]; // Use any or specific type if preferred
 }
 
 export function Experiences({ experiences }: ExperiencesProps) {
+  if (!experiences || experiences.length === 0) return null;
+
   return (
     <section className="py-40 bg-white text-black relative overflow-hidden border-t border-black/5">
       {/* Decorative Background Text */}
@@ -22,7 +32,7 @@ export function Experiences({ experiences }: ExperiencesProps) {
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="flex flex-col md:flex-row items-end justify-between mb-24 gap-8 border-b border-black/10 pb-12">
+        <div className="flex flex-col md:flex-row items-end justify-between mb-24 gap-8 pb-12">
           <div>
             <motion.span
               initial={{ opacity: 0, x: -20 }}
@@ -39,7 +49,7 @@ export function Experiences({ experiences }: ExperiencesProps) {
               transition={{ delay: 0.1 }}
               className="text-5xl md:text-7xl font-light tracking-tighter leading-tight"
             >
-              Curated <span className="italic font-serif">Experiences</span>
+              Curated <span className="italic font-serif normal-case text-amber-600">Experiences</span>
             </motion.h3>
           </div>
           <motion.div
@@ -58,75 +68,39 @@ export function Experiences({ experiences }: ExperiencesProps) {
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {experiences.map((exp, index) => (
-            <ExperienceCard key={index} exp={exp} index={index} />
-          ))}
-        </div>
+        <Carousel
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-8">
+            {experiences.map((exp, index) => (
+              <CarouselItem
+                key={index}
+                className="pl-8 md:basis-1/2 lg:basis-1/3"
+              >
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <ExperienceCard experience={exp} index={index} />
+                </motion.div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+
+          {/* Navigation Buttons below the carousel */}
+          <div className="flex justify-start gap-4 mt-16">
+            <CarouselPrevious className="static translate-y-0 h-14 w-14 bg-transparent hover:bg-black/5 text-black rounded-none border border-black/10 hover:border-black/30 transition-all" />
+            <CarouselNext className="static translate-y-0 h-14 w-14 bg-transparent hover:bg-black/5 text-black rounded-none border border-black/10 hover:border-black/30 transition-all" />
+          </div>
+        </Carousel>
       </div>
     </section>
-  );
-}
-
-function ExperienceCard({ exp, index }: { exp: Experience; index: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "center center"],
-  });
-
-  const overlayOpacity = useTransform(scrollYProgress, [0, 1], [0.6, 0]);
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-    >
-      <Link
-        href={`/experiences/${exp.slug}`}
-        className="group relative block h-[600px] overflow-hidden rounded-sm border border-black/5 bg-neutral-100"
-      >
-        <img
-          src={exp.image}
-          alt={exp.title}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-        />
-        {/* Scroll-based white overlay */}
-        <motion.div
-          style={{ opacity: overlayOpacity }}
-          className="absolute inset-0 bg-white z-10 pointer-events-none"
-        />
-
-        {/* Gradient overlay for text readability */}
-        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-60 transition-opacity duration-700 z-20" />
-
-        <div className="absolute inset-0 p-10 flex flex-col justify-between z-30">
-          <div className="flex justify-between items-start">
-            <span className="font-mono text-[9px] tracking-widest uppercase bg-white/80 backdrop-blur-md px-3 py-1 border border-black/10 text-black">
-              ID: EXP-0{index + 1}
-            </span>
-            <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-              <ArrowUpRight className="w-5 h-5 text-white" />
-            </div>
-          </div>
-
-          <div className="transform translate-y-4 transition-all duration-500 group-hover:translate-y-0">
-            <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-amber-500 mb-4 block">
-              {exp.category}
-            </span>
-            <h4 className="text-4xl font-light tracking-tighter text-white mb-6 group-hover:italic transition-all duration-500 drop-shadow-lg">
-              {exp.title}
-            </h4>
-            <p className="text-gray-200 text-sm font-light leading-relaxed line-clamp-3 italic opacity-0 group-hover:opacity-100 transition-all duration-700 delay-100 drop-shadow-md">
-              "{exp.description}"
-            </p>
-          </div>
-        </div>
-      </Link>
-    </motion.div>
   );
 }
 

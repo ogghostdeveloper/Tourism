@@ -6,7 +6,7 @@ import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { Experience } from "@/app/admin/experiences/schema";
 
-import { ExperienceCard } from "./ExperienceCard";
+import { ExperienceCard } from "@/components/common/ExperienceCard";
 
 interface ExperiencesClientProps {
     initialExperiences: Experience[];
@@ -97,9 +97,9 @@ export function ExperiencesClient({ initialExperiences }: ExperiencesClientProps
                         </p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-32">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-32">
                         {filteredExperiences.map((exp, index) => (
-                            <ExperienceCard key={exp.slug} exp={exp} index={index} />
+                            <ExperienceCard key={exp.slug} experience={exp} index={index} />
                         ))}
                     </div>
                 )}
