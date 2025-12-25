@@ -5,9 +5,10 @@ import { MissionItem } from "../schema";
 
 interface OurMissionProps {
   items: MissionItem[];
+  subtitle?: string;
 }
 
-export function OurMission({ items }: OurMissionProps) {
+export function OurMission({ items, subtitle }: OurMissionProps) {
   return (
     <section className="py-40 bg-neutral-950 text-white relative overflow-hidden">
       {/* Tactical Background Elements */}
@@ -24,7 +25,7 @@ export function OurMission({ items }: OurMissionProps) {
         <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8 pb-12 border-b border-white/5">
           <div className="max-w-2xl">
             <span className="font-mono text-amber-500 text-xs uppercase tracking-[0.5em] mb-4 block">
-              // strategic objectives
+              // {subtitle || "strategic objectives"}
             </span>
             <h2 className="text-5xl md:text-[6rem] font-light tracking-tighter uppercase leading-none">
               Mission <span className="italic font-serif normal-case text-amber-500">Parameters</span>

@@ -42,7 +42,7 @@ export function WhyBhutan({ items }: WhyBhutanProps) {
           >
             // unique identifiers
           </motion.span>
-          <h2 className="text-5xl md:text-7xl font-light tracking-tighter uppercase leading-tight">
+          <h2 className="text-5xl md:text-7xl font-light tracking-tighter uppercase leading-tight text-black">
             The Kingdom of <span className="italic font-serif normal-case text-amber-600">Happiness</span>
           </h2>
         </div>
@@ -61,7 +61,7 @@ export function WhyBhutan({ items }: WhyBhutanProps) {
               >
                 <div className="mb-10 relative">
                   <div className="w-16 h-16 border border-black/10 rounded-sm flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all duration-500">
-                    <IconComponent className="w-6 h-6" />
+                    <IconComponent className="w-6 h-6 text-black group-hover:text-white transition-colors delay-100" />
                   </div>
                   {/* Decorative Number */}
                   <span className="absolute -top-4 -right-4 font-mono text-[10px] text-black/10 group-hover:text-amber-600/20">#{index + 1}</span>

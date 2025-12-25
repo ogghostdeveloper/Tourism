@@ -69,7 +69,7 @@ export function AboutHero({ hero }: AboutHeroProps) {
           >
             <h1 className="text-7xl md:text-[10rem] font-light tracking-tighter leading-none mb-8 uppercase drop-shadow-2xl">
               {titleWords.map((word, i) => (
-                <span key={i} className={i % 2 !== 0 ? "italic font-serif normal-case text-amber-100" : "text-white"}>
+                <span key={i} className={i % 2 !== 0 ? "italic font-serif normal-case text-amber-500" : "text-white"}>
                   {word}{' '}
                 </span>
               ))}

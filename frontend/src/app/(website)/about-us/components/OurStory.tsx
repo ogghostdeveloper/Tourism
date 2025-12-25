@@ -29,7 +29,7 @@ export function OurStory({ story }: OurStoryProps) {
               // {story.subtitle || "Our Narrative"}
             </span>
 
-            <h2 className="text-5xl md:text-7xl font-light tracking-tighter leading-tight mb-12 uppercase">
+            <h2 className="text-5xl md:text-7xl font-light tracking-tighter leading-tight mb-12 uppercase text-black">
               {titleWords[0]} <span className="italic font-serif normal-case text-amber-600">{titleWords.slice(1).join(' ')}</span>
             </h2>
 
