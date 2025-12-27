@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { Pencil, Trash2, MapPin, DollarSign, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Hotel } from "@/lib/data/packages";
+import { Hotel } from "@/app/(website)/hotels/schema";
 
 interface HotelCardProps {
   hotel: Hotel;
@@ -35,11 +35,7 @@ export function HotelCard({ hotel }: HotelCardProps) {
 
       {/* Content Overlay */}
       <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent p-6 flex flex-col justify-end">
-        <div className="mb-2">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-white/70">
-            {hotel.category}
-          </span>
-        </div>
+
         <h3 className="text-xl font-light text-white mb-2">{hotel.name}</h3>
 
         <div className="flex flex-wrap gap-2 mt-1">
@@ -52,7 +48,7 @@ export function HotelCard({ hotel }: HotelCardProps) {
           <div className="flex items-center gap-1.5 text-white/70 border-l border-white/20 pl-2">
             <DollarSign className="w-3 h-3" />
             <span className="text-[10px] font-medium tracking-wide uppercase">
-              {hotel.pricePerNight}
+              {hotel.priceRange}
             </span>
           </div>
           <div className="flex items-center gap-1.5 text-white/70 border-l border-white/20 pl-2">

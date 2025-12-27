@@ -18,7 +18,7 @@ const menuItems = [
     { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
     { icon: MapPin, label: "Destinations", href: "/admin/destinations" },
     { icon: Compass, label: "Experiences", href: "/admin/experiences" },
-    { icon: Package, label: "Packages", href: "/admin/packages" },
+    { icon: Package, label: "Tours", href: "/admin/tours" },
     { icon: Hotel, label: "Hotels", href: "/admin/hotels" },
 ];
 

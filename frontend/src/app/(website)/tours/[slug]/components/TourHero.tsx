@@ -26,8 +26,8 @@ export function TourHero({ title, image, category, duration, price }: TourHeroPr
                     alt={title}
                     className="w-full h-full object-cover"
                 />
-                {/* Cinematic Overlays - Light Theme */}
-                <div className="absolute inset-0 bg-linear-to-b from-white/40 via-transparent to-white/80" />
+                <div className="absolute inset-0 bg-linear-to-b from-black/80 via-transparent to-white via-90%" />
+                <div className="absolute inset-0 bg-linear-to-tr from-amber-500/5 via-transparent to-blue-500/5 mix-blend-overlay" />
             </motion.div>
 
             {/* Decorative Elements */}
@@ -53,9 +53,9 @@ export function TourHero({ title, image, category, duration, price }: TourHeroPr
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1, delay: 0.7 }}
-                        className="text-7xl md:text-9xl font-light tracking-tighter leading-none mb-12 uppercase text-black"
+                        className="text-7xl md:text-9xl font-light tracking-tighter leading-none mb-12 uppercase text-white"
                     >
-                        The <span className="italic font-serif normal-case opacity-40">Journey</span> <br />
+                        The <span className="italic font-serif normal-case text-amber-500">Journey</span> <br />
                         Through {title}
                     </motion.h1>
 
@@ -67,20 +67,20 @@ export function TourHero({ title, image, category, duration, price }: TourHeroPr
                     >
                         {duration && (
                             <div className="flex flex-col gap-2">
-                                <span className="font-mono text-[10px] text-gray-500 uppercase tracking-widest font-bold">Duration</span>
+                                <span className="font-mono text-[10px] text-white uppercase tracking-widest font-bold">Duration</span>
                                 <div className="flex items-center gap-3">
                                     <Clock className="w-4 h-4 text-amber-600" />
-                                    <span className="text-xl font-light uppercase tracking-tight">{duration}</span>
+                                    <span className="text-xl font-light uppercase tracking-tight text-white">{duration}</span>
                                 </div>
                             </div>
                         )}
 
                         {price && (
                             <div className="flex flex-col gap-2">
-                                <span className="font-mono text-[10px] text-gray-500 uppercase tracking-widest font-bold">Pricing</span>
+                                <span className="font-mono text-[10px] text-white uppercase tracking-widest font-bold">Pricing</span>
                                 <div className="flex items-center gap-3">
                                     <Tag className="w-4 h-4 text-amber-600" />
-                                    <span className="text-xl font-light uppercase tracking-tight">{price}</span>
+                                    <span className="text-xl font-light uppercase tracking-tight text-white">{price}</span>
                                 </div>
                             </div>
                         )}

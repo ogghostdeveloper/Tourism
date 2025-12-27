@@ -10,18 +10,18 @@ interface DestinationHeroProps {
 
 export function DestinationHero({ name, image, region }: DestinationHeroProps) {
   return (
-    <div className="h-[90vh] relative overflow-hidden bg-white">
+    <div className="h-screen relative overflow-hidden bg-white">
       {/* Background Image with Color */}
       <motion.div
         initial={{ scale: 1.2, opacity: 0 }}
-        animate={{ scale: 1, opacity: 0.8 }}
+        animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
         className="absolute inset-0"
       >
         <img src={image} alt={name} className="w-full h-full object-cover" />
         {/* Cinematic Overlays */}
-        <div className="absolute inset-0 bg-linear-to-b from-black/60 via-transparent to-white" />
-        <div className="absolute inset-0 bg-linear-to-tr from-amber-500/10 via-transparent to-blue-500/10 mix-blend-overlay" />
+        <div className="absolute inset-0 bg-linear-to-b from-black/80 via-transparent to-white via-90%" />
+        <div className="absolute inset-0 bg-linear-to-tr from-amber-500/5 via-transparent to-blue-500/5 mix-blend-overlay" />
       </motion.div>
 
       {/* Animated Light Leak */}

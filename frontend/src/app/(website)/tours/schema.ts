@@ -22,6 +22,7 @@ export const tourDaySchema = z.object({
 
 // Main tour schema
 export const tourSchema = z.object({
+  _id: z.string().optional(),
   id: z.string(),
   slug: z.string(),
   title: z.string(),
@@ -29,7 +30,7 @@ export const tourSchema = z.object({
   image: z.string().url(),
   duration: z.string(),
   price: z.string(),
-  featured: z.boolean().default(false),
+  featured: z.boolean().optional(),
   category: z.string().optional(),
   highlights: z.array(z.string()).optional(),
   days: z.array(tourDaySchema),

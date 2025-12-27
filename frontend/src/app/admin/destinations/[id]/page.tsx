@@ -7,12 +7,12 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DestinationHero } from "@/components/destinations/DestinationHero";
-import { DestinationOverview } from "@/components/destinations/DestinationOverview";
-import { DestinationMap } from "@/components/destinations/DestinationMap";
-import { DestinationExperiences } from "@/components/destinations/DestinationExperiences";
-import { DestinationFestivals } from "@/components/destinations/DestinationFestivals";
-import { DestinationHotels } from "@/components/destinations/DestinationHotels";
+import { DestinationHero } from "@/app/(website)/destinations/[slug]/components/DestinationHero";
+import { DestinationOverview } from "@/app/(website)/destinations/[slug]/components/DestinationOverview";
+import { DestinationMap } from "@/app/(website)/destinations/[slug]/components/DestinationMap";
+import { DestinationExperiences } from "@/app/(website)/destinations/[slug]/components/DestinationExperiences";
+import { DestinationFestivals } from "@/app/(website)/destinations/[slug]/components/DestinationFestivals";
+import { DestinationHotels } from "@/app/(website)/destinations/[slug]/components/DestinationHotels";
 
 interface PageProps {
   params: { id: string };

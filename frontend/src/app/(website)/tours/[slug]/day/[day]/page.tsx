@@ -3,8 +3,10 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, BedDouble, MapPin, Camera, ShieldCheck, Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { DayHero } from "../../components/DayHero";
-import { ExperienceCard } from "../../components/ExperienceCard";
+import { ExperienceCard } from "@/components/common/ExperienceCard";
+import { TourCarousel } from "../../components/TourCarousel";
 import CallToAction from "@/components/shared/CallToAction";
+import { Tour } from "../../../schema";
 
 interface PageProps {
   params: Promise<{ slug: string; day: string }>;
@@ -37,7 +39,7 @@ export default async function TourDayPage({ params }: PageProps) {
       {/* Narrative & Protocol Controls */}
       <div className="container mx-auto px-6 py-24">
         {/* Superior Navigation */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-24 gap-8 pb-12 border-b border-black/5">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-24 gap-8 pb-12">
           <Link
             href={`/tours/${slug}`}
             className="group flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.4em] text-gray-500 hover:text-black transition-all font-bold"
@@ -88,7 +90,7 @@ export default async function TourDayPage({ params }: PageProps) {
                   // daily briefing log: 0{dayNumber}
                 </span>
                 <h2 className="text-5xl md:text-7xl font-light tracking-tighter leading-tight mb-12 uppercase">
-                  The <span className="italic font-serif normal-case opacity-40">Experience</span> <br />of {dayData.title}
+                  The <span className="italic font-serif normal-case text-amber-600">Experience</span> <br />of {dayData.title}
                 </h2>
                 <div className="relative pl-8 border-l border-black/10">
                   <p className="text-2xl text-gray-600 leading-relaxed font-light italic">
@@ -123,7 +125,7 @@ export default async function TourDayPage({ params }: PageProps) {
                       <MapPin className="w-4 h-4" /> [ Strategic Objectives ]
                     </h4>
                     <ul className="space-y-6">
-                      {dayData.activities.map((activity, index) => (
+                      {dayData.activities.map((activity: string, index: number) => (
                         <li key={index} className="flex items-start gap-4 group/item">
                           <span className="font-mono text-[10px] text-gray-300 mt-1">[0{index + 1}]</span>
                           <p className="text-gray-500 leading-relaxed font-light italic group-hover/item:text-black transition-colors duration-300">
@@ -141,7 +143,7 @@ export default async function TourDayPage({ params }: PageProps) {
                       <Camera className="w-4 h-4" /> [ Visual Records ]
                     </h4>
                     <div className="flex flex-wrap gap-4">
-                      {dayData.highlights.map((highlight, index) => (
+                      {dayData.highlights.map((highlight: string, index: number) => (
                         <div
                           key={index}
                           className="px-6 py-2 bg-black text-white font-mono text-[10px] uppercase tracking-[0.3em] flex items-center gap-3 group-hover:bg-amber-600 transition-colors font-bold"
@@ -166,8 +168,8 @@ export default async function TourDayPage({ params }: PageProps) {
                     </div>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                    {dayData.experiences.map((experience, index) => (
-                      <ExperienceCard key={index} experience={experience} />
+                    {dayData.experiences.map((experience: any, index: number) => (
+                      <ExperienceCard key={index} experience={experience} index={index} />
                     ))}
                   </div>
                 </div>
@@ -216,62 +218,9 @@ export default async function TourDayPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* Similar Journeys */}
-        {relatedTours.length > 0 && (
-          <div className="border-t border-black/5 pt-40">
-            <div className="flex items-center justify-between mb-24">
-              <div>
-                <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-4 block">
-                  // similar narratives
-                </span>
-                <h2 className="text-4xl md:text-5xl font-light tracking-tighter uppercase">
-                  Other curated <span className="italic font-serif normal-case opacity-40">Expeditions</span>
-                </h2>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-              {relatedTours.map((related, index) => (
-                <Link
-                  key={related.slug}
-                  href={`/tours/${related.slug}`}
-                  className="group relative"
-                >
-                  <div className="relative aspect-16/10 overflow-hidden rounded-sm bg-neutral-100 border border-black/5 mb-8">
-                    <img
-                      src={related.image}
-                      alt={related.title}
-                      className="w-full h-full object-cover transition-all duration-1000 saturate-[0.7] brightness-[1.05] group-hover:saturate-[1.2] group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-white/40 group-hover:bg-transparent transition-colors duration-700" />
-
-                    <div className="absolute bottom-6 left-6 flex items-center gap-4">
-                      <span className="h-px w-10 bg-amber-500" />
-                      <span className="font-mono text-[10px] text-white uppercase tracking-widest drop-shadow-md font-bold">
-                        Discovery Ready
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <span className="font-mono text-[11px] text-amber-600 uppercase tracking-widest mb-2 block font-bold">
-                        {related.duration} // BHU-EXP
-                      </span>
-                      <h3 className="text-4xl font-light tracking-tighter text-black group-hover:italic transition-all duration-500 uppercase line-clamp-1">
-                        {related.title}
-                      </h3>
-                    </div>
-                    <div className="w-12 h-12 rounded-full border border-black/10 flex items-center justify-center group-hover:border-amber-500 transition-colors ml-4 shrink-0">
-                      <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
+      {/* Similar Journeys */}
+      <TourCarousel tours={relatedTours} currentSlug={slug} />
       <CallToAction />
     </div>
   );

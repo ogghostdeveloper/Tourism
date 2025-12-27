@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { OverlayMenu } from "@/components/ui/OverlayMenu";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { useScroll, useMotionValueEvent } from "framer-motion";
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -18,8 +18,8 @@ export function Header() {
   // Pages with white backgrounds requiring dark text when not scrolled
   const isDarkText =
     (pathname === "/destinations" ||
-      pathname === "/enquire" ||
-      pathname === "/plan-my-trip") &&
+      pathname === "/experiences" ||
+      pathname === "/tours") &&
     !isScrolled;
 
   useMotionValueEvent(scrollY, "change", (latest) => {

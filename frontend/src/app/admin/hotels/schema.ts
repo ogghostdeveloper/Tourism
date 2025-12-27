@@ -12,6 +12,7 @@ export const hotelSchema = z.object({
   priceRange: z.enum(["$$", "$$$", "$$$$"]),
   rooms: z.number().optional(),
   coordinates: z.tuple([z.number(), z.number()]).optional(),
+  gallery: z.array(z.string()).optional(),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
 });

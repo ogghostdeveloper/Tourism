@@ -1,10 +1,5 @@
 import {
   getAboutContent,
-  getHeroData,
-  getOurStoryData,
-  getMissionItems,
-  getOurPurposeData,
-  getSustainabilityItems,
   getWhyBhutanItems,
 } from "./actions";
 import { AboutHero } from "./components/AboutHero";
@@ -30,51 +25,39 @@ export default async function AboutPage() {
   const storyProps = {
     id: "our-story",
     title: aboutContent.story.title,
-    subtitle: "Our Story",
+    subtitle: aboutContent.story.subtitle,
     content: aboutContent.story.content.split("\n\n").filter((p: string) => p.trim()),
-    image: "https://images.unsplash.com/photo-1548013146-72479768bada?w=2940&auto=format&fit=crop",
+    image: aboutContent.story.image,
     order: 1,
   };
-
-  const missionProps = [
-    {
-      id: "mission-1",
-      title: aboutContent.mission.title,
-      description: aboutContent.mission.content,
-      order: 1,
-    }
-  ];
 
   const purposeProps = {
     id: "our-purpose",
     title: aboutContent.purpose.title,
-    subtitle: "Our Purpose",
+    subtitle: aboutContent.purpose.subtitle,
     content: aboutContent.purpose.content.split("\n\n").filter((p: string) => p.trim()),
-    image: "https://images.unsplash.com/photo-1528127269322-539801943592?w=2940&auto=format&fit=crop",
+    image: aboutContent.purpose.image,
     order: 2,
   };
-
-  const sustainabilityProps = [
-    {
-      id: "sustainability-1",
-      title: aboutContent.sustainable.title,
-      description: aboutContent.sustainable.content,
-      order: 1,
-    }
-  ];
 
   // Fetch additional structured data for Why Bhutan section
   const whyBhutan = await getWhyBhutanItems();
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <main className="flex flex-col min-h-screen bg-white">
       <AboutHero hero={heroProps} />
-      <OurStory story={storyProps} />
-      <OurMission items={missionProps} />
-      <OurPurpose purpose={purposeProps} />
-      <SustainableTravel items={sustainabilityProps} />
-      <WhyBhutan items={whyBhutan} />
+      <div className="relative">
+        <OurStory story={storyProps} />
+        <OurMission items={aboutContent.mission.items} subtitle={aboutContent.mission.subtitle} />
+        <OurPurpose purpose={purposeProps} />
+        <SustainableTravel
+          items={aboutContent.sustainable.items}
+          intro={aboutContent.sustainable.intro}
+          subtitle={aboutContent.sustainable.subtitle}
+        />
+        <WhyBhutan items={whyBhutan} />
+      </div>
       <CallToAction />
-    </div>
+    </main>
   );
 }

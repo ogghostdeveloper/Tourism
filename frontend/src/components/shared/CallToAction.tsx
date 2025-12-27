@@ -10,9 +10,32 @@ export default function CallToAction() {
       <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=2952&auto=format&fit=crop')] bg-cover bg-center opacity-10 saturate-[0.5]" />
       <div className="absolute inset-0 bg-linear-to-t from-white via-white/80 to-white" />
 
-      {/* Background Grid */}
-      <div className="absolute inset-0 opacity-10 pointer-events-none">
-        <div className="h-full w-full bg-[linear-gradient(to_right,#00000012_1px,transparent_1px),linear-gradient(to_bottom,#00000012_1px,transparent_1px)] bg-size-[40px_40px]" />
+      {/* Background Decorative Waves */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
+        <svg
+          viewBox="0 0 1440 320"
+          className="absolute bottom-0 left-0 w-full h-[120%] text-neutral-100 fill-current opacity-60"
+          preserveAspectRatio="none"
+        >
+          <path d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+        <svg
+          viewBox="0 0 1440 320"
+          className="absolute bottom-10 left-0 w-full h-full text-neutral-50 fill-current"
+          preserveAspectRatio="none"
+        >
+          <path d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,106.7C672,117,768,171,864,165.3C960,160,1056,96,1152,101.3C1248,107,1344,181,1392,218.7L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+      </div>
+
+      {/* Background Grid - Minimalist Overlay */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+        <div className="h-full w-full bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-size-[60px_60px]" />
+      </div>
+
+      {/* Narrative ID Overlay */}
+      <div className="absolute top-20 right-10 font-mono text-[10px] text-gray-200 uppercase tracking-[0.6em] writing-mode-vertical-rl rotate-180 select-none">
+        PROTOCOL // REQ-2025
       </div>
 
       <div className="container mx-auto px-6 relative z-10 text-center">
@@ -26,7 +49,7 @@ export default function CallToAction() {
             // start your journey
           </span>
           <h2 className="text-5xl md:text-8xl font-light text-black tracking-tighter leading-tight mb-8 uppercase">
-            Start Your <span className="italic font-serif normal-case opacity-60 text-black">Discovery</span>
+            Start Your <span className="italic font-serif normal-case text-amber-600">Discovery</span>
           </h2>
           <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-16 leading-relaxed font-light italic">
             "Let us craft a bespoke itinerary that includes these regional highlights and
