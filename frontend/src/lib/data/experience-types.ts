@@ -1,22 +1,20 @@
 import clientPromise from "../mongodb";
-import { ObjectId } from "mongodb";
-import { Tour } from "@/app/(website)/tours/schema";
+import { ExperienceType } from "@/app/admin/experience-types/schema";
 
 const DB = process.env.MONGODB_DB || "bhutan_tourism";
-const COLLECTION = "tours";
+const COLLECTION = "experience_types";
 
 const formatDoc = (doc: any) => {
     if (!doc) return null;
     return {
         ...doc,
-        id: doc._id.toString(),
         _id: doc._id.toString(),
     };
 };
 
-export async function listTours(page: number = 1, pageSize: number = 10) {
+export async function listExperienceTypes(page: number = 1, pageSize: number = 10) {
     const client = await clientPromise;
-    const collection = client.db(DB).collection<Tour>(COLLECTION);
+    const collection = client.db(DB).collection<ExperienceType>(COLLECTION);
 
     const totalItems = await collection.countDocuments();
     const totalPages = Math.ceil(totalItems / pageSize);
@@ -24,7 +22,7 @@ export async function listTours(page: number = 1, pageSize: number = 10) {
 
     const items = await collection
         .find({})
-        .sort({ title: 1 })
+        .sort({ displayOrder: 1, createdAt: -1 })
         .skip(skip)
         .limit(pageSize)
         .toArray();
@@ -36,35 +34,29 @@ export async function listTours(page: number = 1, pageSize: number = 10) {
         total_pages: totalPages,
         has_next: page < totalPages,
         has_prev: page > 1,
-        total_items: totalItems
     };
 }
 
-export async function getTourBySlug(slug: string) {
+export async function getExperienceTypeBySlug(slug: string) {
     const client = await clientPromise;
-    const doc = await client.db(DB).collection<Tour>(COLLECTION).findOne({ slug });
+    const doc = await client.db(DB).collection<ExperienceType>(COLLECTION).findOne({ slug });
     return formatDoc(doc);
 }
 
-export async function getTourById(id: string) {
+export async function getAllExperienceTypes() {
     const client = await clientPromise;
-    const doc = await client.db(DB).collection<Tour>(COLLECTION).findOne({ _id: new ObjectId(id) } as any);
-    return formatDoc(doc);
-}
-
-export async function getAllTours() {
-    const client = await clientPromise;
-    const items = await client.db(DB).collection<Tour>(COLLECTION)
+    const items = await client.db(DB).collection<ExperienceType>(COLLECTION)
         .find({})
-        .sort({ title: 1 })
+        .sort({ displayOrder: 1, title: 1 })
         .toArray();
     return items.map(formatDoc);
 }
 
-export async function createTour(data: any) {
+export async function createExperienceType(data: Partial<ExperienceType>) {
     const client = await clientPromise;
+    const { _id, ...rest } = data;
     const doc = {
-        ...data,
+        ...rest,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
     };
@@ -72,26 +64,20 @@ export async function createTour(data: any) {
     return res.insertedId;
 }
 
-export async function updateTour(id: string, data: any) {
+export async function updateExperienceType(slug: string, data: Partial<ExperienceType>) {
     const client = await clientPromise;
-    const { id: _, _id: __, ...updateData } = data;
     return client.db(DB).collection(COLLECTION).updateOne(
-        { _id: new ObjectId(id) },
+        { slug },
         {
             $set: {
-                ...updateData,
+                ...data,
                 updatedAt: new Date().toISOString()
             }
         }
     );
 }
 
-export async function deleteTour(id: string) {
+export async function deleteExperienceType(slug: string) {
     const client = await clientPromise;
-    return client.db(DB).collection(COLLECTION).deleteOne({ _id: new ObjectId(id) });
-}
-export async function listCategories() {
-    const client = await clientPromise;
-    const categories = await client.db(DB).collection(COLLECTION).distinct("category");
-    return categories.map(cat => ({ id: cat, name: cat }));
+    return client.db(DB).collection(COLLECTION).deleteOne({ slug });
 }

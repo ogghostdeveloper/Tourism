@@ -224,8 +224,6 @@ export async function updateExperience(
 
     if (latitude !== undefined && longitude !== undefined && !isNaN(latitude) && !isNaN(longitude)) {
       experienceData.coordinates = [latitude, longitude];
-    } else {
-      experienceData.coordinates = null; // or keep existing? Usually explicitly clearing is better if cleared in form
     }
 
     console.log("Action: Updating in DB:", slug, experienceData);

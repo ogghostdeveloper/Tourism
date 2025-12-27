@@ -32,7 +32,12 @@ const menuItems = [
     label: "Experiences",
     href: "/admin/experiences",
   },
-  { iconName: "package" as const, label: "Packages", href: "/admin/packages" },
+  {
+    iconName: "layers" as const,
+    label: "Experience Types",
+    href: "/admin/experience-types",
+  },
+  { iconName: "package" as const, label: "Tours", href: "/admin/tours" },
   {
     iconName: "file-text" as const,
     label: "Trip Requests",

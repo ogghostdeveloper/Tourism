@@ -1,17 +1,17 @@
 import { Metadata } from "next";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import Link from "next/link";
-import { columns } from "./components/columns";
 import { DataTable } from "./components/data-table";
-import { getTours } from "./actions";
+import { getExperienceTypes } from "./actions";
+import Link from "next/link";
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { columns } from "./components/columns";
 
 export const metadata: Metadata = {
-    title: "Tours",
-    description: "Manage guided tours and expeditions.",
+    title: "Experience Types",
+    description: "Manage experience categories.",
 };
 
-export default async function ToursPage({
+export default async function ExperienceTypesPage({
     searchParams,
 }: {
     searchParams: Promise<{ page?: string; page_size?: string }>;
@@ -20,26 +20,25 @@ export default async function ToursPage({
     const page = Number(params.page) || 1;
     const pageSize = Number(params.page_size) || 10;
 
-    const paginatedData = await getTours(page, pageSize);
+    const paginatedData = await getExperienceTypes(page, pageSize);
 
     return (
         <div className="hidden h-full flex-1 flex-col gap-8 p-8 md:flex">
             <div className="flex items-center justify-between gap-2">
                 <div className="flex flex-col gap-1">
                     <h2 className="text-2xl font-semibold tracking-tight text-black">
-                        Expeditions & Tours
+                        Experience Types
                     </h2>
-                    <p className="text-black text-sm text-neutral-500">
-                        Manage your curated travel journeys and luxury itineraries.
+                    <p className="text-black text-sm">
+                        Manage experience categories and their featured content.
                     </p>
                 </div>
-                <div className="flex items-center gap-2">
-                    <Link href="/admin/tours/new">
-                        <Button className="bg-black text-white hover:bg-neutral-800">
-                            <Plus className="mr-2 h-4 w-4" /> Add Tour
-                        </Button>
+                <Button asChild className="bg-black text-white hover:bg-black/90">
+                    <Link href="/admin/experience-types/new" className="flex items-center gap-2">
+                        <Plus className="w-4 h-4" />
+                        Add Type
                     </Link>
-                </div>
+                </Button>
             </div>
             <DataTable
                 data={paginatedData.items}

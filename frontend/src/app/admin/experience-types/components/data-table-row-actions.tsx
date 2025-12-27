@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Row } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -12,8 +12,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
-import { tourSchema } from "../schema";
-import { DeleteTourDialog } from "./delete-tour-dialog";
+import { experienceTypeSchema } from "../schema";
+import { DeleteExperienceTypeDialog } from "./delete-experience-type-dialog";
 
 interface DataTableRowActionsProps<TData> {
     row: Row<TData>;
@@ -22,13 +22,13 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
     row,
 }: DataTableRowActionsProps<TData>) {
-    const tour = tourSchema.parse(row.original);
+    const experienceType = experienceTypeSchema.parse(row.original);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
     return (
         <>
-            <DeleteTourDialog
-                tour={tour}
+            <DeleteExperienceTypeDialog
+                experienceType={experienceType}
                 open={showDeleteDialog}
                 onOpenChange={setShowDeleteDialog}
             />
@@ -44,21 +44,21 @@ export function DataTableRowActions<TData>({
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <Link href={`/tours/${tour.slug}`} target="_blank">
-                        <DropdownMenuItem className="text-green-600 focus:text-green-600 data-[variant=default]:text-green-600 data-[variant=default]:focus:bg-green-50">
-                            View on Site
-                        </DropdownMenuItem>
-                    </Link>
-                    <Link href={`/admin/tours/${tour._id}`}>
-                        <DropdownMenuItem className="text-blue-500 focus:text-blue-500 data-[variant=default]:text-blue-500 data-[variant=default]:focus:bg-blue-100">
+                    <Link href={`/admin/experience-types/${experienceType.slug}/edit`}>
+                        <DropdownMenuItem
+                            className="text-blue-500 focus:text-blue-500 data-[variant=default]:text-blue-500 data-[variant=default]:focus:bg-blue-100"
+                        >
+                            <Edit className="w-4 h-4 mr-2" />
                             Edit
                         </DropdownMenuItem>
                     </Link>
+
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                         onClick={() => setShowDeleteDialog(true)}
                         className="text-red-500 focus:text-red-500 data-[variant=default]:text-red-500 data-[variant=default]:focus:bg-red-100"
                     >
+                        <Trash2 className="w-4 h-4 mr-2" />
                         Delete
                     </DropdownMenuItem>
                 </DropdownMenuContent>

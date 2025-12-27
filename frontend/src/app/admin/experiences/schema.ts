@@ -9,7 +9,7 @@ export const experienceSchema = z.object({
   image: z.string(),
   duration: z.string().optional(),
   difficulty: z.enum(["Easy", "Moderate", "Challenging"]).optional(),
-  coordinates: z.tuple([z.number(), z.number()]).optional(),
+  coordinates: z.tuple([z.number(), z.number()]).nullable().optional(),
   destinationSlug: z.string().optional(),
   destinations: z.array(z.string()).optional(),
   gallery: z.array(z.string()).optional(),

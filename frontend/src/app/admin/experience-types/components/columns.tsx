@@ -2,10 +2,9 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { Tour } from "../schema";
+import { ExperienceType } from "../schema";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
-import { Badge } from "@/components/ui/badge";
 
 function ImageCell({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
     if (!imageUrl) {
@@ -25,7 +24,7 @@ function ImageCell({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
     );
 }
 
-export const columns: ColumnDef<Tour>[] = [
+export const columns: ColumnDef<ExperienceType>[] = [
     {
         accessorKey: "image",
         header: "Image",
@@ -60,40 +59,15 @@ export const columns: ColumnDef<Tour>[] = [
         },
     },
     {
-        accessorKey: "category",
+        accessorKey: "displayOrder",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Category" />
+            <DataTableColumnHeader column={column} title="Order" />
         ),
         cell: ({ row }) => {
-            const category = row.getValue("category") as string;
-            if (!category) return "-";
             return (
-                <Badge variant="outline" className="font-normal border-gray-200 text-black bg-gray-50/50">
-                    {category}
-                </Badge>
-            );
-        },
-    },
-    {
-        accessorKey: "price",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Price" />
-        ),
-        cell: ({ row }) => {
-            return <div className="text-sm text-gray-600">{row.getValue("price")}</div>;
-        },
-    },
-    {
-        accessorKey: "featured",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Featured" />
-        ),
-        cell: ({ row }) => {
-            const isFeatured = row.getValue("featured") as boolean;
-            return (
-                <Badge variant={isFeatured ? "default" : "secondary"} className="font-normal">
-                    {isFeatured ? "Yes" : "No"}
-                </Badge>
+                <div className="text-gray-500">
+                    {row.getValue("displayOrder")}
+                </div>
             );
         },
     },

@@ -1,42 +1,58 @@
-import { TourForm } from "../components/TourForm";
-import { Button } from "@/components/ui/button";
-import { AnimatedArrowLeft } from "@/components/ui/animated-arrow-left";
-import Link from "next/link";
-import { getTourById } from "../actions";
+"use client";
+
+import * as React from "react";
+import { use } from "react";
+import { Loader2 } from "lucide-react";
+import { TourForm } from "../components/tour-form";
+import { getTourById, updateTourAction } from "../actions";
 import { notFound } from "next/navigation";
 
 interface EditTourPageProps {
     params: Promise<{ id: string }>;
 }
 
-export default async function EditTourPage({ params }: EditTourPageProps) {
-    const { id } = await params;
-    const tour = await getTourById(id);
+export default function EditTourPage({ params }: EditTourPageProps) {
+    const { id } = use(params);
+    const [tour, setTour] = React.useState<any>(null);
+    const [isLoading, setIsLoading] = React.useState(true);
+    const [error, setError] = React.useState(false);
 
-    if (!tour) {
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await getTourById(id);
+                if (data) {
+                    setTour(data);
+                } else {
+                    setError(true);
+                }
+            } catch (err) {
+                console.error("Failed to fetch tour", err);
+                setError(true);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchData();
+    }, [id]);
+
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            </div>
+        );
+    }
+
+    if (error || !tour) {
         notFound();
     }
 
     return (
-        <div className="flex-1 max-w-5xl mx-auto space-y-6 p-8 pt-6">
-            <div className="flex flex-col gap-2">
-                <Link href="/admin/tours">
-                    <Button variant="outline" className="text-black group">
-                        <AnimatedArrowLeft className="mr-2 h-4 w-4" />
-                        Back to Tours
-                    </Button>
-                </Link>
-                <h2 className="text-3xl font-semibold tracking-tight text-neutral-900 serif italic">
-                    Edit Expedition
-                </h2>
-                <p className="text-neutral-500 text-sm">
-                    Modify the details or itinerary of <strong>{tour.title}</strong>.
-                </p>
-            </div>
-
-            <div className="bg-neutral-50/30 rounded-xl p-1">
-                <TourForm initialData={tour} />
-            </div>
-        </div>
+        <TourForm
+            initialData={tour}
+            title="Edit Tour"
+            action={(formData) => updateTourAction(id, null, formData)}
+        />
     );
 }

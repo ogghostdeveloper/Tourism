@@ -8,7 +8,7 @@ import { FeaturedItinerary } from "@/components/home/FeaturedItinerary";
 import CallToAction from "@/components/shared/CallToAction";
 import { getFeaturedTours } from "./tours/actions";
 import { getBestHotels } from "./hotels/actions";
-import { getFeaturedExperiences } from "./experiences/actions";
+import { getFeaturedExperiences, getExperienceTypes } from "./experiences/actions";
 import { getFeaturedDestinations } from "./destinations/actions";
 import { LuxuryBridge } from "./components/LuxuryBridge";
 
@@ -17,13 +17,14 @@ export default async function Home() {
   const bestHotels = await getBestHotels(6);
   const featuredExperiences = await getFeaturedExperiences(6);
   const featuredDestinations = await getFeaturedDestinations(6);
+  const experienceTypes = await getExperienceTypes();
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Hero />
+      < Hero />
       <LuxuryBridge />
       <FeaturedItinerary itineraries={featuredTours.slice(0, 5)} />
-      <ExperienceTypes />
+      <ExperienceTypes experienceTypes={experienceTypes} />
       <Destinations destinations={featuredDestinations} />
       <Experiences experiences={featuredExperiences} />
       <CompanyIntro />

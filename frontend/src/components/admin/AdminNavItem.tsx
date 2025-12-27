@@ -12,6 +12,7 @@ import {
   Hotel,
   Info,
   FileText,
+  Layers,
 } from "lucide-react";
 
 const iconMap = {
@@ -22,6 +23,7 @@ const iconMap = {
   hotel: Hotel,
   info: Info,
   "file-text": FileText,
+  layers: Layers,
 };
 
 interface AdminNavItemProps {
