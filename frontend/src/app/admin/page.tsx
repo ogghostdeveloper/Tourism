@@ -2,36 +2,41 @@ import { StatCard } from "@/components/admin/StatCard";
 import { Users, Package, Calendar, DollarSign, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
+import { getDashboardData } from "./actions";
+import { formatDistanceToNow } from "date-fns";
 
-export default function AdminDashboard() {
+export default async function AdminDashboard() {
+  const data = await getDashboardData();
+  const { stats, recentActivity } = data;
+
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
-          title="Total Bookings"
-          value="1,284"
+          title="Trip Requests"
+          value={stats.totalBookings.toString()}
           change="+12.5%"
           trend="up"
           icon={Calendar}
         />
         <StatCard
-          title="Active Packages"
-          value="15"
+          title="Active Tours"
+          value={stats.activeTours.toString()}
           change="0%"
           trend="neutral"
           icon={Package}
         />
         <StatCard
-          title="Total Visitors"
-          value="45.2k"
+          title="Experiences"
+          value={stats.totalExperiences.toString()}
           change="+8.2%"
           trend="up"
           icon={Users}
         />
         <StatCard
-          title="Revenue"
-          value="$2.4M"
-          change="+15.3%"
+          title="Destinations"
+          value={stats.totalDestinations.toString()}
+          change="+5.3%"
           trend="up"
           icon={DollarSign}
         />
@@ -43,32 +48,41 @@ export default function AdminDashboard() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-black">
-                Recent Activity
+                Recent trip requests
               </h2>
-              <button className="text-xs font-medium uppercase text-gray-500 hover:text-black transition-colors tracking-wide">
-                View All
-              </button>
+              <Link href="/admin/trips">
+                <button className="text-xs font-medium uppercase text-gray-500 hover:text-black transition-colors tracking-wide">
+                  View All
+                </button>
+              </Link>
             </div>
             <div className="space-y-6">
-              {[1, 2, 3, 4, 5].map((i) => (
+              {recentActivity.map((activity) => (
                 <div
-                  key={i}
+                  key={activity.id}
                   className="flex items-start gap-4 pb-6 border-b border-gray-200 last:border-0 last:pb-0"
                 >
                   <div className="w-10 h-10 bg-gray-100 flex items-center justify-center shrink-0">
                     <span className="text-sm font-semibold text-gray-700">
-                      JD
+                      {activity.userName.split(" ").map(n => n[0]).join("")}
                     </span>
                   </div>
                   <div>
                     <p className="text-sm text-black font-medium">
-                      John Doe submitted an enquiry for{" "}
-                      <span className="font-semibold">Cultural Immersion</span>
+                      {activity.userName} submitted an enquiry for{" "}
+                      <span className="font-semibold">{activity.packageName}</span>
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">2 hours ago</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {formatDistanceToNow(new Date(activity.createdAt), { addSuffix: true })}
+                    </p>
                   </div>
                 </div>
               ))}
+              {recentActivity.length === 0 && (
+                <div className="py-12 text-center text-gray-400">
+                  No recent activity found.
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -81,10 +95,10 @@ export default function AdminDashboard() {
             </h2>
             <div className="space-y-3">
               <Link
-                href="/admin/packages/new"
+                href="/admin/tours/new"
                 className="flex items-center justify-between p-4 bg-white/10 hover:bg-white/20 transition-colors group border border-white/20"
               >
-                <span className="text-sm font-medium">Add New Package</span>
+                <span className="text-sm font-medium">Add New Tour</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link

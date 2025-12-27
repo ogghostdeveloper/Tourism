@@ -5,6 +5,9 @@ import { Tour, PaginatedTours } from "./schema";
 import { revalidatePath } from "next/cache";
 import { uploadImage } from "@/lib/upload";
 import { auth } from "@/auth";
+import * as experienceDb from "@/lib/data/experiences";
+import * as hotelDb from "@/lib/data/hotels";
+import * as destinationDb from "@/lib/data/destinations";
 
 export async function getTours(page: number = 1, pageSize: number = 10): Promise<PaginatedTours> {
     try {
@@ -19,7 +22,6 @@ export async function getTours(page: number = 1, pageSize: number = 10): Promise
             total_pages: 0,
             has_next: false,
             has_prev: false,
-            // total_items: 0, // Removed as per instruction's example
         };
     }
 }
@@ -58,8 +60,9 @@ export async function createTourAction(prevState: any, formData: FormData) {
         const featured = formData.get("featured") === "true";
         const highlightsStr = formData.get("highlights") as string;
         const highlights = JSON.parse(highlightsStr || "[]");
+
         const daysStr = formData.get("days") as string;
-        const days = JSON.parse(daysStr || "[]");
+        let days = JSON.parse(daysStr || "[]");
 
         let imageUrl = formData.get("image") as string;
         const imageFile = formData.get("imageFile") as File;
@@ -67,6 +70,17 @@ export async function createTourAction(prevState: any, formData: FormData) {
         if (imageFile && imageFile.size > 0) {
             const uploadedPath = await uploadImage(imageFile);
             if (uploadedPath) imageUrl = uploadedPath;
+        }
+
+        // Handle day images
+        for (let i = 0; i < days.length; i++) {
+            const dayImageFile = formData.get(`dayImage_${i}`) as File;
+            if (dayImageFile && dayImageFile.size > 0) {
+                const uploadedPath = await uploadImage(dayImageFile);
+                if (uploadedPath) {
+                    days[i].image = uploadedPath;
+                }
+            }
         }
 
         const tourData: Partial<Tour> = {
@@ -106,8 +120,9 @@ export async function updateTourAction(id: string, prevState: any, formData: For
         const featured = formData.get("featured") === "true";
         const highlightsStr = formData.get("highlights") as string;
         const highlights = JSON.parse(highlightsStr || "[]");
+
         const daysStr = formData.get("days") as string;
-        const days = JSON.parse(daysStr || "[]");
+        let days = JSON.parse(daysStr || "[]");
 
         let imageUrl = formData.get("image") as string;
         const imageFile = formData.get("imageFile") as File;
@@ -115,6 +130,17 @@ export async function updateTourAction(id: string, prevState: any, formData: For
         if (imageFile && imageFile.size > 0) {
             const uploadedPath = await uploadImage(imageFile);
             if (uploadedPath) imageUrl = uploadedPath;
+        }
+
+        // Handle day images
+        for (let i = 0; i < days.length; i++) {
+            const dayImageFile = formData.get(`dayImage_${i}`) as File;
+            if (dayImageFile && dayImageFile.size > 0) {
+                const uploadedPath = await uploadImage(dayImageFile);
+                if (uploadedPath) {
+                    days[i].image = uploadedPath;
+                }
+            }
         }
 
         const tourData: Partial<Tour> = {
@@ -159,13 +185,52 @@ export async function deleteTourAction(id: string) {
 
 export async function getCategoriesForDropdown(): Promise<{ value: string; label: string }[]> {
     try {
-        const categories = await tourDb.listCategories(); // Assuming tourDb has a listCategories function
+        const categories = await tourDb.listCategories();
         return categories.map((cat: any) => ({
-            value: cat.id, // Or cat.slug, depending on what's used as value
+            value: cat.id,
             label: cat.name,
         }));
     } catch (error) {
         console.error("Error fetching categories for dropdown:", error);
+        return [];
+    }
+}
+
+export async function getExperiencesForDropdown(): Promise<{ value: string; label: string }[]> {
+    try {
+        const experiences = await experienceDb.getAllExperiences();
+        return experiences.map((exp: any) => ({
+            value: exp._id,
+            label: exp.title,
+        }));
+    } catch (error) {
+        console.error("Error fetching experiences for dropdown:", error);
+        return [];
+    }
+}
+
+export async function getHotelsForDropdown(): Promise<{ value: string; label: string }[]> {
+    try {
+        const hotels = await hotelDb.getAllHotels();
+        return hotels.map((hotel: any) => ({
+            value: hotel._id,
+            label: hotel.name,
+        }));
+    } catch (error) {
+        console.error("Error fetching hotels for dropdown:", error);
+        return [];
+    }
+}
+
+export async function getDestinationsForDropdown(): Promise<{ value: string; label: string }[]> {
+    try {
+        const destinations = await destinationDb.getAllDestinations();
+        return destinations.map((dest: any) => ({
+            value: dest._id,
+            label: dest.name,
+        }));
+    } catch (error) {
+        console.error("Error fetching destinations for dropdown:", error);
         return [];
     }
 }

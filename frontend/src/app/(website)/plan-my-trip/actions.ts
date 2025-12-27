@@ -3,6 +3,7 @@
 import * as tourDb from "@/lib/data/tours";
 import * as destinationDb from "@/lib/data/destinations";
 import * as experienceDb from "@/lib/data/experiences";
+import { tourRequestDb } from "@/lib/data/tour-requests";
 import { Tour } from "../tours/schema";
 import { Destination } from "../destinations/schema";
 import { Experience } from "../experiences/schema";
@@ -40,5 +41,15 @@ export async function getPlanMyTripData(): Promise<PlanMyTripData> {
             destinations: [],
             experiences: []
         };
+    }
+}
+
+export async function submitTourRequest(data: any) {
+    try {
+        await tourRequestDb.createTourRequest(data);
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to submit tour request:", error);
+        return { success: false, error: "Submission failed" };
     }
 }

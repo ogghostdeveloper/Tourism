@@ -5,12 +5,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Sparkles, Heart } from "lucide-react";
 import { PackageSelection } from "./PackageSelection";
 import { CustomItineraryBuilder } from "./CustomItineraryBuilder";
+import { TourRequestForm } from "./TourRequestForm";
 
 import { Tour } from "../../tours/schema";
 import { Destination } from "../../destinations/schema";
 import { Experience } from "../../experiences/schema";
 
-type PlanningMode = "package" | "custom" | null;
+type PlanningStep = "mode_selection" | "package_list" | "custom_builder" | "inquiry_form";
 
 interface PlanMyTripPageProps {
     packages: Tour[];
@@ -19,7 +20,13 @@ interface PlanMyTripPageProps {
 }
 
 export default function PlanMyTripClient(props: PlanMyTripPageProps) {
-    const [selectedMode, setSelectedMode] = useState<PlanningMode>(null);
+    const [step, setStep] = useState<PlanningStep>("mode_selection");
+    const [selectedTour, setSelectedTour] = useState<Tour | null>(null);
+
+    const handleTourSelect = (tour: Tour) => {
+        setSelectedTour(tour);
+        setStep("inquiry_form");
+    };
 
     return (
         <div className="min-h-screen bg-white pb-32">
@@ -27,12 +34,12 @@ export default function PlanMyTripClient(props: PlanMyTripPageProps) {
             <section className="relative h-[85vh] flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0">
                     <img
-                        src="/images/cinematic/plan-hero.png"
+                        src="/images/Bhutan-Travel-Guide.jpg"
                         className="w-full h-full object-cover scale-105"
                         alt="Bhutanese Aerial Landscape"
                     />
-                    <div className="absolute inset-0 bg-black/50" />
-                    <div className="absolute inset-0 bg-linear-to-b from-black/60 via-transparent to-white" />
+                    <div className="absolute inset-0 bg-linear-to-b from-black/80 via-transparent to-white via-90%" />
+                    <div className="absolute inset-0 bg-linear-to-tr from-amber-500/5 via-transparent to-blue-500/5 mix-blend-overlay" />
                 </div>
 
                 <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
@@ -74,9 +81,9 @@ export default function PlanMyTripClient(props: PlanMyTripPageProps) {
 
             {/* Mode Selection / Interface Area */}
             <section className="relative -mt-12 px-6">
-                <div className="container mx-auto max-w-7xl">
+                <div className="container mx-auto">
                     <AnimatePresence mode="wait">
-                        {!selectedMode ? (
+                        {step === "mode_selection" ? (
                             <motion.div
                                 key="mode-selection"
                                 initial={{ opacity: 0, y: 100 }}
@@ -87,12 +94,12 @@ export default function PlanMyTripClient(props: PlanMyTripPageProps) {
                             >
                                 {/* Curated Package Card */}
                                 <motion.button
-                                    onClick={() => setSelectedMode("package")}
+                                    onClick={() => setStep("package_list")}
                                     className="group relative overflow-hidden bg-white hover:bg-neutral-50 transition-all duration-700 p-16 md:p-24 text-left flex flex-col justify-between aspect-4/5 md:aspect-auto"
                                 >
                                     <div className="space-y-8 relative z-10">
                                         <div className="w-12 h-12 border border-black/10 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all duration-500">
-                                            <Sparkles className="w-5 h-5" />
+                                            <Sparkles className="w-5 h-5 text-black group-hover:text-white transition-all duration-500" />
                                         </div>
                                         <div>
                                             <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase mb-6 leading-none">
@@ -111,18 +118,18 @@ export default function PlanMyTripClient(props: PlanMyTripPageProps) {
 
                                     {/* Abstract Overlay */}
                                     <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
-                                        <Sparkles className="w-64 h-64 rotate-12" />
+                                        <Sparkles className="w-64 h-64 rotate-12 text-black group-hover:text-amber-600 transition-all" />
                                     </div>
                                 </motion.button>
 
                                 {/* Custom Bespoke Card */}
                                 <motion.button
-                                    onClick={() => setSelectedMode("custom")}
+                                    onClick={() => setStep("custom_builder")}
                                     className="group relative overflow-hidden bg-white hover:bg-neutral-50 transition-all duration-700 p-16 md:p-24 text-left flex flex-col justify-between aspect-4/5 md:aspect-auto"
                                 >
                                     <div className="space-y-8 relative z-10">
                                         <div className="w-12 h-12 border border-black/10 flex items-center justify-center group-hover:bg-amber-600 group-hover:text-white transition-all duration-500">
-                                            <Heart className="w-5 h-5" />
+                                            <Heart className="w-5 h-5 text-black group-hover:text-white transition-all duration-500" />
                                         </div>
                                         <div>
                                             <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase mb-6 leading-none">
@@ -135,32 +142,40 @@ export default function PlanMyTripClient(props: PlanMyTripPageProps) {
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center gap-6 text-[10px] font-bold uppercase tracking-[0.4em] text-gray-400 group-hover:text-amber-600 transition-all">
+                                    <div className="mt-4 flex items-center gap-6 text-[10px] font-bold uppercase tracking-[0.4em] text-gray-400 group-hover:text-amber-600 transition-all">
                                         Commence Workshop <ArrowRight className="w-4 h-4 group-hover:translate-x-3 transition-transform duration-500" />
                                     </div>
 
                                     {/* Abstract Overlay */}
                                     <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
-                                        <Heart className="w-64 h-64 -rotate-12" />
+                                        <Heart className="w-64 h-64 -rotate-12 text-black group-hover:text-amber-600 transition-all" />
                                     </div>
                                 </motion.button>
                             </motion.div>
-                        ) : selectedMode === "package" ? (
+                        ) : step === "package_list" ? (
                             <div className="py-24">
                                 <PackageSelection
                                     packages={props.packages}
-                                    onBack={() => setSelectedMode(null)}
+                                    onBack={() => setStep("mode_selection")}
+                                    onSelect={handleTourSelect}
                                 />
                             </div>
-                        ) : (
+                        ) : step === "custom_builder" ? (
                             <div className="py-24">
                                 <CustomItineraryBuilder
                                     experiences={props.experiences}
                                     destinations={props.destinations}
-                                    onBack={() => setSelectedMode(null)}
+                                    onBack={() => setStep("mode_selection")}
                                 />
                             </div>
-                        )}
+                        ) : step === "inquiry_form" ? (
+                            <div className="py-24">
+                                <TourRequestForm
+                                    selectedTour={selectedTour}
+                                    onBack={() => setStep("package_list")}
+                                />
+                            </div>
+                        ) : null}
                     </AnimatePresence>
                 </div>
             </section>
