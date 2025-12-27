@@ -50,7 +50,7 @@ export default async function AdminDashboard() {
               <h2 className="text-lg font-semibold text-black">
                 Recent trip requests
               </h2>
-              <Link href="/admin/trips">
+              <Link href="/admin/tour-requests">
                 <button className="text-xs font-medium uppercase text-gray-500 hover:text-black transition-colors tracking-wide">
                   View All
                 </button>

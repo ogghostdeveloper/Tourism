@@ -152,6 +152,11 @@ export function ExperienceForm({ initialData, action, id = null, title: pageTitl
         formData.set("destinations", JSON.stringify(selectedDestinations));
         formData.set("category", category);
 
+        const durationVal = formData.get("duration");
+        if (durationVal) {
+            formData.set("duration", `${durationVal} Hours`);
+        }
+
         if (isFestivalOrCulture) {
             if (startDate) formData.set("startDate", format(startDate, "yyyy-MM-dd"));
             if (endDate) formData.set("endDate", format(endDate, "yyyy-MM-dd"));
@@ -257,12 +262,15 @@ export function ExperienceForm({ initialData, action, id = null, title: pageTitl
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="duration" className="text-black">Duration</Label>
+                        <Label htmlFor="duration" className="text-black">Duration (Hours)</Label>
                         <Input
                             id="duration"
                             name="duration"
-                            placeholder="e.g., 5 Hours, Full Day"
-                            defaultValue={initialData?.duration}
+                            type="number"
+                            step="0.5"
+                            min="0.5"
+                            placeholder="e.g., 2.5"
+                            defaultValue={initialData?.duration ? parseFloat(initialData.duration) : undefined}
                             className="text-black bg-white border-gray-200"
                         />
                     </div>

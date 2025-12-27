@@ -13,8 +13,8 @@ export const experienceSchema = z.object({
   destinationSlug: z.string().optional(),
   destinations: z.array(z.string()).optional(),
   gallery: z.array(z.string()).optional(),
-  startDate: z.string().optional(),
-  endDate: z.string().optional(),
+  startDate: z.string().nullable().optional(),
+  endDate: z.string().nullable().optional(),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
 });

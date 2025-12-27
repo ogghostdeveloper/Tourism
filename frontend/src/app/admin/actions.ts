@@ -3,7 +3,7 @@
 import * as tourDb from "@/lib/data/tours";
 import * as experienceDb from "@/lib/data/experiences";
 import * as destinationDb from "@/lib/data/destinations";
-import { getTripRequests } from "@/lib/actions";
+import { tourRequestDb } from "@/lib/data/tour-requests";
 
 export async function getDashboardData() {
     try {
@@ -12,25 +12,25 @@ export async function getDashboardData() {
         const experiencesData = await experienceDb.listExperiences(1, 1);
         const destinationsData = await destinationDb.listDestinations(1, 1);
 
-        // Fetch trip requests (currently static but will use the action)
-        const tripRequests = await getTripRequests();
+        // Fetch tour requests (limit to 5 for recent activity)
+        const tourRequestsData = await tourRequestDb.getAllTourRequests(1, 5);
 
-        // Recent Activity (last 5 trip requests)
-        const recentActivity = tripRequests.slice(0, 5).map(tr => ({
-            id: tr.id,
-            userName: tr.userName,
-            userEmail: tr.userEmail,
-            type: tr.type,
+        // Recent Activity
+        const recentActivity = tourRequestsData.items.map(tr => ({
+            id: tr._id,
+            userName: `${tr.firstName} ${tr.lastName}`, // Mapping to 'userName' for dashboard compatibility
+            userEmail: tr.email,
+            type: "Tour Request", // Static type for now
             status: tr.status,
             createdAt: tr.createdAt,
-            packageName: tr.packageName || tr.destination || "Custom Trip"
+            packageName: tr.tourName || "General Enquiry"
         }));
 
         // For revenue/visitors, we'll return hardcoded but dynamic-looking values for now
         // since we don't have these metrics in the DB yet.
         return {
             stats: {
-                totalBookings: tripRequests.length,
+                totalBookings: tourRequestsData.total,
                 activeTours: toursData.total_items,
                 totalExperiences: experiencesData.total_items,
                 totalDestinations: destinationsData.total_items,

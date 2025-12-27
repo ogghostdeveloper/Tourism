@@ -246,7 +246,7 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
 function FormInput({ label, name, value, onChange, placeholder, type = "text" }: any) {
     return (
         <div className="space-y-4 group">
-            <label className="text-[10px] font-bold uppercase tracking-[0.5em] text-black group-focus-within:text-amber-600 transition-colors">
+            <label className="text-[10px] font-bold uppercase tracking-[0.5em] text-gray-500 group-focus-within:text-amber-600 transition-colors">
                 {label}
             </label>
             <input

@@ -11,6 +11,8 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { format } from "date-fns";
+import Link from "next/link";
 import { MoreHorizontal } from "lucide-react";
 import { RequestStatus, TourRequest } from "../types";
 import { deleteTourRequest, updateTourRequestStatus } from "../actions";
@@ -93,6 +95,16 @@ export const columns: ColumnDef<TourRequest>[] = [
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <Link href={`/admin/tour-requests/${request._id}`}>
+                            <DropdownMenuItem>
+                                View Details
+                            </DropdownMenuItem>
+                        </Link>
+                        <DropdownMenuItem
+                            onClick={() => navigator.clipboard.writeText(request._id!)}
+                        >
+                            Copy request ID
+                        </DropdownMenuItem>
                         <DropdownMenuItem
                             onClick={() => navigator.clipboard.writeText(request.email)}
                         >
