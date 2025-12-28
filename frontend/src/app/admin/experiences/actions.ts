@@ -4,7 +4,20 @@ import { revalidatePath } from "next/cache";
 import { PaginatedExperiences, Experience } from "./schema";
 import * as db from "@/lib/data/experiences";
 import { auth } from "@/auth";
-import { uploadImage } from "@/lib/upload";
+import { uploadImage, updateImage, deleteImage } from "@/lib/upload";
+
+// Helper function to extract filename from image URL
+function extractFilenameFromUrl(imageUrl: string): string | null {
+  if (!imageUrl) return null;
+  try {
+    const parts = imageUrl.split("/");
+    const filename = parts[parts.length - 1];
+    return filename && filename.length > 0 ? filename : null;
+  } catch (error) {
+    console.error("Error extracting filename from URL:", imageUrl, error);
+    return null;
+  }
+}
 
 export async function getExperiences(
   page: number = 1,
@@ -179,10 +192,25 @@ export async function updateExperience(
     let imageUrl = existingExperience?.image || "https://images.unsplash.com/photo-1581330560232-474c3e8a4a58";
 
     if (imageInput instanceof File && imageInput.size > 0) {
-      console.log("Action: Uploading new image...");
-      const uploadedPath = await uploadImage(imageInput);
-      if (uploadedPath) {
-        imageUrl = uploadedPath;
+      console.log("Action: Updating image...");
+      const existingImageFilename = extractFilenameFromUrl(existingExperience?.image);
+      
+      if (existingImageFilename) {
+        console.log("Updating existing image:", existingImageFilename);
+        const uploadedPath = await updateImage(existingImageFilename, imageInput);
+        if (uploadedPath) {
+          imageUrl = uploadedPath;
+        } else {
+          console.warn("Failed to update image, uploading as new");
+          const newPath = await uploadImage(imageInput);
+          if (newPath) imageUrl = newPath;
+        }
+      } else {
+        console.log("No existing image, uploading new image");
+        const uploadedPath = await uploadImage(imageInput);
+        if (uploadedPath) {
+          imageUrl = uploadedPath;
+        }
       }
     }
 
@@ -205,6 +233,20 @@ export async function updateExperience(
 
     // Combine existing and new gallery images
     const galleryUrls = [...existingGallery, ...newGalleryUrls];
+
+    // Delete removed gallery images
+    if (existingExperience?.gallery && existingExperience.gallery.length > 0) {
+      for (const galleryImage of existingExperience.gallery) {
+        // Check if this image is no longer in the gallery
+        if (!galleryUrls.includes(galleryImage)) {
+          const imageFilename = extractFilenameFromUrl(galleryImage);
+          if (imageFilename) {
+            console.log("Deleting removed gallery image:", imageFilename);
+            await deleteImage(imageFilename);
+          }
+        }
+      }
+    }
 
     const experienceData: any = {
       title,
@@ -257,6 +299,35 @@ export async function deleteExperience(slug: string) {
   }
 
   try {
+    // Get experience to delete its images
+    const experience = await db.getExperienceBySlug(slug);
+    
+    // Delete main image
+    if (experience?.image) {
+      const imageFilename = extractFilenameFromUrl(experience.image);
+      if (imageFilename) {
+        console.log("Deleting main image:", imageFilename);
+        const deleted = await deleteImage(imageFilename);
+        if (!deleted) {
+          console.warn("Failed to delete main image:", imageFilename);
+        }
+      }
+    }
+
+    // Delete gallery images
+    if (experience?.gallery && Array.isArray(experience.gallery)) {
+      for (const galleryImage of experience.gallery) {
+        const galleryFilename = extractFilenameFromUrl(galleryImage);
+        if (galleryFilename) {
+          console.log("Deleting gallery image:", galleryFilename);
+          const deleted = await deleteImage(galleryFilename);
+          if (!deleted) {
+            console.warn("Failed to delete gallery image:", galleryFilename);
+          }
+        }
+      }
+    }
+
     await db.deleteExperience(slug);
 
     revalidatePath("/admin/experiences");
