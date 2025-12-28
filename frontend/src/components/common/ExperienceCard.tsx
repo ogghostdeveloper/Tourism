@@ -14,9 +14,10 @@ export interface Experience {
 export interface ExperienceCardProps {
     experience: Experience;
     index: number;
+    disableLink?: boolean;
 }
 
-export function ExperienceCard({ experience, index }: ExperienceCardProps) {
+export function ExperienceCard({ experience, index, disableLink }: ExperienceCardProps) {
     const CardContent = (
         <div className="group relative block aspect-4/5 overflow-hidden rounded-sm border border-black/5 bg-neutral-100 pointer-events-auto cursor-pointer">
             {/* Image Layer */}
@@ -43,6 +44,11 @@ export function ExperienceCard({ experience, index }: ExperienceCardProps) {
                 </div>
 
                 <div>
+                    {experience.destinationSlug && (
+                        <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-white/50 mb-2 block">
+                            {experience.destinationSlug}
+                        </span>
+                    )}
                     {experience.category && (
                         <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-amber-500 mb-4 block">
                             {experience.category}
@@ -72,7 +78,7 @@ export function ExperienceCard({ experience, index }: ExperienceCardProps) {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
         >
-            {experience.slug ? (
+            {experience.slug && !disableLink ? (
                 <Link href={`/experiences/${experience.slug}`}>
                     {CardContent}
                 </Link>

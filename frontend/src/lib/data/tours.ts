@@ -90,3 +90,8 @@ export async function deleteTour(id: string) {
     const client = await clientPromise;
     return client.db(DB).collection(COLLECTION).deleteOne({ _id: new ObjectId(id) });
 }
+export async function listCategories() {
+    const client = await clientPromise;
+    const categories = await client.db(DB).collection(COLLECTION).distinct("category");
+    return categories.map(cat => ({ id: cat, name: cat }));
+}

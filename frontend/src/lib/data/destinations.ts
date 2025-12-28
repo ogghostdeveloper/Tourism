@@ -54,6 +54,17 @@ export async function getDestinationBySlug(slug: string) {
     return formatDoc(doc);
 }
 
+export async function getDestinationById(id: string) {
+    try {
+        const client = await clientPromise;
+        const doc = await client.db(DB).collection<Destination>(COLLECTION).findOne({ _id: new ObjectId(id) });
+        return formatDoc(doc);
+    } catch (error) {
+        console.error("Error fetching destination by id:", error);
+        return null;
+    }
+}
+
 export async function createDestination(data: Partial<Destination>) {
     const client = await clientPromise;
     const doc = {

@@ -45,19 +45,19 @@ export function DataTableRowActions<TData>({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
                     <Link href={`/tours/${tour.slug}`} target="_blank">
-                        <DropdownMenuItem className="text-green-600 focus:text-green-600">
+                        <DropdownMenuItem className="text-green-600 focus:text-green-600 data-[variant=default]:text-green-600 data-[variant=default]:focus:bg-green-50">
                             View on Site
                         </DropdownMenuItem>
                     </Link>
                     <Link href={`/admin/tours/${tour._id}`}>
-                        <DropdownMenuItem className="text-blue-500 focus:text-blue-500">
+                        <DropdownMenuItem className="text-blue-500 focus:text-blue-500 data-[variant=default]:text-blue-500 data-[variant=default]:focus:bg-blue-100">
                             Edit
                         </DropdownMenuItem>
                     </Link>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                         onClick={() => setShowDeleteDialog(true)}
-                        className="text-red-500 focus:text-red-500"
+                        className="text-red-500 focus:text-red-500 data-[variant=default]:text-red-500 data-[variant=default]:focus:bg-red-100"
                     >
                         Delete
                     </DropdownMenuItem>

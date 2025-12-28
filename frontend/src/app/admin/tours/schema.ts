@@ -1,21 +1,30 @@
 import { z } from "zod";
 
-export const experienceSchema = z.object({
-    title: z.string(),
-    description: z.string(),
-    image: z.string().url(),
-    category: z.string().optional(),
+export const travelSchema = z.object({
+    from: z.string(),
+    to: z.string(),
+    location: z.string().optional(),
+    timing: z.string().optional(),
+});
+
+export const itineraryItemSchema = z.object({
+    type: z.enum(["experience", "travel"]),
+    experienceId: z.string().optional(), // Link to an Experience entity
+    travel: travelSchema.optional(),
+    order: z.number(),
 });
 
 export const tourDaySchema = z.object({
     day: z.number(),
     title: z.string(),
     description: z.string(),
-    image: z.string().url().optional(),
+    image: z.string().optional(), // URL for the day's image
+    hotelId: z.string().optional(), // Link to a Hotel entity for overnight stay
+    items: z.array(itineraryItemSchema).default([]),
+    // Legacy fields for backward compatibility/quick fallback
     accommodation: z.string().optional(),
     activities: z.array(z.string()).optional(),
     highlights: z.array(z.string()).optional(),
-    experiences: z.array(experienceSchema).optional(),
 });
 
 export const tourSchema = z.object({
@@ -23,7 +32,7 @@ export const tourSchema = z.object({
     slug: z.string(),
     title: z.string(),
     description: z.string(),
-    image: z.string().url(),
+    image: z.string(), // Cover image URL
     duration: z.string(),
     price: z.string(),
     featured: z.boolean().default(false),
@@ -36,7 +45,8 @@ export const tourSchema = z.object({
 
 export type Tour = z.infer<typeof tourSchema>;
 export type TourDay = z.infer<typeof tourDaySchema>;
-export type Experience = z.infer<typeof experienceSchema>;
+export type ItineraryItem = z.infer<typeof itineraryItemSchema>;
+export type Travel = z.infer<typeof travelSchema>;
 
 export interface PaginatedTours {
     items: Tour[];
@@ -45,5 +55,4 @@ export interface PaginatedTours {
     total_pages: number;
     has_next: boolean;
     has_prev: boolean;
-    total_items: number;
 }

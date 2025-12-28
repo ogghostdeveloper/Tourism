@@ -1,4 +1,7 @@
 import { Metadata } from "next";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import Link from "next/link";
 import { columns } from "./components/columns";
 import { DataTable } from "./components/data-table";
 import { getTours } from "./actions";
@@ -26,9 +29,16 @@ export default async function ToursPage({
                     <h2 className="text-2xl font-semibold tracking-tight text-black">
                         Expeditions & Tours
                     </h2>
-                    <p className="text-black text-sm text-muted-foreground">
+                    <p className="text-black text-sm text-neutral-500">
                         Manage your curated travel journeys and luxury itineraries.
                     </p>
+                </div>
+                <div className="flex items-center gap-2">
+                    <Link href="/admin/tours/new">
+                        <Button className="bg-black text-white hover:bg-neutral-800">
+                            <Plus className="mr-2 h-4 w-4" /> Add Tour
+                        </Button>
+                    </Link>
                 </div>
             </div>
             <DataTable

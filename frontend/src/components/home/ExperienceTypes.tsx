@@ -3,13 +3,11 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { experiences } from "@/lib/data";
+import { ExperienceType } from "@/app/admin/experience-types/schema";
 
-export function ExperienceTypes() {
-    // Filter for the specific experience types we want to showcase
-    const showcaseExperiences = experiences.filter(e =>
-        ["wellness", "festivals", "nature"].includes(e.slug)
-    );
+export function ExperienceTypes({ experienceTypes }: { experienceTypes: ExperienceType[] }) {
+    // We can still limit it to 3 if we want the same look
+    const showcaseExperiences = experienceTypes.slice(0, 3);
 
     return (
         <section className="py-24 md:py-32 bg-white border-t border-black/5 relative overflow-hidden">
@@ -65,7 +63,7 @@ export function ExperienceTypes() {
                             <div
                                 className="w-full md:w-1/2"
                             >
-                                <Link href={`/experiences/${experience.slug}`} className="block group relative bg-neutral-100 border border-black/10 hover:border-amber-600/50 transition-all duration-700 rounded-sm overflow-hidden">
+                                <Link href={`/experiences?category=${encodeURIComponent(experience.title)}`} className="block group relative bg-neutral-100 border border-black/10 hover:border-amber-600/50 transition-all duration-700 rounded-sm overflow-hidden">
                                     {/* Image Container with Reveal */}
                                     <div className="aspect-4/3 overflow-hidden relative">
                                         <img
@@ -97,7 +95,7 @@ export function ExperienceTypes() {
                                     {experience.description}
                                 </p>
                                 <Link
-                                    href={`/experiences/${experience.slug}`}
+                                    href={`/experiences?category=${encodeURIComponent(experience.title)}`}
                                     className="group inline-flex items-center gap-4 text-gray-500 hover:text-black transition-colors"
                                 >
                                     <span className="h-px w-12 bg-black/20 group-hover:w-20 group-hover:bg-amber-600 transition-all duration-500" />

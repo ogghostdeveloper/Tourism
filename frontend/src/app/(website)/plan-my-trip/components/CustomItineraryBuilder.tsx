@@ -2,11 +2,21 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ChevronDown, MapPin, Sparkles, Hotel } from "lucide-react";
+import { ArrowRight, Plus, Calendar, Loader2, Sparkles, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
-
 import { Destination } from "../../destinations/schema";
 import { Experience } from "../../experiences/schema";
+import { DayItinerary, ItineraryItem } from "@/app/admin/tour-requests/types";
+import { DayBuilder } from "./builder/DayBuilder";
+import { ExperienceSelector } from "./builder/ExperienceSelector";
+import { TravelSelector } from "./builder/TravelSelector";
+import { submitTourRequest } from "../actions";
+import { toast } from "sonner";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+function generateId() {
+    return Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
+}
 
 interface CustomItineraryBuilderProps {
     experiences: Experience[];
@@ -14,357 +24,448 @@ interface CustomItineraryBuilderProps {
     onBack: () => void;
 }
 
+type BuilderStep = "BUILDER" | "DETAILS" | "SUCCESS";
+
 export function CustomItineraryBuilder({ experiences, destinations, onBack }: CustomItineraryBuilderProps) {
-    const [step, setStep] = useState(1);
-    const [formData, setFormData] = useState({
-        duration: "",
+    const [step, setStep] = useState<BuilderStep>("BUILDER");
+
+    // Builder State
+    const [days, setDays] = useState<DayItinerary[]>([
+        { day: 1, items: [] } // Start with Day 1
+    ]);
+    const [activeDayIndex, setActiveDayIndex] = useState<number | null>(null);
+    const [showExperienceSelector, setShowExperienceSelector] = useState(false);
+    const [showTravelSelector, setShowTravelSelector] = useState(false);
+
+    // Form State
+    const [userDetails, setUserDetails] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
         travelers: "",
-        budget: "",
-        experiences: [] as string[],
-        destinations: [] as string[],
-        hotels: [] as string[],
-        specialRequests: ""
+        message: ""
     });
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // --- Builder Logic ---
 
-    const hotelCategories = [
-        { id: "ultra", name: "Ultra Luxury", price: "$1,500+ /night", detail: "Aman, Six Senses, Como" },
-        { id: "luxury", name: "Luxury Resorts", price: "$800-1,500/night", detail: "Zhiwa Ling, Pemako" },
-        { id: "boutique", name: "Boutique Stays", price: "$400-800/night", detail: "Heritage focused" },
-        { id: "authentic", name: "Authentic Lodges", price: "$300-600/night", detail: "High-end farmstays" }
-    ];
-
-    const toggleSelection = (category: keyof typeof formData, value: string) => {
-        const current = formData[category] as string[];
-        if (current.includes(value)) {
-            setFormData({
-                ...formData,
-                [category]: current.filter(item => item !== value)
-            });
-        } else {
-            setFormData({
-                ...formData,
-                [category]: [...current, value]
-            });
-        }
+    const addDay = () => {
+        setDays([...days, { day: days.length + 1, items: [] }]);
     };
 
-    const nextStep = () => setStep(s => Math.min(s + 1, 5));
-    const prevStep = () => setStep(s => Math.max(s - 1, 1));
+    const removeDay = (index: number) => {
+        if (days.length <= 1) return;
+        const newDays = days.filter((_, i) => i !== index)
+            .map((day, i) => ({ ...day, day: i + 1 })); // Renumber
+        setDays(newDays);
+    };
+
+    const addExperienceToDay = (dayIndex: number, experience: Experience) => {
+        const newDays = [...days];
+        const newItem: ItineraryItem = {
+            id: generateId(),
+            type: "experience",
+            order: newDays[dayIndex].items.length,
+            experienceId: experience._id || experience.slug,
+            experience: {
+                title: experience.title,
+                duration: experience.duration || "2 Hours", // Default if missing
+                image: experience.image
+            }
+        };
+        newDays[dayIndex].items.push(newItem);
+        setDays(newDays);
+        setShowExperienceSelector(false);
+    };
+
+    const addTravelToDay = (dayIndex: number, data: { from: string; to: string; duration: number }) => {
+        const newDays = [...days];
+        const newItem: ItineraryItem = {
+            id: generateId(),
+            type: "travel",
+            order: newDays[dayIndex].items.length,
+            travel: {
+                from: data.from,
+                to: data.to,
+                duration: data.duration
+            }
+        };
+        newDays[dayIndex].items.push(newItem);
+        setDays(newDays);
+        setShowTravelSelector(false);
+    };
+
+    const removeItemFromDay = (dayIndex: number, itemId: string) => {
+        const newDays = [...days];
+        newDays[dayIndex].items = newDays[dayIndex].items.filter(item => item.id !== itemId);
+        setDays(newDays);
+    };
+
+    const reorderItemsInDay = (dayIndex: number, items: ItineraryItem[]) => {
+        const newDays = [...days];
+        newDays[dayIndex].items = items;
+        setDays(newDays);
+    };
+
+    const calculateDayHours = (items: ItineraryItem[]) => {
+        return items.reduce((total, item) => {
+            if (item.type === "travel") return total + (item.travel?.duration || 0);
+            if (item.type === "experience") {
+                // Parse duration string "X Hours" or similar
+                const durationStr = item.experience?.duration || "";
+                const match = durationStr.match(/(\d+(\.\d+)?)/);
+                return total + (match ? parseFloat(match[0]) : 2); // Default 2 hours
+            }
+            return total;
+        }, 0);
+    };
+
+    const validateItinerary = () => {
+        for (const day of days) {
+            if (day.items.length === 0) return { valid: false, message: `Day ${day.day} is empty.` };
+            if (calculateDayHours(day.items) > 18) return { valid: false, message: `Day ${day.day} exceeds 18 hours limit.` };
+        }
+        return { valid: true };
+    };
+
+    // --- Submission Logic ---
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        const payload = {
+            ...userDetails,
+            tourName: "Custom Bespoke Itinerary",
+            status: "pending",
+            travelDate: "Custom Dates", // Or add field
+            customItinerary: days,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+        };
+
+        const result = await submitTourRequest(payload);
+
+        if (result.success) {
+            setStep("SUCCESS");
+        } else {
+            toast.error("Failed to submit request.");
+        }
+        setIsSubmitting(false);
+    };
+
+    if (step === "SUCCESS") {
+        return (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-2xl mx-auto text-center py-24 space-y-8">
+                <div className="w-24 h-24 border border-green-600/30 rounded-full flex items-center justify-center mx-auto text-green-600">
+                    <Check className="w-10 h-10" />
+                </div>
+                <h2 className="text-4xl font-light uppercase tracking-tight text-black">Itinerary <span className="italic normal-case text-amber-600">Submitted</span></h2>
+                <p className="text-gray-500">Our team will review your bespoke design and contact you shortly.</p>
+                <button
+                    onClick={() => window.location.href = "/"}
+                    className="bg-black text-white px-8 py-3 uppercase tracking-widest text-xs font-bold hover:bg-amber-600 transition-colors"
+                >
+                    Return Home
+                </button>
+            </motion.div>
+        );
+    }
 
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="w-full"
+            className="w-full container mx-auto pb-24"
         >
-            <div className="flex justify-between items-end mb-24 border-b border-black/5 pb-12">
+            {/* Header */}
+            <div className="flex justify-between items-end mb-16 border-b border-gray-100 pb-8">
                 <div className="space-y-4">
                     <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.5em] font-bold block">
-                        // configuration workshop
+                        // bespoke architecture
                     </span>
-                    <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase leading-none">
-                        Bespoke <span className="italic font-serif normal-case text-amber-600">Architect</span>
+                    <h2 className="text-4xl md:text-5xl font-light tracking-tighter uppercase leading-none text-black">
+                        Planner <span className="italic font-serif normal-case text-amber-600">Studio</span>
                     </h2>
                 </div>
-                <button
-                    onClick={onBack}
-                    className="group flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400 hover:text-black transition-colors"
-                >
-                    <span className="w-8 h-px bg-gray-200 group-hover:w-12 group-hover:bg-black transition-all" />
-                    Reset Design
-                </button>
+                <div className="flex gap-4">
+                    {step === "DETAILS" && (
+                        <button onClick={() => setStep("BUILDER")} className="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-black transition-colors">
+                            Back to Builder
+                        </button>
+                    )}
+                    <button onClick={onBack} className="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-red-500 transition-colors">
+                        Exit Studio
+                    </button>
+                </div>
             </div>
 
-            <div className="flex justify-between items-center max-w-2xl mx-auto mb-24">
-                {[1, 2, 3, 4, 5].map((s) => (
-                    <div key={s} className="flex flex-col items-center gap-4 group">
-                        <div className={cn(
-                            "w-12 h-12 rounded-sm border flex items-center justify-center transition-all duration-500 font-mono text-xs font-bold",
-                            step >= s ? "bg-black text-white border-black" : "border-black/20 text-black/40"
-                        )}>
-                            0{s}
-                        </div>
-                        <span className={cn(
-                            "text-[8px] uppercase tracking-widest font-bold transition-opacity",
-                            step === s ? "opacity-100" : "opacity-0"
-                        )}>
-                            {["Foundation", "Essence", "Terrain", "Sanctuary", "Finalize"][s - 1]}
-                        </span>
-                    </div>
-                ))}
-            </div>
-
-            <div className="max-w-4xl mx-auto">
-                <AnimatePresence mode="wait">
-                    {step === 1 && (
-                        <motion.div
-                            key="step1"
-                            initial={{ opacity: 0, scale: 0.98 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 1.02 }}
-                            className="space-y-16"
-                        >
-                            <h3 className="text-3xl font-light tracking-tighter uppercase text-center italic font-serif">Trip Foundation</h3>
-                            <div className="grid md:grid-cols-2 gap-x-16 gap-y-12">
-                                <div className="space-y-4 group">
-                                    <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-500 group-focus-within:text-amber-600 transition-colors font-mono">
-                                        // duration
-                                    </label>
-                                    <div className="relative border-b border-black/10 transition-all">
-                                        <select
-                                            value={formData.duration}
-                                            onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                                            className="w-full bg-transparent py-4 text-lg font-light focus:outline-none appearance-none"
-                                        >
-                                            <option value="">Select duration</option>
-                                            <option value="3-5">Boutique [3-5 Days]</option>
-                                            <option value="6-8">Balanced [6-8 Days]</option>
-                                            <option value="9-12">Immersive [9-12 Days]</option>
-                                            <option value="13+">Odyssey [13+ Days]</option>
-                                        </select>
-                                        <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
-                                    </div>
-                                </div>
-                                <div className="space-y-4 group">
-                                    <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-500 group-focus-within:text-amber-600 transition-colors font-mono">
-                                        // volume
-                                    </label>
-                                    <div className="relative border-b border-black/10 transition-all">
-                                        <select
-                                            value={formData.travelers}
-                                            onChange={(e) => setFormData({ ...formData, travelers: e.target.value })}
-                                            className="w-full bg-transparent py-4 text-lg font-light focus:outline-none appearance-none"
-                                        >
-                                            <option value="">Select travelers</option>
-                                            <option value="1">Solitary [1]</option>
-                                            <option value="2">Duo [2]</option>
-                                            <option value="3-4">Small Party [3-4]</option>
-                                            <option value="5+">Large Party [5+]</option>
-                                        </select>
-                                        <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
-                                    </div>
-                                </div>
-                                <div className="space-y-4 group md:col-span-2">
-                                    <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-500 group-focus-within:text-amber-600 transition-colors font-mono">
-                                        // investment range
-                                    </label>
-                                    <div className="relative border-b border-black/10 transition-all">
-                                        <select
-                                            value={formData.budget}
-                                            onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                                            className="w-full bg-transparent py-4 text-lg font-light focus:outline-none appearance-none"
-                                        >
-                                            <option value="">Select range per person</option>
-                                            <option value="moderate">Refined [$4,000 - $8,000]</option>
-                                            <option value="luxury">Luxury [$8,000 - $15,000]</option>
-                                            <option value="ultra">Prestige [$15,000+]</option>
-                                        </select>
-                                        <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="flex justify-center pt-8">
-                                <button
-                                    onClick={nextStep}
-                                    disabled={!formData.duration || !formData.travelers || !formData.budget}
-                                    className="group relative bg-black px-16 py-6 text-white text-[10px] font-bold uppercase tracking-[0.5em] disabled:opacity-30 disabled:hover:bg-black overflow-hidden transition-all hover:bg-amber-600"
-                                >
-                                    <span className="relative z-10 flex items-center gap-4">Define Essence <ArrowRight className="w-4 h-4 group-hover:translate-x-3 transition-transform duration-500" /></span>
-                                    <div className="absolute inset-0 translate-y-full group-hover:translate-y-0 bg-amber-500 transition-transform duration-500" />
-                                </button>
-                            </div>
-                        </motion.div>
-                    )}
-
-                    {step === 2 && (
-                        <motion.div
-                            key="step2"
-                            initial={{ opacity: 0, x: 30 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -30 }}
-                            className="space-y-12"
-                        >
-                            <h3 className="text-3xl font-light tracking-tighter uppercase text-center italic font-serif">Select Your Essence</h3>
-                            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                                {experiences.map((exp) => (
-                                    <button
-                                        key={exp._id || exp.slug}
-                                        onClick={() => toggleSelection("experiences", exp._id || exp.slug)}
-                                        className={cn(
-                                            "p-8 border transition-all duration-700 text-center flex flex-col items-center gap-4 hover:border-amber-600",
-                                            formData.experiences.includes(exp._id || exp.slug)
-                                                ? "bg-black border-black text-white"
-                                                : "bg-white border-black/5 text-gray-400"
-                                        )}
-                                    >
-                                        <div className="w-16 h-16 relative overflow-hidden rounded-full mb-2">
-                                            <img src={exp.image} alt={exp.title} className="w-full h-full object-cover" />
-                                        </div>
-                                        <span className="text-[9px] font-bold uppercase tracking-widest">{exp.title}</span>
-                                    </button>
-                                ))}
-                            </div>
-                            <Navigation step={step} nextStep={nextStep} prevStep={prevStep} canNext={formData.experiences.length > 0} nextLabel="Select Terrain" />
-                        </motion.div>
-                    )}
-
-                    {step === 3 && (
-                        <motion.div
-                            key="step3"
-                            initial={{ opacity: 0, x: 30 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -30 }}
-                            className="space-y-12"
-                        >
-                            <h3 className="text-3xl font-light tracking-tighter uppercase text-center italic font-serif">Choose Your Terrain</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {destinations.map((dest) => (
-                                    <button
-                                        key={dest._id || dest.slug}
-                                        onClick={() => toggleSelection("destinations", dest._id || dest.slug)}
-                                        className={cn(
-                                            "p-10 border transition-all duration-700 text-left relative overflow-hidden group hover:border-amber-600",
-                                            formData.destinations.includes(dest._id || dest.slug)
-                                                ? "bg-black border-black text-white shadow-xl"
-                                                : "bg-white border-black/5 text-gray-500"
-                                        )}
-                                    >
-                                        <MapPin className={cn("w-6 h-6 mb-4", formData.destinations.includes(dest._id || dest.slug) ? "text-amber-600" : "text-black/10")} />
-                                        <h4 className="text-xl font-light tracking-tight mb-2 uppercase">{dest.name}</h4>
-                                        <p className="text-[10px] font-light leading-relaxed tracking-widest uppercase opacity-60 italic">{dest.description}</p>
-                                    </button>
-                                ))}
-                            </div>
-                            <Navigation step={step} nextStep={nextStep} prevStep={prevStep} canNext={formData.destinations.length > 0} nextLabel="Define Sanctuary" />
-                        </motion.div>
-                    )}
-
-                    {step === 4 && (
-                        <motion.div
-                            key="step4"
-                            initial={{ opacity: 0, x: 30 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -30 }}
-                            className="space-y-12"
-                        >
-                            <h3 className="text-3xl font-light tracking-tighter uppercase text-center italic font-serif">Define Your Sanctuary</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {hotelCategories.map((cat) => (
-                                    <button
-                                        key={cat.id}
-                                        onClick={() => toggleSelection("hotels", cat.id)}
-                                        className={cn(
-                                            "p-10 border transition-all duration-700 text-left group hover:border-amber-600",
-                                            formData.hotels.includes(cat.id)
-                                                ? "bg-black border-black text-white"
-                                                : "bg-white border-black/5"
-                                        )}
-                                    >
-                                        <Hotel className={cn("w-6 h-6 mb-4", formData.hotels.includes(cat.id) ? "text-amber-600" : "text-black/10")} />
-                                        <div className="flex justify-between items-start mb-2">
-                                            <h4 className="text-xl font-light tracking-tight uppercase">{cat.name}</h4>
-                                            <span className="text-[10px] font-mono tracking-widest text-amber-600 font-bold">{cat.price}</span>
-                                        </div>
-                                        <p className="text-[9px] font-bold uppercase tracking-widest opacity-40">{cat.detail}</p>
-                                    </button>
-                                ))}
-                            </div>
-                            <Navigation step={step} nextStep={nextStep} prevStep={prevStep} canNext={formData.hotels.length > 0} nextLabel="Finalize Narrative" />
-                        </motion.div>
-                    )}
-
-                    {step === 5 && (
-                        <motion.div
-                            key="step5"
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="space-y-16"
-                        >
-                            <div className="space-y-8">
-                                <h3 className="text-3xl font-light tracking-tighter uppercase italic font-serif">Finalize Narrative</h3>
-                                <div className="space-y-4 group">
-                                    <label className="text-[10px] font-bold uppercase tracking-[0.5em] text-gray-500 group-focus-within:text-amber-600 transition-colors font-mono italic">
-                                        // nuances & special intentions
-                                    </label>
-                                    <textarea
-                                        value={formData.specialRequests}
-                                        onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })}
-                                        rows={6}
-                                        className="w-full border-b border-black/10 py-6 text-xl font-light focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none resize-none placeholder:text-gray-200 italic font-serif"
-                                        placeholder="Speak of your intentions, dietary requirements, or special milestones..."
+            <AnimatePresence mode="wait">
+                {step === "BUILDER" ? (
+                    <motion.div
+                        key="builder"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        className="space-y-12"
+                    >
+                        {/* Days List */}
+                        <div className="space-y-8">
+                            {days.map((day, index) => (
+                                <div key={day.day} className="relative group">
+                                    <DayBuilder
+                                        day={day}
+                                        totalHours={calculateDayHours(day.items)}
+                                        isValid={calculateDayHours(day.items) <= 18}
+                                        onAddExperience={() => {
+                                            setActiveDayIndex(index);
+                                            setShowExperienceSelector(true);
+                                        }}
+                                        onAddTravel={() => {
+                                            setActiveDayIndex(index);
+                                            setShowTravelSelector(true);
+                                        }}
+                                        onRemoveItem={(itemId) => removeItemFromDay(index, itemId)}
+                                        onReorder={(items) => reorderItemsInDay(index, items)}
                                     />
+                                    {days.length > 1 && (
+                                        <button
+                                            onClick={() => removeDay(index)}
+                                            className="absolute -right-12 top-8 p-2 text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                                            title="Remove Day"
+                                        >
+                                            <span className="sr-only">Remove Day</span>
+                                            &times;
+                                        </button>
+                                    )}
                                 </div>
-                            </div>
+                            ))}
+                        </div>
 
-                            <div className="bg-neutral-50 p-12 space-y-8 relative overflow-hidden group">
-                                <div className="absolute top-0 right-0 w-32 h-px bg-amber-600/20" />
-                                <div className="absolute top-0 right-0 w-px h-32 bg-amber-600/20" />
+                        {/* Actions */}
+                        <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-gray-100">
+                            <button
+                                onClick={addDay}
+                                className="flex items-center gap-3 px-8 py-4 border border-dashed border-gray-300 rounded-lg text-gray-500 hover:text-black hover:border-black transition-colors uppercase tracking-widest text-xs font-bold"
+                            >
+                                <Plus className="w-4 h-4" /> Add Day {days.length + 1}
+                            </button>
 
-                                <span className="font-mono text-[9px] text-amber-600 uppercase tracking-[0.6em] font-bold flex items-center gap-4">
-                                    <Sparkles className="w-3 h-3" /> Synthesis Summary
-                                </span>
-
-                                <div className="grid grid-cols-2 lg:grid-cols-3 gap-12 text-[10px] font-mono uppercase tracking-[0.2em] text-gray-500">
-                                    <div>
-                                        <span className="block mb-2 text-black/20">// Duration</span>
-                                        <span className="text-black font-bold">{formData.duration || "N/A"} Days</span>
-                                    </div>
-                                    <div>
-                                        <span className="block mb-2 text-black/20">// Volume</span>
-                                        <span className="text-black font-bold">{formData.travelers || "N/A"} Travelers</span>
-                                    </div>
-                                    <div>
-                                        <span className="block mb-2 text-black/20">// Investment</span>
-                                        <span className="text-black font-bold">{formData.budget?.toUpperCase() || "N/A"}</span>
-                                    </div>
-                                    <div>
-                                        <span className="block mb-2 text-black/20">// Terrain</span>
-                                        <span className="text-black font-bold">{formData.destinations.length} Clusters</span>
-                                    </div>
-                                    <div>
-                                        <span className="block mb-2 text-black/20">// Essence</span>
-                                        <span className="text-black font-bold">{formData.experiences.length} Themes</span>
-                                    </div>
+                            <div className="flex items-center gap-8">
+                                <div className="text-right">
+                                    <span className="block text-[10px] uppercase font-bold text-gray-400 tracking-wider">Total Duration</span>
+                                    <span className="text-2xl font-light">{days.length} Days</span>
                                 </div>
-                            </div>
-
-                            <div className="flex justify-between items-center pt-8">
-                                <button onClick={prevStep} className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400 hover:text-black transition-colors">← Sculpt Previous</button>
                                 <button
-                                    onClick={() => window.location.href = "/enquire"}
-                                    className="group relative bg-amber-600 px-20 py-8 text-white text-[11px] font-bold uppercase tracking-[0.6em] overflow-hidden transition-all shadow-2xl hover:bg-black"
+                                    onClick={() => {
+                                        const validation = validateItinerary();
+                                        if (validation.valid) {
+                                            setStep("DETAILS");
+                                        } else {
+                                            toast.error(validation.message);
+                                        }
+                                    }}
+                                    className="bg-black text-white px-12 py-5 rounded-sm uppercase tracking-[0.2em] text-xs font-bold hover:bg-amber-600 transition-colors shadow-xl"
                                 >
-                                    <span className="relative z-10 flex items-center gap-6">Commence Synthesis <ArrowRight className="w-5 h-5 group-hover:translate-x-3 transition-transform duration-500" /></span>
-                                    <div className="absolute inset-0 -translate-x-full group-hover:translate-x-0 bg-black transition-transform duration-700 ease-in-out" />
+                                    Proceed to Details
                                 </button>
                             </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </div>
+                        </div>
+                    </motion.div>
+                ) : (
+                    <motion.div
+                        key="details"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 20 }}
+                        className="max-w-3xl mx-auto space-y-12"
+                    >
+                        <div className="bg-gray-50 p-8 rounded border border-gray-200">
+                            <h3 className="text-xl font-light uppercase tracking-tight mb-6 text-black">Itinerary Summary</h3>
+                            <div className="space-y-4">
+                                {days.map(day => (
+                                    <div key={day.day} className="flex gap-4 text-sm">
+                                        <span className="font-bold w-16 text-black">Day {day.day}</span>
+                                        <span className="text-black">{day.items.length} Activities ({calculateDayHours(day.items)} Hrs)</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <form onSubmit={handleSubmit} className="space-y-16">
+                            {/* Personal Name Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+                                <FormInput
+                                    label="Given Name"
+                                    name="firstName"
+                                    placeholder="Enter first name"
+                                    value={userDetails.firstName}
+                                    onChange={(e: any) => setUserDetails({ ...userDetails, firstName: e.target.value })}
+                                />
+                                <FormInput
+                                    label="Family Name"
+                                    name="lastName"
+                                    placeholder="Enter last name"
+                                    value={userDetails.lastName}
+                                    onChange={(e: any) => setUserDetails({ ...userDetails, lastName: e.target.value })}
+                                />
+                            </div>
+
+                            {/* Contact Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+                                <FormInput
+                                    label="Digital Address"
+                                    name="email"
+                                    type="email"
+                                    placeholder="name@example.com"
+                                    value={userDetails.email}
+                                    onChange={(e: any) => setUserDetails({ ...userDetails, email: e.target.value })}
+                                />
+                                <FormInput
+                                    label="Mobile Connection"
+                                    name="phone"
+                                    type="tel"
+                                    placeholder="+1 (555) 000-0000"
+                                    value={userDetails.phone}
+                                    onChange={(e: any) => setUserDetails({ ...userDetails, phone: e.target.value })}
+                                />
+                            </div>
+
+                            {/* Details Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+                                <div className="space-y-4 group">
+                                    <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
+                                        Traveler Count
+                                    </label>
+                                    <Select
+                                        value={userDetails.travelers}
+                                        onValueChange={(value) => setUserDetails({ ...userDetails, travelers: value })}
+                                    >
+                                        <SelectTrigger className="w-full border-b border-black/10 py-4 text-lg font-light focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none placeholder:text-gray-300 h-auto px-0">
+                                            <SelectValue placeholder="Select volume" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="1">Solitary [1]</SelectItem>
+                                            <SelectItem value="2">Duo [2]</SelectItem>
+                                            <SelectItem value="3-4">Small Group [3-4]</SelectItem>
+                                            <SelectItem value="5-8">Large Group [5-8]</SelectItem>
+                                            <SelectItem value="9+">Kingdom Delegation [9+]</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </div>
+
+                            {/* Large Message Area */}
+                            <div className="space-y-4 group">
+                                <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors font-mono">
+                                    // Narrative & Requirements
+                                </label>
+                                <textarea
+                                    name="message"
+                                    rows={4}
+                                    value={userDetails.message}
+                                    onChange={e => setUserDetails({ ...userDetails, message: e.target.value })}
+                                    className="w-full border-b border-black/10 py-4 text-lg font-light focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none resize-none placeholder:text-gray-300 italic serif"
+                                    placeholder="Any dietary restrictions, physical limitations, or special occasions?"
+                                />
+                            </div>
+
+                            <div className="pt-12">
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className={cn(
+                                        "group relative w-full overflow-hidden bg-black py-8 text-white text-[10px] font-bold uppercase tracking-[0.5em] transition-all hover:bg-amber-600",
+                                        isSubmitting && "opacity-70 cursor-not-allowed"
+                                    )}
+                                >
+                                    <span className="relative z-10 flex items-center justify-center gap-6">
+                                        {isSubmitting ? (
+                                            <>
+                                                <Loader2 className="w-4 h-4 animate-spin" /> Initiating Transmission...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Sparkles className="w-4 h-4" /> Submit Custom Itinerary
+                                            </>
+                                        )}
+                                        {!isSubmitting && <ArrowRight className="w-5 h-5 group-hover:translate-x-3 transition-transform duration-500" />}
+                                    </span>
+                                    <div className="absolute inset-0 -translate-x-full group-hover:translate-x-0 bg-amber-500 transition-transform duration-700 ease-in-out" />
+                                </button>
+                            </div>
+                        </form>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Modals */}
+            <AnimatePresence>
+                {showExperienceSelector && (
+                    <ExperienceSelector
+                        experiences={experiences}
+                        onSelect={(exp) => activeDayIndex !== null && addExperienceToDay(activeDayIndex, exp)}
+                        onClose={() => setShowExperienceSelector(false)}
+                        initialLocation={(() => {
+                            if (activeDayIndex === null) return undefined;
+                            const currentDay = days[activeDayIndex];
+                            // Check last item of current day
+                            if (currentDay.items.length > 0) {
+                                const lastItem = currentDay.items[currentDay.items.length - 1];
+                                if (lastItem.type === "experience") return lastItem.experience?.image && lastItem.experienceId ? experiences.find(e => e._id === lastItem.experienceId || e.slug === lastItem.experienceId)?.destinationSlug : undefined;
+                                if (lastItem.type === "travel") return lastItem.travel?.to;
+                            }
+                            // Check previous day if current day is empty
+                            if (activeDayIndex > 0) {
+                                const prevDay = days[activeDayIndex - 1];
+                                if (prevDay.items.length > 0) {
+                                    const lastItem = prevDay.items[prevDay.items.length - 1];
+                                    if (lastItem.type === "experience") return lastItem.experience?.image && lastItem.experienceId ? experiences.find(e => e._id === lastItem.experienceId || e.slug === lastItem.experienceId)?.destinationSlug : undefined;
+                                    if (lastItem.type === "travel") return lastItem.travel?.to;
+                                }
+                            }
+                            return undefined;
+                        })()}
+                    />
+                )}
+                {showTravelSelector && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+                        onClick={() => setShowTravelSelector(false)}
+                    >
+                        <div className="w-full max-w-2xl" onClick={e => e.stopPropagation()}>
+                            <TravelSelector
+                                destinations={destinations}
+                                onConfirm={(data) => activeDayIndex !== null && addTravelToDay(activeDayIndex, data)}
+                                onCancel={() => setShowTravelSelector(false)}
+                            />
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </motion.div>
     );
 }
 
-function Navigation({ step, nextStep, prevStep, canNext, nextLabel }: any) {
+function FormInput({ label, name, value, onChange, placeholder, type = "text" }: any) {
     return (
-        <div className="flex justify-between items-center pt-12 border-t border-black/5">
-            <button
-                onClick={prevStep}
-                className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400 hover:text-black transition-colors"
-            >
-                ← Refine Previous
-            </button>
-            <button
-                onClick={nextStep}
-                disabled={!canNext}
-                className="group relative bg-black px-16 py-6 text-white text-[10px] font-bold uppercase tracking-[0.4em] disabled:opacity-20 overflow-hidden"
-            >
-                <span className="relative z-10 flex items-center gap-4">{nextLabel} <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform duration-500" /></span>
-                <div className="absolute inset-0 translate-y-full group-hover:translate-y-0 bg-amber-600 transition-transform duration-500" />
-            </button>
+        <div className="space-y-4 group">
+            <label className="text-[10px] font-bold uppercase tracking-[0.5em] text-gray-500 group-focus-within:text-amber-600 transition-colors">
+                {label}
+            </label>
+            <input
+                type={type}
+                name={name}
+                required
+                value={value}
+                onChange={onChange}
+                className="w-full border-b border-black/10 py-4 text-lg font-light text-black focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none placeholder:text-gray-200"
+                placeholder={placeholder}
+            />
         </div>
     );
 }

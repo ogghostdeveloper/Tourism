@@ -2,7 +2,19 @@
 
 import { ActionResponse } from "./schema";
 import * as db from "@/lib/data/experiences";
+import * as typeDb from "@/lib/data/experience-types";
 import { Experience } from "@/app/admin/experiences/schema";
+import { ExperienceType } from "@/app/admin/experience-types/schema";
+
+export async function getExperienceTypes(): Promise<ExperienceType[]> {
+  try {
+    const data = await typeDb.listExperienceTypes(1, 10);
+    return data.items as ExperienceType[];
+  } catch (error) {
+    console.error("Error fetching experience types:", error);
+    return [];
+  }
+}
 
 export async function getExperiences(): Promise<Experience[]> {
   try {

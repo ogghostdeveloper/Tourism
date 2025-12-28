@@ -6,10 +6,13 @@ import * as topojson from "topojson-client";
 
 interface BhutanMapProps {
   highlightDestination?: string; // slug of the destination to highlight
-  coordinates?: [number, number]; // [lat, long] for a specific marker
+  route?: {
+    start: [number, number];
+    end: [number, number];
+  };
 }
 
-export function BhutanMap({ highlightDestination, coordinates }: BhutanMapProps) {
+export function BhutanMap({ highlightDestination, coordinates, route }: BhutanMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [geoJsonData, setGeoJsonData] = useState<any>(null);
 
@@ -93,48 +96,109 @@ export function BhutanMap({ highlightDestination, coordinates }: BhutanMapProps)
       const point = projection([long, lat]);
 
       if (point) {
-        // Ripple effect
-        const ripple = svg
-          .append("circle")
-          .attr("cx", point[0])
-          .attr("cy", point[1])
-          .attr("r", 8)
-          .attr("fill", "none")
-          .attr("stroke", "#fbbf24")
-          .attr("stroke-width", 1)
-          .attr("opacity", 1);
-
-        ripple
-          .transition()
-          .duration(2000)
-          .ease(d3.easeLinear)
-          .attr("r", 30)
-          .attr("opacity", 0)
-          .on("end", function repeat() {
-            d3.select(this)
-              .attr("r", 8)
-              .attr("opacity", 1)
-              .transition()
-              .duration(2000)
-              .ease(d3.easeLinear)
-              .attr("r", 30)
-              .attr("opacity", 0)
-              .on("end", repeat);
-          });
-
-        // Main marker point
-        svg
-          .append("circle")
-          .attr("cx", point[0])
-          .attr("cy", point[1])
-          .attr("r", 5)
-          .attr("fill", "#fbbf24")
-          .attr("stroke", "#ffffff")
-          .attr("stroke-width", 2)
-          .style("filter", "drop-shadow(0 0 8px rgba(251, 191, 36, 0.8))");
+        drawMarker(svg, point[0], point[1]);
       }
     }
-  }, [geoJsonData, highlightDestination, coordinates]);
+
+    // Draw Route if provided
+    if (route) {
+      const startPoint = projection([route.start[1], route.start[0]]);
+      const endPoint = projection([route.end[1], route.end[0]]);
+
+      if (startPoint && endPoint) {
+        // Draw markers for start and end
+        drawMarker(svg, startPoint[0], startPoint[1]);
+        drawMarker(svg, endPoint[0], endPoint[1]);
+
+        // Draw curved line
+        const dx = endPoint[0] - startPoint[0];
+        const dy = endPoint[1] - startPoint[1];
+        const dr = Math.sqrt(dx * dx + dy * dy); // Curve radius
+
+        // SVG Path for arc
+        const pathData = `M${startPoint[0]},${startPoint[1]}A${dr},${dr} 0 0,1 ${endPoint[0]},${endPoint[1]}`;
+
+        // Define arrowhead marker
+        svg.append("defs").append("marker")
+          .attr("id", "arrow")
+          .attr("viewBox", "0 -5 10 10")
+          .attr("refX", 8) // Position of arrow relative to line end
+          .attr("refY", 0)
+          .attr("markerWidth", 6)
+          .attr("markerHeight", 6)
+          .attr("orient", "auto")
+          .append("path")
+          .attr("d", "M0,-5L10,0L0,5")
+          .attr("class", "arrowHead")
+          .style("fill", "#fbbf24");
+
+        // Draw the path
+        const routePath = svg.append("path")
+          .attr("d", pathData)
+          .style("fill", "none")
+          .style("stroke", "#fbbf24")
+          .style("stroke-width", 2)
+          .style("stroke-dasharray", "5,5") // Dashed line
+          .attr("marker-end", "url(#arrow)") // Attach arrow
+          .style("opacity", 0);
+
+        // Animate line
+        routePath.transition()
+          .duration(2000)
+          .style("opacity", 1);
+      }
+    }
+
+  }, [geoJsonData, highlightDestination, coordinates, route]);
 
   return <div ref={containerRef} className="w-full h-full min-h-[400px]" />;
+}
+
+// Helper to draw a standard location marker
+function drawMarker(svg: any, x: number, y: number) {
+  // Ripple effect
+  const ripple = svg
+    .append("circle")
+    .attr("cx", x)
+    .attr("cy", y)
+    .attr("r", 8)
+    .attr("fill", "none")
+    .attr("stroke", "#fbbf24")
+    .attr("stroke-width", 1)
+    .attr("opacity", 1);
+
+  ripple
+    .transition()
+    .duration(2000)
+    .ease(d3.easeLinear)
+    .attr("r", 30)
+    .attr("opacity", 0)
+    .on("end", function (this: SVGCircleElement) {
+      repeat.call(this);
+    });
+
+  // Main marker point
+  svg
+    .append("circle")
+    .attr("cx", x)
+    .attr("cy", y)
+    .attr("r", 5)
+    .attr("fill", "#fbbf24")
+    .attr("stroke", "#ffffff")
+    .attr("stroke-width", 2)
+    .style("filter", "drop-shadow(0 0 8px rgba(251, 191, 36, 0.8))");
+}
+
+function repeat(this: SVGCircleElement) {
+  d3.select(this)
+    .attr("r", 8)
+    .attr("opacity", 1)
+    .transition()
+    .duration(2000)
+    .ease(d3.easeLinear)
+    .attr("r", 30)
+    .attr("opacity", 0)
+    .on("end", function (this: SVGCircleElement) {
+      repeat.call(this);
+    });
 }

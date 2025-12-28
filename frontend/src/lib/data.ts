@@ -8,7 +8,10 @@ export interface Destination {
     coordinates: [number, number]; // [lat, lng]
 }
 
+import { ObjectId } from "mongodb";
+
 export interface Experience {
+    _id?: string | ObjectId;
     slug: string;
     title: string;
     category: string;
@@ -22,6 +25,7 @@ export interface Experience {
 }
 
 export interface Hotel {
+    _id?: string | ObjectId;
     id: string;
     name: string;
     description: string;
@@ -202,16 +206,16 @@ export const experiences: Experience[] = [
         ]
     },
     {
-         slug: "rafts-phochhu",
-         title: "Rafting on Pho Chhu",
-         category: "Adventure",
-         description: "Exhilarating white water rafting past the Punakha Dzong.",
-         image: "https://images.unsplash.com/photo-1520038410233-7141dd88284e?q=80&w=2874&auto=format&fit=crop",
-         duration: "4 Hours",
-         difficulty: "Moderate",
-         coordinates: [27.6000, 89.9000],
-         destinationSlug: "punakha",
-         gallery: []
+        slug: "rafts-phochhu",
+        title: "Rafting on Pho Chhu",
+        category: "Adventure",
+        description: "Exhilarating white water rafting past the Punakha Dzong.",
+        image: "https://images.unsplash.com/photo-1520038410233-7141dd88284e?q=80&w=2874&auto=format&fit=crop",
+        duration: "4 Hours",
+        difficulty: "Moderate",
+        coordinates: [27.6000, 89.9000],
+        destinationSlug: "punakha",
+        gallery: []
     }
 ];
 
@@ -310,7 +314,7 @@ export interface TripRequest {
     userName: string;
     type: "Prepackaged" | "Custom";
     status: "Pending" | "Accepted" | "Rejected" | "Proposed";
-    
+
     // Details
     destination?: string;
     packageSlug?: string;
@@ -318,11 +322,11 @@ export interface TripRequest {
     startDate?: string;
     endDate?: string;
     numberOfTravelers: number;
-    
+
     // Custom specific
     budget?: string;
     interests?: string[];
-    
+
     // Metadata
     notes?: string;
     createdAt: string;

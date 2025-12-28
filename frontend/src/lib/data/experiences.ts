@@ -35,12 +35,19 @@ export async function listExperiences(page: number = 1, pageSize: number = 10) {
         total_pages: totalPages,
         has_next: page < totalPages,
         has_prev: page > 1,
+        total_items: totalItems
     };
 }
 
 export async function getExperienceBySlug(slug: string) {
     const client = await clientPromise;
     const doc = await client.db(DB).collection<Experience>(COLLECTION).findOne({ slug });
+    return formatDoc(doc);
+}
+
+export async function getExperienceById(id: string) {
+    const client = await clientPromise;
+    const doc = await client.db(DB).collection<Experience>(COLLECTION).findOne({ _id: new ObjectId(id) as any });
     return formatDoc(doc);
 }
 

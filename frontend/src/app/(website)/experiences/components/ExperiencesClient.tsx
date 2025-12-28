@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { Experience } from "@/app/admin/experiences/schema";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 import { ExperienceCard } from "@/components/common/ExperienceCard";
 
@@ -13,7 +14,30 @@ interface ExperiencesClientProps {
 }
 
 export function ExperiencesClient({ initialExperiences }: ExperiencesClientProps) {
-    const [activeCategory, setActiveCategory] = useState("All");
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const pathname = usePathname();
+    const categoryParam = searchParams.get("category");
+
+    const [activeCategory, setActiveCategory] = useState(categoryParam || "All");
+
+    useEffect(() => {
+        if (categoryParam) {
+            setActiveCategory(categoryParam);
+        } else {
+            setActiveCategory("All");
+        }
+    }, [categoryParam]);
+
+    const handleCategoryChange = (category: string) => {
+        const params = new URLSearchParams(searchParams.toString());
+        if (category === "All") {
+            params.delete("category");
+        } else {
+            params.set("category", category);
+        }
+        router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    };
 
     // Get unique categories from experiences
     const categories = [
@@ -37,7 +61,7 @@ export function ExperiencesClient({ initialExperiences }: ExperiencesClientProps
                             {categories.map((category) => (
                                 <button
                                     key={category}
-                                    onClick={() => setActiveCategory(category)}
+                                    onClick={() => handleCategoryChange(category)}
                                     className={`
                                         px-6 py-2 text-[10px] font-mono uppercase tracking-[0.4em] transition-all relative group
                                         ${activeCategory === category

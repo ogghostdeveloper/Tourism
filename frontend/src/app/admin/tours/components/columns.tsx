@@ -68,7 +68,7 @@ export const columns: ColumnDef<Tour>[] = [
             const category = row.getValue("category") as string;
             if (!category) return "-";
             return (
-                <Badge variant="outline" className="font-normal border-gray-200">
+                <Badge variant="outline" className="font-normal border-gray-200 text-black bg-gray-50/50">
                     {category}
                 </Badge>
             );

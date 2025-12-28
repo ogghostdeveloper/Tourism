@@ -146,10 +146,10 @@ export default function EnquirePage() {
                             <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.5em] font-bold block">
                                 // enquiry details
                             </span>
-                            <h2 className="text-4xl font-light tracking-tighter uppercase leading-tight">
+                            <h2 className="text-4xl font-light tracking-tighter uppercase leading-tight text-black">
                                 Personal <span className="italic font-serif normal-case text-amber-600">Discovery</span>
                             </h2>
-                            <p className="text-gray-500 font-light leading-relaxed">
+                            <p className="text-black font-light leading-relaxed">
                                 Our bespoke journey design begins with a conversation. Please share your preferences so we can pair you with the right specialist.
                             </p>
                         </div>
@@ -159,14 +159,14 @@ export default function EnquirePage() {
                                 <span className="font-mono text-[10px] text-amber-600 pt-1 font-bold">[01]</span>
                                 <div>
                                     <h4 className="text-[10px] font-bold uppercase tracking-widest text-black mb-1">Response Time</h4>
-                                    <p className="text-xs text-gray-500 font-medium">Within 24 business hours</p>
+                                    <p className="text-xs text-black font-medium">Within 24 business hours</p>
                                 </div>
                             </div>
                             <div className="flex items-start gap-6 group">
                                 <span className="font-mono text-[10px] text-amber-600 pt-1 font-bold">[02]</span>
                                 <div>
                                     <h4 className="text-[10px] font-bold uppercase tracking-widest text-black mb-1">Tailored Planning</h4>
-                                    <p className="text-xs text-gray-500 font-medium">Bespoke itineraries, zero templates</p>
+                                    <p className="text-xs text-black font-medium">Bespoke itineraries, zero templates</p>
                                 </div>
                             </div>
                         </div>
@@ -223,7 +223,7 @@ export default function EnquirePage() {
                             {/* Travel Details Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
                                 <div className="space-y-4 group">
-                                    <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400 group-focus-within:text-amber-600 transition-colors">
+                                    <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
                                         Traveler Count
                                     </label>
                                     <div className="relative border-b border-black/10 group-focus-within:border-amber-600 transition-all">
@@ -231,7 +231,7 @@ export default function EnquirePage() {
                                             name="travelers"
                                             value={formState.travelers}
                                             onChange={handleChange}
-                                            className="w-full bg-transparent py-4 text-lg font-light focus:outline-none appearance-none cursor-pointer placeholder:text-gray-300"
+                                            className="w-full bg-transparent py-4 text-lg font-light text-black focus:outline-none appearance-none cursor-pointer placeholder:text-gray-300"
                                         >
                                             <option value="">Select volume</option>
                                             <option value="1">Solitary [1]</option>
@@ -255,7 +255,7 @@ export default function EnquirePage() {
 
                             {/* Large Message Area */}
                             <div className="space-y-4 group">
-                                <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400 group-focus-within:text-amber-600 transition-colors font-mono">
+                                <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors font-mono">
                                     // Narrative & Requirements
                                 </label>
                                 <textarea
@@ -263,7 +263,7 @@ export default function EnquirePage() {
                                     rows={4}
                                     value={formState.message}
                                     onChange={handleChange}
-                                    className="w-full border-b border-black/10 py-4 text-lg font-light focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none resize-none placeholder:text-gray-300 italic serif"
+                                    className="w-full border-b border-black/10 py-4 text-lg font-light text-black focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none resize-none placeholder:text-gray-300 italic serif"
                                     placeholder="Describe your vision, interests, or any special moments you wish to experience..."
                                 />
                             </div>
@@ -303,7 +303,7 @@ export default function EnquirePage() {
 function FormInput({ label, name, value, onChange, placeholder, type = "text" }: any) {
     return (
         <div className="space-y-4 group">
-            <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400 group-focus-within:text-amber-600 transition-colors">
+            <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
                 {label}
             </label>
             <input
@@ -312,7 +312,7 @@ function FormInput({ label, name, value, onChange, placeholder, type = "text" }:
                 required
                 value={value}
                 onChange={onChange}
-                className="w-full border-b border-black/10 py-4 text-lg font-light focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none placeholder:text-gray-200"
+                className="w-full border-b border-black/10 py-4 text-lg font-light text-black focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none placeholder:text-gray-200"
                 placeholder={placeholder}
             />
         </div>
