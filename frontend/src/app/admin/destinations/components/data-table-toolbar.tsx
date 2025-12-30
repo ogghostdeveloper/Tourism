@@ -45,6 +45,13 @@ export function DataTableToolbar<TData>({
         )}
       </div>
       <div className="flex items-center gap-2">
+        <DataTableViewOptions table={table} />
+        <Link href="/admin/destinations/create">
+          <Button size="sm" className="text-white">
+            <Plus className="mr-2 h-4 w-4" />
+            Add New
+          </Button>
+        </Link>
         {view && onViewChange && (
           <div className="flex items-center gap-1 border border-gray-300 p-1">
             <Button
@@ -73,13 +80,6 @@ export function DataTableToolbar<TData>({
             </Button>
           </div>
         )}
-        <DataTableViewOptions table={table} />
-        <Link href="/admin/destinations/create">
-          <Button size="sm" className="text-white">
-            <Plus className="mr-2 h-4 w-4" />
-            Add New
-          </Button>
-        </Link>
       </div>
     </div>
   );

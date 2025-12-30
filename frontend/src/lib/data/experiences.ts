@@ -102,3 +102,9 @@ export async function getCategoriesForDropdown() {
     const categories = await client.db(DB).collection(COLLECTION).distinct("category");
     return categories.map(cat => ({ title: cat, value: cat }));
 }
+
+export async function getExperiencesByDestination(slug: string) {
+    const client = await clientPromise;
+    const items = await client.db(DB).collection<Experience>(COLLECTION).find({ destinationSlug: slug }).toArray();
+    return items.map(formatDoc);
+}

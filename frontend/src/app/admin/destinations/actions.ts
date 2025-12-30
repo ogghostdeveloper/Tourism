@@ -57,21 +57,14 @@ export async function createDestination(prevState: any, formData: FormData) {
     const slug = formData.get("slug") as string;
     const region = formData.get("region") as string;
     const description = formData.get("description") as string;
-    const highlightsStr = formData.get("highlights") as string;
-    const highlights = highlightsStr ? highlightsStr.split("\n").filter(h => h.trim()) : [];
+
 
     const latStr = formData.get("latitude") as string;
     const lngStr = formData.get("longitude") as string;
     const latitude = latStr ? parseFloat(latStr) : undefined;
     const longitude = lngStr ? parseFloat(lngStr) : undefined;
 
-    const experiencesStr = formData.get("experiences") as string;
-    const experiences = JSON.parse(experiencesStr || "[]");
 
-    const hotelsStr = formData.get("hotels") as string;
-    const hotels = JSON.parse(hotelsStr || "[]");
-
-    const topExperienceSlug = formData.get("topExperienceSlug") as string;
 
     const imageInput = formData.get("image");
     let imageUrl = "https://images.unsplash.com/photo-1578500263628-936ddec022cf";
@@ -88,10 +81,6 @@ export async function createDestination(prevState: any, formData: FormData) {
       slug,
       region,
       description,
-      highlights,
-      experiences,
-      hotels,
-      topExperienceSlug,
       image: imageUrl,
     };
 
@@ -130,21 +119,14 @@ export async function updateDestination(
     const name = formData.get("name") as string;
     const region = formData.get("region") as string;
     const description = formData.get("description") as string;
-    const highlightsStr = formData.get("highlights") as string;
-    const highlights = highlightsStr ? highlightsStr.split("\n").filter(h => h.trim()) : [];
+
 
     const latStr = formData.get("latitude") as string;
     const lngStr = formData.get("longitude") as string;
     const latitude = latStr ? parseFloat(latStr) : undefined;
     const longitude = lngStr ? parseFloat(lngStr) : undefined;
 
-    const experiencesStr = formData.get("experiences") as string;
-    const experiences = JSON.parse(experiencesStr || "[]");
 
-    const hotelsStr = formData.get("hotels") as string;
-    const hotels = JSON.parse(hotelsStr || "[]");
-
-    const topExperienceSlug = formData.get("topExperienceSlug") as string;
 
     const imageInput = formData.get("image");
     const existingDestination = await db.getDestinationBySlug(slug);
@@ -161,10 +143,6 @@ export async function updateDestination(
       name,
       region,
       description,
-      highlights,
-      experiences,
-      hotels,
-      topExperienceSlug,
       image: imageUrl,
     };
 

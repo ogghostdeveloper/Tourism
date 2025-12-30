@@ -1,16 +1,13 @@
 import { z } from "zod";
 
 export const destinationSchema = z.object({
+  _id: z.string().optional(),
   slug: z.string(),
   name: z.string(),
   description: z.string(),
   image: z.string(),
   region: z.string(),
-  highlights: z.array(z.string()),
   coordinates: z.tuple([z.number(), z.number()]).optional(),
-  topExperienceSlug: z.string().optional(),
-  experiences: z.array(z.string()).optional(),
-  hotels: z.array(z.string()).optional(),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
 });

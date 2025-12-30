@@ -407,26 +407,6 @@ export function CustomItineraryBuilder({ experiences, destinations, onBack }: Cu
                         experiences={experiences}
                         onSelect={(exp) => activeDayIndex !== null && addExperienceToDay(activeDayIndex, exp)}
                         onClose={() => setShowExperienceSelector(false)}
-                        initialLocation={(() => {
-                            if (activeDayIndex === null) return undefined;
-                            const currentDay = days[activeDayIndex];
-                            // Check last item of current day
-                            if (currentDay.items.length > 0) {
-                                const lastItem = currentDay.items[currentDay.items.length - 1];
-                                if (lastItem.type === "experience") return lastItem.experience?.image && lastItem.experienceId ? experiences.find(e => e._id === lastItem.experienceId || e.slug === lastItem.experienceId)?.destinationSlug : undefined;
-                                if (lastItem.type === "travel") return lastItem.travel?.to;
-                            }
-                            // Check previous day if current day is empty
-                            if (activeDayIndex > 0) {
-                                const prevDay = days[activeDayIndex - 1];
-                                if (prevDay.items.length > 0) {
-                                    const lastItem = prevDay.items[prevDay.items.length - 1];
-                                    if (lastItem.type === "experience") return lastItem.experience?.image && lastItem.experienceId ? experiences.find(e => e._id === lastItem.experienceId || e.slug === lastItem.experienceId)?.destinationSlug : undefined;
-                                    if (lastItem.type === "travel") return lastItem.travel?.to;
-                                }
-                            }
-                            return undefined;
-                        })()}
                     />
                 )}
                 {showTravelSelector && (

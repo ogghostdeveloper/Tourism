@@ -48,6 +48,19 @@ export const columns: ColumnDef<Destination>[] = [
     },
   },
   {
+    accessorKey: "slug",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Slug" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="max-w-[200px] truncate font-mono text-xs text-gray-500">
+          {row.getValue("slug")}
+        </div>
+      );
+    },
+  },
+  {
     accessorKey: "region",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Region" />
@@ -60,47 +73,7 @@ export const columns: ColumnDef<Destination>[] = [
       );
     },
   },
-  {
-    accessorKey: "highlights",
-    header: "Highlights",
-    cell: ({ row }) => {
-      const highlights = row.original.highlights;
-      return (
-        <div className="max-w-[250px] truncate text-sm text-black">
-          {highlights.slice(0, 2).join(", ")}
-          {highlights.length > 2 && "..."}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "experiences",
-    header: "Experiences",
-    cell: ({ row }) => {
-      const experiences = row.original.experiences || [];
-      return (
-        <div className="text-sm">
-          <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
-            {experiences.length} linked
-          </span>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "hotels",
-    header: "Hotels",
-    cell: ({ row }) => {
-      const hotels = row.original.hotels || [];
-      return (
-        <div className="text-sm">
-          <span className="inline-flex items-center rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-800">
-            {hotels.length} linked
-          </span>
-        </div>
-      );
-    },
-  },
+
   {
     accessorKey: "updatedAt",
     header: ({ column }) => (

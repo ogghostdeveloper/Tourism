@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Row } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,11 +9,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { toast } from "sonner";
 import Link from "next/link";
 import { destinationSchema } from "../schema";
-import { AnimatedArrowLeft } from "@/components/ui/animated-arrow-left";
-import type { AnimatedArrowLeftHandle } from "@/components/ui/animated-arrow-left";
 import { DeleteDestinationDialog } from "./delete-destination-dialog";
 
 interface DataTableRowActionsProps<TData> {
@@ -25,12 +22,8 @@ export function DataTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const destination = destinationSchema.parse(row.original);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const editRef = useRef<AnimatedArrowLeftHandle>(null);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(destination.name);
-    toast.success("Destination name copied to clipboard");
-  };
+
 
   return (
     <>
@@ -58,12 +51,13 @@ export function DataTableRowActions<TData>({
               Edit
             </DropdownMenuItem>
           </Link>
-          <DropdownMenuItem
-            onClick={handleCopy}
-            className="text-black focus:text-black data-[variant=default]:text-black data-[variant=default]:focus:bg-gray-100"
-          >
-            Copy Name
-          </DropdownMenuItem>
+          <Link href={`/admin/destinations/${destination.slug}`}>
+            <DropdownMenuItem
+              className="text-black focus:text-black data-[variant=default]:text-black data-[variant=default]:focus:bg-gray-100"
+            >
+              View
+            </DropdownMenuItem>
+          </Link>
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => setShowDeleteDialog(true)}

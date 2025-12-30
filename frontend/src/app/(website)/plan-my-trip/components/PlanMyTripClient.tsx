@@ -102,7 +102,7 @@ export default function PlanMyTripClient(props: PlanMyTripPageProps) {
                                             <Sparkles className="w-5 h-5 text-black group-hover:text-white transition-all duration-500" />
                                         </div>
                                         <div>
-                                            <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase mb-6 leading-none">
+                                            <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase mb-6 leading-none text-black">
                                                 Curated <br />
                                                 <span className="italic font-serif normal-case text-amber-600">Collections</span>
                                             </h2>
@@ -132,7 +132,7 @@ export default function PlanMyTripClient(props: PlanMyTripPageProps) {
                                             <Heart className="w-5 h-5 text-black group-hover:text-white transition-all duration-500" />
                                         </div>
                                         <div>
-                                            <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase mb-6 leading-none">
+                                            <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase mb-6 leading-none text-black">
                                                 Bespoke <br />
                                                 <span className="italic font-serif normal-case text-amber-600">Architecture</span>
                                             </h2>

@@ -7,10 +7,7 @@ export const destinationSchema = z.object({
   description: z.string(),
   image: z.string(),
   region: z.string(),
-  highlights: z.array(z.string()),
   coordinates: z.tuple([z.number(), z.number()]),
-  experiences: z.array(z.string()).optional(),
-  hotels: z.array(z.string()).optional(),
 });
 
 export const experienceSchema = z.object({

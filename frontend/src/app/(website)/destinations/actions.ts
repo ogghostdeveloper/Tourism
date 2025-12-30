@@ -74,7 +74,7 @@ export async function getExperiencesByDestination(
     if (!destination) return [];
 
     const linkedByDestination = allExperiences.filter(exp =>
-      destination.experiences?.includes(exp.slug) ||
+      // destination.experiences?.includes(exp.slug) || // Deprecated: we now only link from Experience -> Destination
       exp.destinationSlug === slug ||
       exp.destinations?.includes(slug)
     );
@@ -94,7 +94,7 @@ export async function getHotelsByDestination(slug: string): Promise<Hotel[]> {
     if (!destination) return [];
 
     const linkedHotels = allHotels.filter(hotel =>
-      destination.hotels?.includes(hotel.id) ||
+      // destination.hotels?.includes(hotel.id) || // Deprecated: we now only link from Hotel -> Destination
       hotel.destinationSlug === slug
     );
 

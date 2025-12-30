@@ -54,7 +54,7 @@ export default async function DestinationPage({ params }: PageProps) {
       <DestinationOverview
         name={destination.name}
         description={destination.description}
-        highlights={destination.highlights}
+        slug={destination.slug}
       />
 
       {/* Section 2: Location on Bhutan map */}

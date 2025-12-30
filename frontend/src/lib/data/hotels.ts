@@ -84,3 +84,9 @@ export async function getAllHotels() {
     return items.map(formatDoc);
 }
 
+export async function getHotelsByDestination(slug: string) {
+    const client = await clientPromise;
+    const items = await client.db(DB).collection(COLLECTION).find({ destinationSlug: slug }).toArray();
+    return items.map(formatDoc);
+}
+

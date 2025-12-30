@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { DestinationCard } from "@/components/admin/DestinationCard";
+import { DestinationCard } from "@/app/admin/destinations/components/destination-card";
 import { Pagination } from "@/components/admin/Pagination";
 
 interface DestinationsClientProps {

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { use } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,9 +12,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AnimatedArrowLeft } from "@/components/ui/animated-arrow-left";
 import type { AnimatedArrowLeftHandle } from "@/components/ui/animated-arrow-left";
-import { createDestination } from "../actions";
-import { generateSlug } from "@/utils/slugGenerator";
-import { ImageUpload } from "@/components/admin/ImageUpload";
 import { Check, ChevronsUpDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -31,17 +29,62 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { DZONGKHAGS, DZONGKHAG_REGIONS } from "@/constants/dzongkhags";
+import { generateSlug } from "@/utils/slugGenerator";
+import { getDestinationBySlug, updateDestination } from "../../actions";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
-export default function CreateDestinationPage() {
+export default function EditDestinationPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug: paramsSlug } = use(params);
   const router = useRouter();
   const [isPending, startTransition] = React.useTransition();
+  const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
   const [open, setOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const iconRef = React.useRef<AnimatedArrowLeftHandle>(null);
+
+  // Form fields
   const [name, setName] = React.useState("");
   const [slug, setSlug] = React.useState("");
   const [region, setRegion] = React.useState("");
-  const iconRef = React.useRef<AnimatedArrowLeftHandle>(null);
+  const [description, setDescription] = React.useState("");
+  const [latitude, setLatitude] = React.useState("");
+  const [longitude, setLongitude] = React.useState("");
+  /* const [highlights, setHighlights] = React.useState("");
+  const [topExperienceSlug, setTopExperienceSlug] = React.useState(""); */
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const destination = await getDestinationBySlug(paramsSlug);
+
+        if (destination) {
+          setName(destination.name);
+          setSlug(destination.slug);
+          setRegion(destination.region);
+          setDescription(destination.description);
+          /* setHighlights(destination.highlights ? destination.highlights.join("\n") : "");
+          setTopExperienceSlug(destination.topExperienceSlug || ""); */
+          setPreviewUrl(destination.image);
+
+          if (destination.coordinates) {
+            setLatitude(destination.coordinates[0].toString());
+            setLongitude(destination.coordinates[1].toString());
+          }
 
 
+        }
+      } catch (error) {
+        toast.error("Failed to fetch destination data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [paramsSlug]);
 
 
 
@@ -49,26 +92,34 @@ export default function CreateDestinationPage() {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
 
-
-
     startTransition(async () => {
       try {
-        const result = await createDestination(null, formData);
+        const result = await updateDestination(slug, null, formData);
 
         if (result.success) {
-          toast.success("Destination created successfully");
+          toast.success("Destination updated successfully");
           router.push("/admin/destinations");
         } else {
-          toast.error(result.message || "Failed to create destination");
+          toast.error(result.message || "Failed to update destination");
         }
       } catch (error) {
-        toast.error("Failed to create destination");
+        toast.error("Failed to update destination");
       }
     });
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex-1 max-w-7xl mx-auto space-y-4 p-8 pt-6">
+        <div className="flex items-center justify-center h-64">
+          <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex-1 max-w-7xl mx-auto space-y-4 md:p-8 pt-6">
+    <div className="flex-1 max-w-7xl mx-auto space-y-4 p-8 pt-6">
       <div className="flex flex-col gap-2">
         <Link href="/admin/destinations" className="mb-4">
           <Button
@@ -82,7 +133,7 @@ export default function CreateDestinationPage() {
           </Button>
         </Link>
         <h2 className="text-2xl font-semibold tracking-tight text-black">
-          Create New Destination
+          Edit Destination
         </h2>
       </div>
       <div>
@@ -96,10 +147,10 @@ export default function CreateDestinationPage() {
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-full justify-between text-black"
+                    className="w-full justify-between text-black bg-white"
                   >
                     {name
-                      ? DZONGKHAGS.find((framework) => framework === name)
+                      ? DZONGKHAGS.find((framework) => framework === name) || name
                       : "Select a Dzongkhag..."}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
@@ -135,8 +186,6 @@ export default function CreateDestinationPage() {
                   </Command>
                 </PopoverContent>
               </Popover>
-
-              {/* Hidden input to ensure name is submitted in form data */}
               <input type="hidden" name="name" value={name} />
             </div>
 
@@ -147,9 +196,9 @@ export default function CreateDestinationPage() {
                 name="slug"
                 required
                 placeholder="destination-slug"
-                className="text-black"
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
+                className="text-black"
               />
             </div>
           </div>
@@ -161,10 +210,10 @@ export default function CreateDestinationPage() {
               name="region"
               required
               placeholder="e.g., Western Bhutan"
-              className="text-black bg-gray-100"
               value={region}
               readOnly
               onChange={(e) => setRegion(e.target.value)}
+              className="text-black bg-gray-100"
             />
           </div>
 
@@ -177,8 +226,14 @@ export default function CreateDestinationPage() {
               placeholder="Describe the destination..."
               className="min-h-[150px] resize-none text-black"
               rows={5}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </div>
+
+
+
+
 
           <div className="border p-4 space-y-4">
             <h3 className="font-semibold text-black">Coordinates</h3>
@@ -192,6 +247,8 @@ export default function CreateDestinationPage() {
                   step="any"
                   required
                   placeholder="27.4728"
+                  value={latitude}
+                  onChange={(e) => setLatitude(e.target.value)}
                   className="text-black"
                 />
               </div>
@@ -205,13 +262,22 @@ export default function CreateDestinationPage() {
                   step="any"
                   required
                   placeholder="89.6393"
+                  value={longitude}
+                  onChange={(e) => setLongitude(e.target.value)}
                   className="text-black"
                 />
               </div>
             </div>
           </div>
 
-          <ImageUpload required />
+          <ImageUpload
+            required={!previewUrl}
+            defaultPreview={previewUrl}
+            onFileSelect={(file) => {
+              if (file) setPreviewUrl(URL.createObjectURL(file));
+              else setPreviewUrl(null);
+            }}
+          />
 
           <div className="flex justify-end gap-4">
             <Link href="/admin/destinations">
@@ -223,10 +289,10 @@ export default function CreateDestinationPage() {
               {isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Creating...
+                  Updating...
                 </>
               ) : (
-                "Create Destination"
+                "Update Destination"
               )}
             </Button>
           </div>

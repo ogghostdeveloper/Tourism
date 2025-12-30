@@ -4,15 +4,14 @@ import { useState, useEffect } from "react";
 import { Metadata } from "next";
 import { columns } from "./components/columns";
 import { DataTable } from "./components/data-table";
-import { DestinationCard } from "@/components/admin/DestinationCard";
 import { getDestinations } from "./actions";
 import { Destination } from "./schema";
-
-export default function DestinationsPage({
-  searchParams,
-}: {
+interface DestinationsPageProps {
   searchParams: Promise<{ page?: string; page_size?: string }>;
-}) {
+}
+
+export default function DestinationsPage({ searchParams }: DestinationsPageProps) {
+  // Always default to 'list' on the server to avoid hydration mismatch
   const [view, setView] = useState<"list" | "grid">("list");
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [pageData, setPageData] = useState({
@@ -22,20 +21,27 @@ export default function DestinationsPage({
   });
   const [isLoading, setIsLoading] = useState(true);
 
-  // Set default view based on screen size
+  // Set view after mount to avoid hydration mismatch
   useEffect(() => {
-    const handleResize = () => {
+    const setInitialView = () => {
       if (window.innerWidth < 768) {
         setView("grid");
       } else {
-        setView("list");
+        const stored = window.localStorage.getItem("destinations_view");
+        setView(stored === "list" || stored === "grid" ? stored : "list");
       }
     };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    setInitialView();
+    window.addEventListener("resize", setInitialView);
+    return () => window.removeEventListener("resize", setInitialView);
   }, []);
+
+  // Persist view changes
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("destinations_view", view);
+    }
+  }, [view]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,54 +66,23 @@ export default function DestinationsPage({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-black">Destinations</h1>
-          <p className="text-sm text-black mt-1">
-            Manage destination locations and highlights
-          </p>
-        </div>
-        <div className="flex items-center gap-1 border border-gray-300 p-1">
-          <button
-            onClick={() => setView("list")}
-            className={`px-3 py-1 text-sm ${view === "list"
-              ? "bg-black text-white"
-              : "text-black hover:text-black hover:bg-gray-100"
-              }`}
-          >
-            List
-          </button>
-          <button
-            onClick={() => setView("grid")}
-            className={`px-3 py-1 text-sm ${view === "grid"
-              ? "bg-black text-white"
-              : "text-black hover:text-black hover:bg-gray-100"
-              }`}
-          >
-            Grid
-          </button>
-        </div>
+      <div>
+        <h1 className="text-2xl font-semibold text-black">Destinations</h1>
+        <p className="text-sm text-black mt-1">
+          Manage destination locations and highlights
+        </p>
       </div>
-
-      {view === "list" ? (
-        <DataTable
-          data={destinations}
-          columns={columns}
-          pageCount={pageData.pageCount}
-          pagination={{
-            pageIndex: pageData.pageIndex,
-            pageSize: pageData.pageSize,
-          }}
-          view={view}
-          onViewChange={setView}
-        />
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {destinations.map((destination) => (
-            <DestinationCard key={destination.slug} destination={destination} />
-          ))}
-        </div>
-      )}
+      <DataTable
+        data={destinations}
+        columns={columns}
+        pageCount={pageData.pageCount}
+        pagination={{
+          pageIndex: pageData.pageIndex,
+          pageSize: pageData.pageSize,
+        }}
+        view={view}
+        onViewChange={setView}
+      />
     </div>
   );
 }

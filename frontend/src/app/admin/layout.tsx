@@ -15,7 +15,7 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { LogOut, Settings } from "lucide-react";
+import { LogOut } from "lucide-react";
 import Link from "next/link";
 import { AdminNavItem } from "@/components/admin/AdminNavItem";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -61,7 +61,6 @@ export default async function AdminLayout({
   return (
     <SidebarProvider>
       <Sidebar
-
         // collapsible="icon"
         className="border-r border-gray-800"
       >
@@ -105,21 +104,12 @@ export default async function AdminLayout({
         <SidebarFooter className="border-t border-gray-800 bg-black">
           <SidebarMenu className="space-y-1 px-2 py-4">
             <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <Link
-                  href="/admin/settings"
-                  className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 transition-all"
-                >
-                  <Settings className="w-5 h-5" />
-                  <span>Settings</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <form action={async () => {
-                "use server";
-                await signOut({ redirectTo: "/login" });
-              }}>
+              <form
+                action={async () => {
+                  "use server";
+                  await signOut({ redirectTo: "/login" });
+                }}
+              >
                 <SidebarMenuButton asChild>
                   <button
                     type="submit"

@@ -11,8 +11,8 @@ interface DestinationCardProps {
     name: string;
     region: string;
     image: string;
-    highlights: string[];
   };
+  showActionsOnClick?: boolean;
 }
 
 export function DestinationCard({ destination }: DestinationCardProps) {
@@ -48,21 +48,7 @@ export function DestinationCard({ destination }: DestinationCardProps) {
         <h3 className="text-xl font-light text-white mb-2">
           {destination.name}
         </h3>
-        <div className="flex flex-wrap gap-1">
-          {destination.highlights.slice(0, 2).map((highlight, i) => (
-            <span
-              key={i}
-              className="text-[10px] text-white/60 border border-white/20 px-2 py-0.5"
-            >
-              {highlight}
-            </span>
-          ))}
-          {destination.highlights.length > 2 && (
-            <span className="text-[10px] text-white/60 border border-white/20 px-2 py-0.5">
-              +{destination.highlights.length - 2}
-            </span>
-          )}
-        </div>
+
       </div>
 
       {/* Hover Actions */}
