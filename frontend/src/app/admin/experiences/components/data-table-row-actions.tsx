@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { Row } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -47,18 +47,18 @@ export function DataTableRowActions<TData>({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
-          <Link href={`/admin/experiences/${experience.slug}`}>
+          <Link href={`/admin/experiences/${experience.slug}/edit`}>
             <DropdownMenuItem
-              className="text-green-600 focus:text-green-600 data-[variant=default]:text-green-600 data-[variant=default]:focus:bg-green-50"
+              className="text-green-500 focus:text-green-500 data-[variant=default]:text-green-500 data-[variant=default]:focus:bg-green-100"
             >
-              View
+              <Pencil className="mr-2 h-4 w-4 text-green-500 focus:text-green-500 data-[variant=default]:text-green-500" /> Edit
             </DropdownMenuItem>
           </Link>
-          <Link href={`/admin/experiences/${experience.slug}/edit`}>
+          <Link href={`/admin/experiences/${experience.slug}`}>
             <DropdownMenuItem
               className="text-blue-500 focus:text-blue-500 data-[variant=default]:text-blue-500 data-[variant=default]:focus:bg-blue-100"
             >
-              Edit
+              <Eye className="mr-2 h-4 w-4 text-blue-500 focus:text-blue-500 data-[variant=default]:text-blue-500" /> View
             </DropdownMenuItem>
           </Link>
 
@@ -67,7 +67,7 @@ export function DataTableRowActions<TData>({
             onClick={() => setShowDeleteDialog(true)}
             className="text-red-500 focus:text-red-500 data-[variant=default]:text-red-500 data-[variant=default]:focus:bg-red-100"
           >
-            Delete
+            <Trash2 className="mr-2 h-4 w-4 text-red-500 focus:text-red-500 data-[variant=default]:text-red-500" />  Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

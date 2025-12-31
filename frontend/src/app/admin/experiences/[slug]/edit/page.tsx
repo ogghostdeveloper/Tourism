@@ -9,16 +9,16 @@ import { ExperienceForm } from "../../components/experience-form";
 export default function EditExperiencePage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }) {
-  const { id } = use(params);
+  const { slug } = use(params);
   const [experience, setExperience] = React.useState<any>(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getExperienceBySlug(id);
+        const data = await getExperienceBySlug(slug);
         setExperience(data);
       } catch (error) {
         console.error("Failed to fetch experience", error);
@@ -27,7 +27,7 @@ export default function EditExperiencePage({
       }
     };
     fetchData();
-  }, [id]);
+  }, [slug]);
 
   if (isLoading) {
     return (
@@ -39,10 +39,10 @@ export default function EditExperiencePage({
 
   return (
     <ExperienceForm
-      id={id}
+      slug={slug}
       title="Edit Experience"
       initialData={experience}
-      action={(formData) => updateExperience(id, null, formData)}
+      action={(formData) => updateExperience(slug, null, formData)}
     />
   );
 }

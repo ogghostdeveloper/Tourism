@@ -53,7 +53,7 @@ export default async function DestinationViewPage({
         href={`/admin/destinations/${slug}/edit`}
         className="fixed top-24 right-8 z-50"
       >
-        <Button className="bg-black text-white hover:bg-gray-800 shadow-lg rounded-full w-12 h-12 p-0 flex items-center justify-center transition-transform hover:scale-110">
+        <Button className="bg-amber-600 text-white hover:bg-amber-700 shadow-lg rounded-full w-12 h-12 p-0 flex items-center justify-center transition-transform hover:scale-110">
           <Pencil className="w-5 h-5" />
         </Button>
       </Link>

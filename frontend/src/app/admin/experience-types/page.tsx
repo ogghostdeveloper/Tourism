@@ -1,26 +1,67 @@
-import { Metadata } from "next";
+"use client";
+
+import { useState, useEffect } from "react";
 import { DataTable } from "./components/data-table";
 import { getExperienceTypes } from "./actions";
-import Link from "next/link";
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { columns } from "./components/columns";
+import { ExperienceType } from "./schema";
 
-export const metadata: Metadata = {
-  title: "Experience Types",
-  description: "Manage experience categories.",
-};
-
-export default async function ExperienceTypesPage({
-  searchParams,
-}: {
+interface ExperienceTypesPageProps {
   searchParams: Promise<{ page?: string; page_size?: string }>;
-}) {
-  const params = await searchParams;
-  const page = Number(params.page) || 1;
-  const pageSize = Number(params.page_size) || 10;
+}
 
-  const paginatedData = await getExperienceTypes(page, pageSize);
+export default function ExperienceTypesPage({ searchParams }: ExperienceTypesPageProps) {
+  const [view, setView] = useState<"list" | "grid">("list");
+  const [experienceTypes, setExperienceTypes] = useState<ExperienceType[]>([]);
+  const [pageData, setPageData] = useState({
+    pageCount: 0,
+    pageIndex: 0,
+    pageSize: 6,
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Set view after mount to avoid hydration mismatch
+  useEffect(() => {
+    const setInitialView = () => {
+      if (typeof window !== "undefined") {
+        if (window.innerWidth < 768) {
+          setView("grid");
+        } else {
+          const stored = window.localStorage.getItem("experience_types_view");
+          setView(stored === "list" || stored === "grid" ? stored : "list");
+        }
+      }
+    };
+    setInitialView();
+  }, []);
+
+  // Persist view changes
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("experience_types_view", view);
+    }
+  }, [view]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      const params = await searchParams;
+      const page = Number(params.page) || 1;
+      const pageSize = Number(params.page_size) || 6;
+
+      const paginatedData = await getExperienceTypes(page, pageSize);
+
+      setExperienceTypes(paginatedData.items);
+      setPageData({
+        pageCount: paginatedData.total_pages,
+        pageIndex: paginatedData.page - 1,
+        pageSize: paginatedData.page_size,
+      });
+      setIsLoading(false);
+    };
+
+    fetchData();
+  }, [searchParams]);
 
   return (
     <div className="space-y-6">
@@ -33,13 +74,15 @@ export default async function ExperienceTypesPage({
         </p>
       </div>
       <DataTable
-        data={paginatedData.items}
+        data={experienceTypes}
         columns={columns}
-        pageCount={paginatedData.total_pages}
+        pageCount={pageData.pageCount}
         pagination={{
-          pageIndex: paginatedData.page - 1,
-          pageSize: paginatedData.page_size,
+          pageIndex: pageData.pageIndex,
+          pageSize: pageData.pageSize,
         }}
+        view={view}
+        onViewChange={setView}
       />
     </div>
   );

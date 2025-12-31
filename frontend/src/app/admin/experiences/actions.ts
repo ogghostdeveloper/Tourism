@@ -60,10 +60,7 @@ export async function getAllExperiences() {
 }
 
 export async function createExperience(prevState: any, formData: FormData) {
-  console.log("Action: createExperience called");
-  console.log("Action: Checking auth session...");
   const session = await auth();
-  console.log("Action: Auth session:", session ? "Authenticated as " + session.user?.email : "Not authenticated");
 
   if (!session) {
     console.error("Action: Unauthorized access attempt");
@@ -71,7 +68,6 @@ export async function createExperience(prevState: any, formData: FormData) {
   }
 
   try {
-    console.log("Action: createExperience start");
     const title = formData.get("title") as string;
     const slug = formData.get("slug") as string;
     const category = formData.get("category") as string;
@@ -87,16 +83,13 @@ export async function createExperience(prevState: any, formData: FormData) {
     const longitude = lngStr ? parseFloat(lngStr) : undefined;
 
     const destinationsStr = formData.get("destinations") as string;
-    console.log("Action: Received destinations string:", destinationsStr);
     const destinations = JSON.parse(destinationsStr || "[]");
 
     // Handle image field correctly. formData.get("image") returns a File object if uploaded.
     const imageInput = formData.get("image");
-    console.log("Action: Image input type:", typeof imageInput);
     let imageUrl = "https://images.unsplash.com/photo-1581330560232-474c3e8a4a58"; // Fallback placeholder
 
     if (imageInput instanceof File && imageInput.size > 0) {
-      console.log("Action: Uploading image...");
       const uploadedPath = await uploadImage(imageInput);
       if (uploadedPath) {
         imageUrl = uploadedPath;
@@ -109,7 +102,6 @@ export async function createExperience(prevState: any, formData: FormData) {
 
     for (const file of galleryFiles) {
       if (file instanceof File && file.size > 0) {
-        console.log("Action: Uploading gallery image...");
         const uploadedPath = await uploadImage(file);
         if (uploadedPath) {
           galleryUrls.push(uploadedPath);
@@ -138,9 +130,7 @@ export async function createExperience(prevState: any, formData: FormData) {
       experienceData.coordinates = [latitude, longitude];
     }
 
-    console.log("Action: Saving to DB:", experienceData);
-    const result = await db.createExperience(experienceData);
-    console.log("Action: DB Result:", result);
+    await db.createExperience(experienceData);
 
     revalidatePath("/admin/experiences");
 
@@ -162,7 +152,6 @@ export async function updateExperience(
   prevState: any,
   formData: FormData
 ) {
-  console.log("Action: updateExperience called for slug:", slug);
   const session = await auth();
   if (!session) {
     console.error("Action: Unauthorized access attempt");
@@ -192,11 +181,9 @@ export async function updateExperience(
     let imageUrl = existingExperience?.image || "https://images.unsplash.com/photo-1581330560232-474c3e8a4a58";
 
     if (imageInput instanceof File && imageInput.size > 0) {
-      console.log("Action: Updating image...");
       const existingImageFilename = extractFilenameFromUrl(existingExperience?.image);
-      
+
       if (existingImageFilename) {
-        console.log("Updating existing image:", existingImageFilename);
         const uploadedPath = await updateImage(existingImageFilename, imageInput);
         if (uploadedPath) {
           imageUrl = uploadedPath;
@@ -206,7 +193,6 @@ export async function updateExperience(
           if (newPath) imageUrl = newPath;
         }
       } else {
-        console.log("No existing image, uploading new image");
         const uploadedPath = await uploadImage(imageInput);
         if (uploadedPath) {
           imageUrl = uploadedPath;
@@ -223,7 +209,6 @@ export async function updateExperience(
 
     for (const file of newGalleryFiles) {
       if (file instanceof File && file.size > 0) {
-        console.log("Action: Uploading gallery image...");
         const uploadedPath = await uploadImage(file);
         if (uploadedPath) {
           newGalleryUrls.push(uploadedPath);
@@ -241,7 +226,6 @@ export async function updateExperience(
         if (!galleryUrls.includes(galleryImage)) {
           const imageFilename = extractFilenameFromUrl(galleryImage);
           if (imageFilename) {
-            console.log("Deleting removed gallery image:", imageFilename);
             await deleteImage(imageFilename);
           }
         }
@@ -268,9 +252,7 @@ export async function updateExperience(
       experienceData.coordinates = [latitude, longitude];
     }
 
-    console.log("Action: Updating in DB:", slug, experienceData);
-    const result = await db.updateExperience(slug, experienceData);
-    console.log("Action: Update result:", result.modifiedCount, "documents modified");
+    await db.updateExperience(slug, experienceData);
 
     revalidatePath("/admin/experiences");
     revalidatePath(`/admin/experiences/${slug}/edit`);
@@ -299,12 +281,11 @@ export async function deleteExperience(slug: string) {
   try {
     // Get experience to delete its images
     const experience = await db.getExperienceBySlug(slug);
-    
+
     // Delete main image
     if (experience?.image) {
       const imageFilename = extractFilenameFromUrl(experience.image);
       if (imageFilename) {
-        console.log("Deleting main image:", imageFilename);
         const deleted = await deleteImage(imageFilename);
         if (!deleted) {
           console.warn("Failed to delete main image:", imageFilename);
@@ -317,7 +298,6 @@ export async function deleteExperience(slug: string) {
       for (const galleryImage of experience.gallery) {
         const galleryFilename = extractFilenameFromUrl(galleryImage);
         if (galleryFilename) {
-          console.log("Deleting gallery image:", galleryFilename);
           const deleted = await deleteImage(galleryFilename);
           if (!deleted) {
             console.warn("Failed to delete gallery image:", galleryFilename);

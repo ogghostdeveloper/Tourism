@@ -3,13 +3,13 @@ import { getExperienceTypeBySlug, updateExperienceType } from "../../actions";
 import { ExperienceTypeForm } from "../../components/experience-type-form";
 
 interface EditExperienceTypePageProps {
-    params: Promise<{ id: string }>;
+    params: Promise<{ slug: string }>;
 }
 
 export default async function EditExperienceTypePage({
     params,
 }: EditExperienceTypePageProps) {
-    const { id: slug } = await params;
+    const { slug } = await params;
     const experienceType = await getExperienceTypeBySlug(slug);
 
     if (!experienceType) {
@@ -20,12 +20,10 @@ export default async function EditExperienceTypePage({
     const updateActionWithSlug = updateExperienceType.bind(null, slug);
 
     return (
-        <div className="p-8">
-            <ExperienceTypeForm
-                title={`Edit ${experienceType.title}`}
-                initialData={experienceType}
-                action={updateActionWithSlug}
-            />
-        </div>
+        <ExperienceTypeForm
+            title={`Edit ${experienceType.title}`}
+            initialData={experienceType}
+            action={updateActionWithSlug}
+        />
     );
 }

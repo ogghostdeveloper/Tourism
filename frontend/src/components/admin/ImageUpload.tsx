@@ -11,6 +11,7 @@ interface ImageUploadProps {
     required?: boolean;
     onFileSelect?: (file: File | null) => void;
     className?: string;
+    readOnly?: boolean;
 }
 
 export function ImageUpload({
@@ -20,6 +21,7 @@ export function ImageUpload({
     required = false,
     onFileSelect,
     className,
+    readOnly = false,
 }: ImageUploadProps) {
     const [previewUrl, setPreviewUrl] = React.useState<string | null>(defaultPreview);
     const [dragActive, setDragActive] = React.useState(false);
@@ -94,8 +96,8 @@ export function ImageUpload({
             <Label className="text-black">{label} {required && "*"}</Label>
             <div
                 className={`relative flex flex-col items-center justify-center border-2 border-dashed transition-colors rounded-lg ${dragActive
-                        ? "border-primary bg-primary/10"
-                        : "border-muted-foreground/25"
+                    ? "border-primary bg-primary/10"
+                    : "border-muted-foreground/25"
                     } ${previewUrl ? "aspect-video p-0 overflow-hidden" : "h-32"}`}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
@@ -109,33 +111,37 @@ export function ImageUpload({
                             alt="Preview"
                             className="object-cover w-full h-full"
                         />
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity group-hover:opacity-100">
-                            <div className="flex gap-4">
-                                <label
-                                    htmlFor={name}
-                                    className="bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 cursor-pointer rounded"
-                                >
-                                    Change
-                                </label>
-                                {/* Optional remove button can be added here */}
+                        {!readOnly && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity group-hover:opacity-100">
+                                <div className="flex gap-4">
+                                    <label
+                                        htmlFor={name}
+                                        className="bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 cursor-pointer rounded"
+                                    >
+                                        Change
+                                    </label>
+                                    {/* Optional remove button can be added here */}
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 ) : (
                     <label
-                        htmlFor={name}
-                        className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-2 text-center"
+                        htmlFor={readOnly ? undefined : name}
+                        className={`flex h-full w-full ${readOnly ? 'cursor-default' : 'cursor-pointer'} flex-col items-center justify-center gap-2 text-center`}
                     >
                         <div className="bg-secondary p-2 rounded-full group-hover:bg-secondary/80">
                             <Upload className="h-4 w-4 text-muted-foreground" />
                         </div>
                         <div>
                             <p className="text-sm font-medium text-black">
-                                Click to upload or drag and drop
+                                {readOnly ? 'No image uploaded' : 'Click to upload or drag and drop'}
                             </p>
-                            <p className="text-xs text-muted-foreground">
-                                PNG, JPG, JPEG up to 5MB
-                            </p>
+                            {!readOnly && (
+                                <p className="text-xs text-muted-foreground">
+                                    PNG, JPG, JPEG up to 5MB
+                                </p>
+                            )}
                         </div>
                     </label>
                 )}

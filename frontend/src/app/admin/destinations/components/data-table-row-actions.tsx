@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Row } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -46,16 +46,16 @@ export function DataTableRowActions<TData>({
         <DropdownMenuContent align="end" className="w-[160px]">
           <Link href={`/admin/destinations/${destination.slug}/edit`}>
             <DropdownMenuItem
-              className="text-blue-500 focus:text-blue-500 data-[variant=default]:text-blue-500 data-[variant=default]:focus:bg-blue-100"
+              className="text-green-500 focus:text-green-500 data-[variant=default]:text-green-500 data-[variant=default]:focus:bg-green-100"
             >
-              Edit
+              <Pencil className="mr-2 h-4 w-4 text-green-500 focus:text-green-500 data-[variant=default]:text-green-500" /> Edit
             </DropdownMenuItem>
           </Link>
           <Link href={`/admin/destinations/${destination.slug}`}>
             <DropdownMenuItem
-              className="text-black focus:text-black data-[variant=default]:text-black data-[variant=default]:focus:bg-gray-100"
+              className="text-blue-500 focus:text-blue-500 data-[variant=default]:text-blue-500 data-[variant=default]:focus:bg-blue-100"
             >
-              View
+              <Eye className="mr-2 h-4 w-4 text-blue-500 focus:text-blue-500 data-[variant=default]:text-blue-500" /> View
             </DropdownMenuItem>
           </Link>
           <DropdownMenuSeparator />
@@ -63,7 +63,7 @@ export function DataTableRowActions<TData>({
             onClick={() => setShowDeleteDialog(true)}
             className="text-red-500 focus:text-red-500 data-[variant=default]:text-red-500 data-[variant=default]:focus:bg-red-100"
           >
-            Delete
+            <Trash2 className="mr-2 h-4 w-4 text-red-500 focus:text-red-500 data-[variant=default]:text-red-500" />  Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

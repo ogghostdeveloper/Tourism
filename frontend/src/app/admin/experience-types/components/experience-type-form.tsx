@@ -1,66 +1,34 @@
 "use client";
 
-import { useActionState, useState, useRef, useEffect } from "react";
+import { useActionState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Upload, X, Save, ArrowLeft } from "lucide-react";
+import { Save, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { ExperienceType } from "../schema";
+import { generateSlug } from "@/utils/slugGenerator";
+import { AnimatedArrowLeft, type AnimatedArrowLeftHandle } from "@/components/ui/animated-arrow-left";
+import { ImageUpload } from "@/components/admin/ImageUpload";
+import { Pencil } from "lucide-react";
 
 interface ExperienceTypeFormProps {
     initialData?: ExperienceType;
-    action: (prevState: any, formData: FormData) => Promise<{ success: boolean; message: string }>;
+    action?: (prevState: any, formData: FormData) => Promise<{ success: boolean; message: string }>;
     title: string;
+    isReadOnly?: boolean;
 }
 
-export function ExperienceTypeForm({ initialData, action, title }: ExperienceTypeFormProps) {
+export function ExperienceTypeForm({ initialData, action, title, isReadOnly = false }: ExperienceTypeFormProps) {
     const router = useRouter();
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    const [previewUrl, setPreviewUrl] = useState<string | null>(initialData?.image || null);
-    const [isDragging, setIsDragging] = useState(false);
-
-    const [state, formAction, isPending] = useActionState(action, {
+    const iconRef = useRef<AnimatedArrowLeftHandle>(null);
+    const [state, formAction, isPending] = useActionState(action || (async () => ({ success: false, message: "" })), {
         success: false,
         message: "",
     });
-
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPreviewUrl(reader.result as string);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    const onDragOver = (e: React.DragEvent) => {
-        e.preventDefault();
-        setIsDragging(true);
-    };
-
-    const onDragLeave = () => {
-        setIsDragging(false);
-    };
-
-    const onDrop = (e: React.DragEvent) => {
-        e.preventDefault();
-        setIsDragging(false);
-        const file = e.dataTransfer.files?.[0];
-        if (file && file.type.startsWith("image/")) {
-            if (fileInputRef.current) {
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-                fileInputRef.current.files = dataTransfer.files;
-                handleImageChange({ target: { files: dataTransfer.files } } as any);
-            }
-        }
-    };
 
     useEffect(() => {
         if (state.success) {
@@ -72,42 +40,58 @@ export function ExperienceTypeForm({ initialData, action, title }: ExperienceTyp
     }, [state.success, state.message, router]);
 
     return (
-        <div className="max-w-4xl mx-auto space-y-8">
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                    <Button asChild variant="ghost" className="text-gray-500">
-                        <Link href="/admin/experience-types">
-                            <ArrowLeft className="w-4 h-4 mr-2" />
-                            Back
-                        </Link>
+        <div className="flex-1 max-w-7xl mx-auto space-y-4 md:p-8 pt-6 relative">
+            {isReadOnly && (
+                <Link
+                    href={`/admin/experience-types/${initialData?.slug}/edit`}
+                    className="fixed top-24 right-8 z-50"
+                >
+                    <Button className="bg-amber-600 text-white hover:bg-amber-700 shadow-lg rounded-full w-12 h-12 p-0 flex items-center justify-center transition-transform hover:scale-110">
+                        <Pencil className="w-5 h-5" />
                     </Button>
-                    <h2 className="text-2xl font-bold tracking-tight text-black">{title}</h2>
-                </div>
+                </Link>
+            )}
+            <div className="flex flex-col gap-2">
+                <Link href="/admin/experience-types" className="mb-4">
+                    <Button
+                        variant="outline"
+                        onMouseEnter={() => iconRef.current?.startAnimation()}
+                        onMouseLeave={() => iconRef.current?.stopAnimation()}
+                        className="text-black"
+                    >
+                        <AnimatedArrowLeft ref={iconRef} className="h-4 w-4" />
+                        Back
+                    </Button>
+                </Link>
+                <h2 className="text-2xl font-semibold tracking-tight text-black">{title}</h2>
             </div>
 
-            <form action={formAction} className="space-y-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="space-y-6">
+            <div>
+                <form action={formAction} className="space-y-6">
+                    <div className="grid md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label htmlFor="title" className="text-black">Title</Label>
+                            <Label htmlFor="title" className="text-black">Title *</Label>
                             <Input
                                 id="title"
                                 name="title"
                                 defaultValue={initialData?.title}
                                 placeholder="e.g. Wellness & Rejuvenation"
                                 required
+                                readOnly={isReadOnly}
                                 className="bg-white border-gray-200 text-black"
                                 onChange={(e) => {
-                                    const slugInput = document.getElementById('slug') as HTMLInputElement;
-                                    if (slugInput && !initialData) {
-                                        slugInput.value = e.target.value.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+                                    if (!initialData) {
+                                        const slugInput = document.getElementById('slug') as HTMLInputElement;
+                                        if (slugInput) {
+                                            slugInput.value = generateSlug(e.target.value);
+                                        }
                                     }
                                 }}
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="slug" className="text-black">Slug</Label>
+                            <Label htmlFor="slug" className="text-black">Slug *</Label>
                             <Input
                                 id="slug"
                                 name="slug"
@@ -115,10 +99,12 @@ export function ExperienceTypeForm({ initialData, action, title }: ExperienceTyp
                                 placeholder="e.g. wellness"
                                 required
                                 className="bg-white border-gray-200 text-black"
-                                readOnly={!!initialData}
+                                readOnly={!!initialData || isReadOnly}
                             />
                         </div>
+                    </div>
 
+                    <div className="grid md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                             <Label htmlFor="displayOrder" className="text-black">Display Order</Label>
                             <Input
@@ -127,95 +113,65 @@ export function ExperienceTypeForm({ initialData, action, title }: ExperienceTyp
                                 type="number"
                                 defaultValue={initialData?.displayOrder || 0}
                                 placeholder="0"
+                                readOnly={isReadOnly}
                                 className="bg-white border-gray-200 text-black"
                             />
                         </div>
                     </div>
 
-                    <div className="space-y-6">
-                        <Label className="text-black">Cover Image</Label>
-                        <div
-                            onDragOver={onDragOver}
-                            onDragLeave={onDragLeave}
-                            onDrop={onDrop}
-                            className={`
-                relative aspect-video rounded-lg border-2 border-dashed transition-all flex flex-col items-center justify-center gap-4 overflow-hidden
-                ${isDragging ? "border-amber-600 bg-amber-50" : "border-gray-200 bg-gray-50 hover:bg-gray-100"}
-              `}
-                        >
-                            {previewUrl ? (
-                                <>
-                                    <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            setPreviewUrl(null);
-                                            if (fileInputRef.current) fileInputRef.current.value = '';
-                                        }}
-                                        className="absolute top-2 right-2 p-1 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
-                                    >
-                                        <X className="w-4 h-4" />
-                                    </button>
-                                </>
-                            ) : (
-                                <>
-                                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm">
-                                        <Upload className="w-6 h-6 text-gray-400" />
-                                    </div>
-                                    <div className="text-center">
-                                        <p className="text-sm font-medium text-black">Drag & drop or click to upload</p>
-                                        <p className="text-xs text-gray-500">PNG, JPG up to 10MB</p>
-                                    </div>
-                                </>
-                            )}
-                            <input
-                                type="file"
-                                name="image"
-                                ref={fileInputRef}
-                                onChange={handleImageChange}
-                                accept="image/*"
-                                className="absolute inset-0 opacity-0 cursor-pointer"
-                                required={!initialData}
-                            />
-                        </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="description" className="text-black">Description *</Label>
+                        <Textarea
+                            id="description"
+                            name="description"
+                            defaultValue={initialData?.description}
+                            placeholder="Describe this experience type..."
+                            required
+                            readOnly={isReadOnly}
+                            className="min-h-[150px] bg-white border-gray-200 text-black"
+                            rows={5}
+                        />
                     </div>
-                </div>
 
-                <div className="space-y-2">
-                    <Label htmlFor="description" className="text-black">Description</Label>
-                    <Textarea
-                        id="description"
-                        name="description"
-                        defaultValue={initialData?.description}
-                        placeholder="Describe this experience type..."
-                        required
-                        className="min-h-[150px] bg-white border-gray-200 text-black"
+                    <ImageUpload
+                        defaultPreview={initialData?.image}
+                        required={!initialData}
+                        name="image"
+                        label="Cover Image *"
+                        readOnly={isReadOnly}
                     />
-                </div>
 
-                <div className="flex justify-end gap-4">
-                    <Button
-                        type="button"
-                        variant="outline"
-                        asChild
-                        className="border-gray-200 text-gray-500 hover:bg-gray-50"
-                    >
-                        <Link href="/admin/experience-types">Cancel</Link>
-                    </Button>
-                    <Button
-                        type="submit"
-                        disabled={isPending}
-                        className="bg-black text-white hover:bg-black/90 min-w-[120px]"
-                    >
-                        {isPending ? "Saving..." : (
-                            <>
-                                <Save className="w-4 h-4 mr-2" />
-                                Save Changes
-                            </>
-                        )}
-                    </Button>
-                </div>
-            </form>
+                    {!isReadOnly && (
+                        <div className="flex justify-end gap-4">
+                            <Link href="/admin/experience-types">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    className="text-black"
+                                >
+                                    Cancel
+                                </Button>
+                            </Link>
+                            <Button
+                                type="submit"
+                                disabled={isPending}
+                                className="bg-amber-600 text-white hover:bg-amber-700 min-w-[120px]"
+                            >
+                                {isPending ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Saving...
+                                    </>
+                                ) : (
+                                    <>
+                                        {initialData ? "Update Experience Type" : "Create Experience Type"}
+                                    </>
+                                )}
+                            </Button>
+                        </div>
+                    )}
+                </form>
+            </div>
         </div>
     );
 }

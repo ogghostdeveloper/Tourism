@@ -1,7 +1,7 @@
 "use client";
 
 import { Table } from "@tanstack/react-table";
-import { X, Plus } from "lucide-react";
+import { X, Plus, List, LayoutGrid } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -13,10 +13,14 @@ import { getCategoriesForDropdown } from "../actions";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
+  view?: "list" | "grid";
+  onViewChange?: (view: "list" | "grid") => void;
 }
 
 export function DataTableToolbar<TData>({
   table,
+  view,
+  onViewChange,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const [categories, setCategories] = useState<{ label: string; value: string }[]>([]);
@@ -64,12 +68,40 @@ export function DataTableToolbar<TData>({
       </div>
       <div className="flex items-center gap-2">
         <DataTableViewOptions table={table} />
-        <Link href="/admin/experiences/new">
-          <Button size="sm">
+        <Link href="/admin/experiences/create">
+          <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white">
             <Plus className="mr-2 h-4 w-4" />
             Add New
           </Button>
         </Link>
+        {view && onViewChange && (
+          <div className="flex items-center gap-1">
+            <Button
+              variant={view === "list" ? "default" : "outline"}
+              size="sm"
+              onClick={() => onViewChange("list")}
+              className={
+                view === "list"
+                  ? "bg-black text-white"
+                  : "text-black hover:text-black hover:bg-gray-100"
+              }
+            >
+              <List className="w-4 h-4" />
+            </Button>
+            <Button
+              variant={view === "grid" ? "default" : "outline"}
+              size="sm"
+              onClick={() => onViewChange("grid")}
+              className={
+                view === "grid"
+                  ? "bg-black text-white"
+                  : "text-black hover:text-black hover:bg-gray-100"
+              }
+            >
+              <LayoutGrid className="w-4 h-4" />
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

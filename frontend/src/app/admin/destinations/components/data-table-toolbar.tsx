@@ -47,15 +47,15 @@ export function DataTableToolbar<TData>({
       <div className="flex items-center gap-2">
         <DataTableViewOptions table={table} />
         <Link href="/admin/destinations/create">
-          <Button size="sm" className="text-white">
+          <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white">
             <Plus className="mr-2 h-4 w-4" />
             Add New
           </Button>
         </Link>
         {view && onViewChange && (
-          <div className="flex items-center gap-1 border border-gray-300 p-1">
+          <div className="flex items-center gap-1">
             <Button
-              variant={view === "list" ? "default" : "ghost"}
+              variant={view === "list" ? "default" : "outline"}
               size="sm"
               onClick={() => onViewChange("list")}
               className={
@@ -67,7 +67,7 @@ export function DataTableToolbar<TData>({
               <List className="w-4 h-4" />
             </Button>
             <Button
-              variant={view === "grid" ? "default" : "ghost"}
+              variant={view === "grid" ? "default" : "outline"}
               size="sm"
               onClick={() => onViewChange("grid")}
               className={

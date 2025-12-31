@@ -73,6 +73,19 @@ export const columns: ColumnDef<Destination>[] = [
       );
     },
   },
+  {
+    accessorKey: "priority",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Priority" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="font-mono text-black">
+          {row.getValue("priority")}
+        </div>
+      );
+    },
+  },
 
   {
     accessorKey: "updatedAt",

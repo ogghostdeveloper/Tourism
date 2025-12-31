@@ -8,6 +8,7 @@ export const destinationSchema = z.object({
   image: z.string(),
   region: z.string(),
   coordinates: z.tuple([z.number(), z.number()]),
+  priority: z.number().optional().default(99),
 });
 
 export const experienceSchema = z.object({

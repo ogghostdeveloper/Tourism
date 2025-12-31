@@ -17,6 +17,7 @@ interface MultiSelectProps {
   onChange: (selected: string[]) => void;
   placeholder?: string;
   className?: string;
+  disabled?: boolean;
 }
 
 export function MultiSelect({
@@ -25,6 +26,7 @@ export function MultiSelect({
   onChange,
   placeholder = "Select items...",
   className,
+  disabled = false,
 }: MultiSelectProps) {
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -50,6 +52,7 @@ export function MultiSelect({
         type="button"
         variant="outline"
         onClick={() => setIsOpen(!isOpen)}
+        disabled={disabled}
         className="w-full justify-between text-left font-normal text-black"
       >
         <span className="truncate">{getDisplayText()}</span>

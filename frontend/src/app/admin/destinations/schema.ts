@@ -8,6 +8,7 @@ export const destinationSchema = z.object({
   image: z.string(),
   region: z.string(),
   coordinates: z.tuple([z.number(), z.number()]).optional(),
+  priority: z.number().default(99),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
 });

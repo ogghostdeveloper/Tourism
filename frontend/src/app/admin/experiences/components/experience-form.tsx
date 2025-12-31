@@ -5,10 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { MultiSelect } from "@/components/ui/multi-select";
-import type { MultiSelectOption } from "@/components/ui/multi-select";
+import { MultiSelectOption } from "@/components/ui/multi-select";
 import { toast } from "sonner";
-import { Loader2, Upload, X, Save } from "lucide-react";
+import { Loader2, Save, Pencil, Check, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AnimatedArrowLeft } from "@/components/ui/animated-arrow-left";
@@ -17,44 +16,53 @@ import { getAllDestinations } from "@/app/admin/destinations/actions";
 import { getExperienceTypes } from "@/app/admin/experience-types/actions";
 import { DatePicker } from "@/components/ui/date-picker";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+} from "@/components/ui/command";
+import { cn } from "@/lib/utils";
 import { parseISO, format } from "date-fns";
+import { generateSlug } from "@/utils/slugGenerator";
+import { ImageUpload } from "@/components/admin/ImageUpload";
+import { GalleryUpload } from "@/components/admin/GalleryUpload";
 
 interface ExperienceFormProps {
     initialData?: any;
-    action: (formData: FormData) => Promise<{ success: boolean; message: string }>;
-    id?: string | null;
+    action?: (formData: FormData) => Promise<{ success: boolean; message: string }>;
+    slug?: string | null;
     title: string;
+    isReadOnly?: boolean;
 }
 
-export function ExperienceForm({ initialData, action, id = null, title: pageTitle }: ExperienceFormProps) {
+export function ExperienceForm({ initialData, action, slug = null, title: pageTitle, isReadOnly = false }: ExperienceFormProps) {
     const router = useRouter();
     const [isPending, startTransition] = React.useTransition();
-    const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
-    const [previewUrl, setPreviewUrl] = React.useState<string | null>(initialData?.image || null);
-    const [dragActive, setDragActive] = React.useState(false);
-    const [selectedDestinations, setSelectedDestinations] = React.useState<string[]>(initialData?.destinations || (initialData?.destinationSlug ? [initialData.destinationSlug] : []));
+    const [selectedDestination, setSelectedDestination] = React.useState<string>(initialData?.destinations?.[0] || initialData?.destinationSlug || "");
     const [destinationOptions, setDestinationOptions] = React.useState<MultiSelectOption[]>([]);
     const [categoryOptions, setCategoryOptions] = React.useState<{ value: string; label: string }[]>([]);
     const [isLoading, setIsLoading] = React.useState(true);
+    const [categoryPopoverOpen, setCategoryPopoverOpen] = React.useState(false);
+    const [difficultyPopoverOpen, setDifficultyPopoverOpen] = React.useState(false);
+    const [destinationsPopoverOpen, setDestinationsPopoverOpen] = React.useState(false);
+    const [difficulty, setDifficulty] = React.useState<string>(initialData?.difficulty || "");
+
+    // Gallery state synced for submission
     const [galleryFiles, setGalleryFiles] = React.useState<File[]>([]);
-    const [galleryPreviews, setGalleryPreviews] = React.useState<string[]>(initialData?.gallery || []);
     const [existingGallery, setExistingGallery] = React.useState<string[]>(initialData?.gallery || []);
 
     const [startDate, setStartDate] = React.useState<Date | undefined>(initialData?.startDate ? parseISO(initialData.startDate) : undefined);
     const [endDate, setEndDate] = React.useState<Date | undefined>(initialData?.endDate ? parseISO(initialData.endDate) : undefined);
     const [category, setCategory] = React.useState<string>(initialData?.category || "");
 
-    const fileInputRef = React.useRef<HTMLInputElement>(null);
-    const galleryInputRef = React.useRef<HTMLInputElement>(null);
     const iconRef = React.useRef<AnimatedArrowLeftHandle>(null);
-
-    const isFestivalOrCulture = category?.toLowerCase() === "festival" || category?.toLowerCase() === "culture" || category?.toLowerCase() === "festivals";
 
     React.useEffect(() => {
         const fetchData = async () => {
@@ -86,86 +94,25 @@ export function ExperienceForm({ initialData, action, id = null, title: pageTitl
         fetchData();
     }, []);
 
-    const handleDrag = (e: React.DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (e.type === "dragenter" || e.type === "dragover") {
-            setDragActive(true);
-        } else if (e.type === "dragleave") {
-            setDragActive(false);
-        }
-    };
-
-    const handleDrop = (e: React.DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setDragActive(false);
-        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-            const file = e.dataTransfer.files[0];
-            if (file.type.startsWith("image/")) {
-                setSelectedFile(file);
-                setPreviewUrl(URL.createObjectURL(file));
-                if (fileInputRef.current) {
-                    const dataTransfer = new DataTransfer();
-                    dataTransfer.items.add(file);
-                    fileInputRef.current.files = dataTransfer.files;
-                }
-            }
-        }
-    };
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        e.preventDefault();
-        if (e.target.files && e.target.files[0]) {
-            const file = e.target.files[0];
-            if (file.type.startsWith("image/")) {
-                setSelectedFile(file);
-                setPreviewUrl(URL.createObjectURL(file));
-            }
-        }
-    };
-
-    const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            const files = Array.from(e.target.files).filter(file => file.type.startsWith("image/"));
-            setGalleryFiles(prev => [...prev, ...files]);
-
-            const newPreviews = files.map(file => URL.createObjectURL(file));
-            setGalleryPreviews(prev => [...prev, ...newPreviews]);
-        }
-    };
-
-    const removeGalleryImage = (index: number) => {
-        if (index < existingGallery.length) {
-            setExistingGallery(prev => prev.filter((_, i) => i !== index));
-        } else {
-            const fileIndex = index - existingGallery.length;
-            setGalleryFiles(prev => prev.filter((_, i) => i !== fileIndex));
-        }
-        setGalleryPreviews(prev => prev.filter((_, i) => i !== index));
-    };
-
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        if (!action) return;
+
         const formData = new FormData(event.currentTarget);
 
-        formData.set("destinations", JSON.stringify(selectedDestinations));
+        formData.set("destinations", JSON.stringify(selectedDestination ? [selectedDestination] : []));
         formData.set("category", category);
+        formData.set("difficulty", difficulty);
 
         const durationVal = formData.get("duration");
         if (durationVal) {
             formData.set("duration", `${durationVal} Hours`);
         }
 
-        if (isFestivalOrCulture) {
-            if (startDate) formData.set("startDate", format(startDate, "yyyy-MM-dd"));
-            if (endDate) formData.set("endDate", format(endDate, "yyyy-MM-dd"));
-        } else {
-            formData.delete("startDate");
-            formData.delete("endDate");
-        }
+        if (startDate) formData.set("startDate", format(startDate, "yyyy-MM-dd"));
+        if (endDate) formData.set("endDate", format(endDate, "yyyy-MM-dd"));
 
-        if (id) {
+        if (slug) {
             formData.set("existingGallery", JSON.stringify(existingGallery));
         }
 
@@ -191,14 +138,25 @@ export function ExperienceForm({ initialData, action, id = null, title: pageTitl
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center h-64">
+            <div className="flex items-center justify-center min-h-[400px]">
                 <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
             </div>
         );
     }
 
     return (
-        <div className="flex-1 max-w-7xl mx-auto space-y-4 p-8 pt-6">
+        <div className="flex-1 max-w-7xl mx-auto space-y-4 md:p-8 pt-6 relative">
+            {isReadOnly && (
+                <Link
+                    href={`/admin/experiences/${initialData?.slug}/edit`}
+                    className="fixed top-24 right-8 z-50"
+                >
+                    <Button className="bg-amber-600 text-white hover:bg-amber-700 shadow-lg rounded-full w-12 h-12 p-0 flex items-center justify-center transition-transform hover:scale-110">
+                        <Pencil className="w-5 h-5" />
+                    </Button>
+                </Link>
+            )}
+
             <div className="flex flex-col gap-2">
                 <Link href="/admin/experiences" className="mb-4">
                     <Button
@@ -224,9 +182,18 @@ export function ExperienceForm({ initialData, action, id = null, title: pageTitl
                             id="title"
                             name="title"
                             required
-                            placeholder="Enter experience title"
+                            placeholder="e.g. Tiger's Nest Hike"
                             defaultValue={initialData?.title}
-                            className="text-black bg-white border-gray-200"
+                            readOnly={isReadOnly}
+                            className="bg-white border-gray-200 text-black"
+                            onChange={(e) => {
+                                if (!initialData && !isReadOnly) {
+                                    const slugInput = document.getElementById('slug') as HTMLInputElement;
+                                    if (slugInput) {
+                                        slugInput.value = generateSlug(e.target.value);
+                                    }
+                                }
+                            }}
                         />
                     </div>
 
@@ -236,10 +203,10 @@ export function ExperienceForm({ initialData, action, id = null, title: pageTitl
                             id="slug"
                             name="slug"
                             required
-                            placeholder="experience-slug"
+                            placeholder="tigers-nest-hike"
                             defaultValue={initialData?.slug}
-                            className="text-black bg-white border-gray-200"
-                            readOnly={!!id}
+                            readOnly={!!initialData || isReadOnly}
+                            className="bg-white border-gray-200 text-black"
                         />
                     </div>
                 </div>
@@ -247,18 +214,50 @@ export function ExperienceForm({ initialData, action, id = null, title: pageTitl
                 <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <Label htmlFor="category" className="text-black">Category *</Label>
-                        <Select value={category} onValueChange={setCategory}>
-                            <SelectTrigger className="bg-white border-gray-200 text-black">
-                                <SelectValue placeholder="Select a category" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {categoryOptions.map((opt) => (
-                                    <SelectItem key={opt.value} value={opt.value}>
-                                        {opt.label}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                        <Popover open={categoryPopoverOpen} onOpenChange={setCategoryPopoverOpen}>
+                            <PopoverTrigger className="rounded-none" asChild disabled={isReadOnly}>
+                                <Button
+                                    variant="outline"
+                                    role="combobox"
+                                    aria-expanded={categoryPopoverOpen}
+                                    className="w-full justify-between bg-white border-gray-200 text-black hover:bg-white"
+                                    disabled={isReadOnly}
+                                >
+                                    {category
+                                        ? categoryOptions.find((opt) => opt.value === category)?.label
+                                        : "Select a category..."}
+                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+                                <Command>
+                                    <CommandInput placeholder="Search category..." className="h-9" />
+                                    <CommandList>
+                                        <CommandEmpty>No category found.</CommandEmpty>
+                                        <CommandGroup>
+                                            {categoryOptions.map((opt) => (
+                                                <CommandItem
+                                                    key={opt.value}
+                                                    value={opt.value}
+                                                    onSelect={(currentValue) => {
+                                                        setCategory(currentValue);
+                                                        setCategoryPopoverOpen(false);
+                                                    }}
+                                                >
+                                                    {opt.label}
+                                                    <Check
+                                                        className={cn(
+                                                            "ml-auto h-4 w-4",
+                                                            category === opt.value ? "opacity-100" : "opacity-0"
+                                                        )}
+                                                    />
+                                                </CommandItem>
+                                            ))}
+                                        </CommandGroup>
+                                    </CommandList>
+                                </Command>
+                            </PopoverContent>
+                        </Popover>
                     </div>
 
                     <div className="space-y-2">
@@ -269,39 +268,132 @@ export function ExperienceForm({ initialData, action, id = null, title: pageTitl
                             type="number"
                             step="0.5"
                             min="0.5"
-                            placeholder="e.g., 2.5"
+                            placeholder="e.g. 2.5"
                             defaultValue={initialData?.duration ? parseFloat(initialData.duration) : undefined}
-                            className="text-black bg-white border-gray-200"
+                            readOnly={isReadOnly}
+                            className="bg-white border-gray-200 text-black"
                         />
                     </div>
                 </div>
 
-                {isFestivalOrCulture && (
-                    <div className="grid md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <Label className="text-black">Start Date</Label>
-                            <DatePicker date={startDate} setDate={setStartDate} placeholder="Select start date" />
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label className="text-black">End Date</Label>
-                            <DatePicker date={endDate} setDate={setEndDate} placeholder="Select end date" />
-                        </div>
+                <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <Label className="text-black">Start Date <span className="text-xs text-gray-500 font-normal">(Optional - Festivals)</span></Label>
+                        <DatePicker
+                            date={startDate}
+                            setDate={setStartDate}
+                            placeholder="Select start date"
+                            disabled={isReadOnly}
+                            className="rounded-none"
+                        />
                     </div>
-                )}
 
-                <div className="space-y-2">
-                    <Label htmlFor="difficulty" className="text-black">Difficulty</Label>
-                    <Select name="difficulty" defaultValue={initialData?.difficulty}>
-                        <SelectTrigger className="bg-white border-gray-200 text-black">
-                            <SelectValue placeholder="Select difficulty" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="Easy">Easy</SelectItem>
-                            <SelectItem value="Moderate">Moderate</SelectItem>
-                            <SelectItem value="Challenging">Challenging</SelectItem>
-                        </SelectContent>
-                    </Select>
+                    <div className="space-y-2">
+                        <Label className="text-black">End Date <span className="text-xs text-gray-500 font-normal">(Optional - Festivals)</span></Label>
+                        <DatePicker
+                            date={endDate}
+                            setDate={setEndDate}
+                            placeholder="Select end date"
+                            disabled={isReadOnly}
+                            className="rounded-none"
+                        />
+                    </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="difficulty" className="text-black">Difficulty</Label>
+                        <Popover open={difficultyPopoverOpen} onOpenChange={setDifficultyPopoverOpen}>
+                            <PopoverTrigger className="rounded-none" asChild disabled={isReadOnly}>
+                                <Button
+                                    variant="outline"
+                                    role="combobox"
+                                    aria-expanded={difficultyPopoverOpen}
+                                    className="w-full justify-between bg-white border-gray-200 text-black hover:bg-white"
+                                    disabled={isReadOnly}
+                                >
+                                    {difficulty ? difficulty : "Select difficulty..."}
+                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+                                <Command>
+                                    <CommandInput placeholder="Search difficulty..." className="h-9" />
+                                    <CommandList>
+                                        <CommandEmpty>No difficulty found.</CommandEmpty>
+                                        <CommandGroup>
+                                            {["Easy", "Moderate", "Challenging"].map((opt) => (
+                                                <CommandItem
+                                                    key={opt}
+                                                    value={opt}
+                                                    onSelect={(currentValue) => {
+                                                        setDifficulty(opt);
+                                                        setDifficultyPopoverOpen(false);
+                                                    }}
+                                                >
+                                                    {opt}
+                                                    <Check
+                                                        className={cn(
+                                                            "ml-auto h-4 w-4",
+                                                            difficulty === opt ? "opacity-100" : "opacity-0"
+                                                        )}
+                                                    />
+                                                </CommandItem>
+                                            ))}
+                                        </CommandGroup>
+                                    </CommandList>
+                                </Command>
+                            </PopoverContent>
+                        </Popover>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label className="text-black font-semibold">Destination</Label>
+                        <Popover open={destinationsPopoverOpen} onOpenChange={setDestinationsPopoverOpen}>
+                            <PopoverTrigger className="rounded-none" asChild disabled={isReadOnly}>
+                                <Button
+                                    variant="outline"
+                                    role="combobox"
+                                    aria-expanded={destinationsPopoverOpen}
+                                    className="w-full justify-between bg-white border-gray-200 text-black hover:bg-white"
+                                    disabled={isReadOnly}
+                                >
+                                    {selectedDestination
+                                        ? destinationOptions.find((opt) => opt.value === selectedDestination)?.label
+                                        : "Select a destination..."}
+                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                                <Command>
+                                    <CommandInput placeholder="Search destinations..." className="h-9" />
+                                    <CommandList>
+                                        <CommandEmpty>No destination found.</CommandEmpty>
+                                        <CommandGroup>
+                                            {destinationOptions.map((opt) => (
+                                                <CommandItem
+                                                    key={opt.value}
+                                                    value={opt.label}
+                                                    onSelect={() => {
+                                                        setSelectedDestination(opt.value);
+                                                        setDestinationsPopoverOpen(false);
+                                                    }}
+                                                >
+                                                    {opt.label}
+                                                    <Check
+                                                        className={cn(
+                                                            "ml-auto h-4 w-4",
+                                                            selectedDestination === opt.value ? "opacity-100" : "opacity-0"
+                                                        )}
+                                                    />
+                                                </CommandItem>
+                                            ))}
+                                        </CommandGroup>
+                                    </CommandList>
+                                </Command>
+                            </PopoverContent>
+                        </Popover>
+                    </div>
                 </div>
 
                 <div className="space-y-2">
@@ -311,27 +403,17 @@ export function ExperienceForm({ initialData, action, id = null, title: pageTitl
                         name="description"
                         required
                         placeholder="Describe the experience..."
-                        className="min-h-[200px] resize-none text-black bg-white border-gray-200"
-                        rows={8}
+                        readOnly={isReadOnly}
+                        className="min-h-[150px] bg-white border-gray-200 text-black"
+                        rows={6}
                         defaultValue={initialData?.description}
                     />
                 </div>
 
-                <div className="border p-4 space-y-4 rounded-lg bg-gray-50/50">
-                    <h3 className="font-semibold text-black">Destinations</h3>
-                    <div className="space-y-2">
-                        <Label className="text-black">Select Destinations</Label>
-                        <MultiSelect
-                            options={destinationOptions}
-                            selected={selectedDestinations}
-                            onChange={setSelectedDestinations}
-                            placeholder="Select destinations..."
-                        />
-                    </div>
-                </div>
 
-                <div className="border p-4 space-y-4 rounded-lg bg-gray-50/50">
-                    <h3 className="font-semibold text-black">Coordinates</h3>
+
+                <div className="border p-4  space-y-4">
+                    <Label className="text-black font-semibold">Coordinates</Label>
                     <div className="grid md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                             <Label htmlFor="latitude" className="text-black">Latitude</Label>
@@ -340,9 +422,10 @@ export function ExperienceForm({ initialData, action, id = null, title: pageTitl
                                 name="latitude"
                                 type="number"
                                 step="any"
-                                placeholder="27.4728"
+                                placeholder="e.g. 27.4728"
                                 defaultValue={initialData?.coordinates?.[0]}
-                                className="text-black bg-white border-gray-200"
+                                readOnly={isReadOnly}
+                                className="bg-white border-gray-200 text-black"
                             />
                         </div>
 
@@ -353,134 +436,59 @@ export function ExperienceForm({ initialData, action, id = null, title: pageTitl
                                 name="longitude"
                                 type="number"
                                 step="any"
-                                placeholder="89.6393"
+                                placeholder="e.g. 89.6393"
                                 defaultValue={initialData?.coordinates?.[1]}
-                                className="text-black bg-white border-gray-200"
+                                readOnly={isReadOnly}
+                                className="bg-white border-gray-200 text-black"
                             />
                         </div>
                     </div>
                 </div>
 
-                <div className="space-y-2">
-                    <Label className="text-black">Cover Image *</Label>
-                    <div
-                        className={`relative flex flex-col items-center justify-center border-2 border-dashed transition-colors rounded-lg ${dragActive
-                            ? "border-black bg-black/5"
-                            : "border-gray-200 bg-white"
-                            } ${previewUrl ? "h-auto p-2" : "h-32"}`}
-                        onDragEnter={handleDrag}
-                        onDragLeave={handleDrag}
-                        onDragOver={handleDrag}
-                        onDrop={handleDrop}
-                    >
-                        {previewUrl ? (
-                            <div className="group relative aspect-video w-full overflow-hidden rounded-md">
-                                <img
-                                    src={previewUrl}
-                                    alt="Preview"
-                                    className="object-cover w-full h-full"
-                                />
-                                <label
-                                    htmlFor="image-upload"
-                                    className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/60 opacity-0 transition-opacity group-hover:opacity-100"
-                                >
-                                    <div className="bg-white px-4 py-2 text-sm font-medium text-gray-900 border border-black hover:bg-gray-100">
-                                        Change Image
-                                    </div>
-                                </label>
-                            </div>
-                        ) : (
-                            <label
-                                htmlFor="image-upload"
-                                className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-2 text-center"
-                            >
-                                <Upload className="h-6 w-6 text-gray-400" />
-                                <div>
-                                    <p className="text-sm font-medium text-black">
-                                        Click to upload or drag and drop
-                                    </p>
-                                    <p className="text-xs text-gray-500">
-                                        PNG, JPG, JPEG up to 5MB
-                                    </p>
-                                </div>
-                            </label>
-                        )}
-                        <input
-                            ref={fileInputRef}
-                            id="image-upload"
-                            name="image"
-                            type="file"
-                            className="hidden"
-                            onChange={handleChange}
-                            accept="image/*"
-                            required={!previewUrl}
-                        />
-                    </div>
-                </div>
+                <ImageUpload
+                    defaultPreview={initialData?.image}
+                    required={!initialData}
+                    name="image"
+                    label="Cover Image *"
+                    readOnly={isReadOnly}
+                />
 
-                <div className="space-y-2">
-                    <Label className="text-black">Gallery Images</Label>
-                    <div className="border-2 border-dashed border-gray-200 p-4 rounded-lg bg-white">
-                        <input
-                            ref={galleryInputRef}
-                            id="gallery-upload"
-                            type="file"
-                            className="hidden"
-                            onChange={handleGalleryChange}
-                            accept="image/*"
-                            multiple
-                        />
+                <GalleryUpload
+                    initialImages={initialData?.gallery}
+                    onImagesChange={(files, existing) => {
+                        setGalleryFiles(files);
+                        setExistingGallery(existing);
+                    }}
+                    readOnly={isReadOnly}
+                    label="Gallery Images"
+                />
 
-                        {galleryPreviews.length > 0 && (
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                                {galleryPreviews.map((preview, index) => (
-                                    <div key={index} className="relative group aspect-square rounded overflow-hidden">
-                                        <img
-                                            src={preview}
-                                            alt={`Gallery ${index + 1}`}
-                                            className="w-full h-full object-cover"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => removeGalleryImage(index)}
-                                            className="absolute top-1 right-1 bg-black/50 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                                        >
-                                            <X className="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-
-                        <button
-                            type="button"
-                            onClick={() => galleryInputRef.current?.click()}
-                            className="w-full bg-gray-50 hover:bg-gray-100 text-black border border-gray-200 py-3 px-4 rounded-md text-sm font-medium flex items-center justify-center gap-2 transition-colors"
+                {!isReadOnly && (
+                    <div className="flex justify-end gap-4 pt-4">
+                        <Link href="/admin/experiences">
+                            <Button variant="outline" type="button" className="text-black">
+                                Cancel
+                            </Button>
+                        </Link>
+                        <Button
+                            type="submit"
+                            disabled={isPending}
+                            className="bg-amber-600 text-white hover:bg-amber-700 min-w-[150px]"
                         >
-                            <Upload className="h-4 w-4" />
-                            {galleryPreviews.length > 0 ? 'Add More Images' : 'Upload Gallery Images'}
-                        </button>
+                            {isPending ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Saving...
+                                </>
+                            ) : (
+                                <>
+                                    <Save className="w-4 h-4 mr-2" />
+                                    {initialData ? "Update Experience" : "Create Experience"}
+                                </>
+                            )}
+                        </Button>
                     </div>
-                </div>
-
-                <div className="flex justify-end gap-4 pt-4">
-                    <Button variant="outline" type="button" asChild className="text-black">
-                        <Link href="/admin/experiences">Cancel</Link>
-                    </Button>
-                    <Button type="submit" disabled={isPending} className="bg-black text-white hover:bg-black/90 min-w-[150px]">
-                        {isPending ? (
-                            <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Saving...
-                            </>
-                        ) : (
-                            <>
-                                <Save className="w-4 h-4 mr-2" />
-                                {id ? "Update Experience" : "Create Experience"}
-                            </>
-                        )}
-                    </Button>
-                </div>
+                )}
             </form>
         </div>
     );

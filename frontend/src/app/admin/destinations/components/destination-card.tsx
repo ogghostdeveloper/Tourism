@@ -64,7 +64,7 @@ export function DestinationCard({ destination }: DestinationCardProps) {
         >
           <Button
             size="icon"
-            className="bg-white text-black hover:bg-gray-100 w-9 h-9"
+            className="bg-amber-600 text-white hover:bg-amber-700 w-9 h-9"
           >
             <Pencil className="w-4 h-4" />
           </Button>

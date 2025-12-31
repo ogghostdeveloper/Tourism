@@ -57,14 +57,12 @@ export async function createDestination(prevState: any, formData: FormData) {
     const slug = formData.get("slug") as string;
     const region = formData.get("region") as string;
     const description = formData.get("description") as string;
-
+    const priority = parseInt(formData.get("priority") as string) || 0;
 
     const latStr = formData.get("latitude") as string;
     const lngStr = formData.get("longitude") as string;
     const latitude = latStr ? parseFloat(latStr) : undefined;
     const longitude = lngStr ? parseFloat(lngStr) : undefined;
-
-
 
     const imageInput = formData.get("image");
     let imageUrl = "https://images.unsplash.com/photo-1578500263628-936ddec022cf";
@@ -81,6 +79,7 @@ export async function createDestination(prevState: any, formData: FormData) {
       slug,
       region,
       description,
+      priority,
       image: imageUrl,
     };
 
@@ -119,14 +118,12 @@ export async function updateDestination(
     const name = formData.get("name") as string;
     const region = formData.get("region") as string;
     const description = formData.get("description") as string;
-
+    const priority = parseInt(formData.get("priority") as string) || 0;
 
     const latStr = formData.get("latitude") as string;
     const lngStr = formData.get("longitude") as string;
     const latitude = latStr ? parseFloat(latStr) : undefined;
     const longitude = lngStr ? parseFloat(lngStr) : undefined;
-
-
 
     const imageInput = formData.get("image");
     const existingDestination = await db.getDestinationBySlug(slug);
@@ -143,6 +140,7 @@ export async function updateDestination(
       name,
       region,
       description,
+      priority,
       image: imageUrl,
     };
 
@@ -190,4 +188,3 @@ export async function deleteDestination(slug: string) {
     };
   }
 }
-
