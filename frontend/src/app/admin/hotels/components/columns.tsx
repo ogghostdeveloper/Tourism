@@ -102,34 +102,34 @@ export const columns: ColumnDef<Hotel>[] = [
       );
     },
   },
-  {
-    accessorKey: "rooms",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Rooms" />
-    ),
-    cell: ({ row }) => {
-      const rooms = row.getValue("rooms");
-      return (
-        <div className="text-sm text-black">
-          {rooms ? `${rooms} rooms` : "-"}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "amenities",
-    header: "Amenities",
-    cell: ({ row }) => {
-      const amenities = row.original.amenities || [];
-      return (
-        <div className="max-w-[250px] truncate text-sm text-black">
-          {amenities.slice(0, 3).join(", ")}
-          {amenities.length > 3 && "..."}
-          {amenities.length === 0 && "-"}
-        </div>
-      );
-    },
-  },
+  // {
+  //   accessorKey: "rooms",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Rooms" />
+  //   ),
+  //   cell: ({ row }) => {
+  //     const rooms = row.getValue("rooms");
+  //     return (
+  //       <div className="text-sm text-black">
+  //         {rooms ? `${rooms} rooms` : "-"}
+  //       </div>
+  //     );
+  //   },
+  // },
+  // {
+  //   accessorKey: "amenities",
+  //   header: "Amenities",
+  //   cell: ({ row }) => {
+  //     const amenities = row.original.amenities || [];
+  //     return (
+  //       <div className="max-w-[250px] truncate text-sm text-black">
+  //         {amenities.slice(0, 3).join(", ")}
+  //         {amenities.length > 3 && "..."}
+  //         {amenities.length === 0 && "-"}
+  //       </div>
+  //     );
+  //   },
+  // },
   {
     accessorKey: "updatedAt",
     header: ({ column }) => (

@@ -60,18 +60,11 @@ export default function HotelsPage({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-black">Hotels</h1>
-          <p className="text-sm text-black mt-1">
-            Manage hotels and accommodations
-          </p>
-        </div>
-        <Link href="/admin/hotels/create">
-          <Button className="bg-black text-white hover:bg-black/90">
-            Add Hotel
-          </Button>
-        </Link>
+      <div>
+        <h1 className="text-2xl font-semibold text-black">Hotels</h1>
+        <p className="text-sm text-black mt-1">
+          Manage hotels and accommodations
+        </p>
       </div>
 
       <DataTable

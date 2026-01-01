@@ -45,41 +45,41 @@ export function DataTableToolbar<TData>({
         )}
       </div>
       <div className="flex items-center gap-2">
+        <DataTableViewOptions table={table} />
+        <Link href="/admin/hotels/create">
+          <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white">
+            <Plus className="mr-2 h-4 w-4" />
+            Add New
+          </Button>
+        </Link>
         {view && onViewChange && (
-          <div className="flex items-center gap-1 border border-gray-300 p-1">
+          <div className="flex items-center gap-1">
             <Button
-              variant={view === "list" ? "default" : "ghost"}
+              variant={view === "list" ? "default" : "outline"}
               size="sm"
               onClick={() => onViewChange("list")}
               className={
                 view === "list"
                   ? "bg-black text-white"
-                  : "text-black hover:text-black/80 hover:bg-gray-100"
+                  : "text-black hover:text-black hover:bg-gray-100"
               }
             >
               <List className="w-4 h-4" />
             </Button>
             <Button
-              variant={view === "grid" ? "default" : "ghost"}
+              variant={view === "grid" ? "default" : "outline"}
               size="sm"
               onClick={() => onViewChange("grid")}
               className={
                 view === "grid"
                   ? "bg-black text-white"
-                  : "text-black hover:text-black/80 hover:bg-gray-100"
+                  : "text-black hover:text-black hover:bg-gray-100"
               }
             >
               <LayoutGrid className="w-4 h-4" />
             </Button>
           </div>
         )}
-        <DataTableViewOptions table={table} />
-        <Link href="/admin/hotels/create">
-          <Button size="sm" className="text-white">
-            <Plus className="mr-2 h-4 w-4" />
-            Add New
-          </Button>
-        </Link>
       </div>
     </div>
   );

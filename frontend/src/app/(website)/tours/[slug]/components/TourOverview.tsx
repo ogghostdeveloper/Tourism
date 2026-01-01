@@ -19,7 +19,7 @@ export function TourOverview({ tour }: TourOverviewProps) {
                         The <span className="italic font-serif normal-case text-amber-600">Narrative</span> <br />of {tour.title}
                     </h2>
                     <div className="relative pl-8 border-l border-black/10">
-                        <p className="text-2xl text-gray-600 leading-relaxed font-light italic">
+                        <p className="text-xl text-gray-500 leading-relaxed font-light italic">
                             "{tour.description}"
                         </p>
                         <div className="mt-8 font-mono text-[10px] text-gray-500 uppercase tracking-widest flex items-center gap-3 font-bold">

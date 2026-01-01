@@ -31,6 +31,16 @@ export async function getHotelById(id: string): Promise<Hotel | null> {
     }
 }
 
+export async function getHotelBySlug(slug: string): Promise<Hotel | null> {
+    try {
+        const hotel = await hotelDb.getHotelBySlug(slug);
+        return hotel as Hotel | null;
+    } catch (error) {
+        console.error("Error fetching hotel by slug:", error);
+        return null;
+    }
+}
+
 export async function getRelatedHotels(destinationSlug: string, excludeId: string, limit: number = 3): Promise<Hotel[]> {
     try {
         const all = await hotelDb.getAllHotels();

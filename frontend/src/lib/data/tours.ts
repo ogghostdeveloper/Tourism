@@ -61,6 +61,15 @@ export async function getAllTours() {
     return items.map(formatDoc);
 }
 
+export async function getRelatedTours(slug: string, limit: number = 3) {
+    const client = await clientPromise;
+    const items = await client.db(DB).collection<Tour>(COLLECTION)
+        .find({ slug: { $ne: slug } })
+        .limit(limit)
+        .toArray();
+    return items.map(formatDoc);
+}
+
 export async function createTour(data: any) {
     const client = await clientPromise;
     const doc = {

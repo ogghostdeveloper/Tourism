@@ -1,26 +1,73 @@
-import { Metadata } from "next";
+"use client";
+
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { columns } from "./components/columns";
 import { DataTable } from "./components/data-table";
 import { getTours } from "./actions";
+import { Tour } from "./schema";
 
-export const metadata: Metadata = {
-    title: "Tours",
-    description: "Manage guided tours and expeditions.",
-};
-
-export default async function ToursPage({
-    searchParams,
-}: {
+interface ToursPageProps {
     searchParams: Promise<{ page?: string; page_size?: string }>;
-}) {
-    const params = await searchParams;
-    const page = Number(params.page) || 1;
-    const pageSize = Number(params.page_size) || 10;
+}
 
-    const paginatedData = await getTours(page, pageSize);
+export default function ToursPage({
+    searchParams,
+}: ToursPageProps) {
+    // Always default to 'list' on the server to avoid hydration mismatch
+    const [view, setView] = useState<"list" | "grid">("list");
+    const [tours, setTours] = useState<Tour[]>([]);
+    const [pageData, setPageData] = useState({
+        pageCount: 0,
+        pageIndex: 0,
+        pageSize: 10,
+    });
+    const [isLoading, setIsLoading] = useState(true);
+
+    // Set view after mount to avoid hydration mismatch
+    useEffect(() => {
+        const setInitialView = () => {
+            if (window.innerWidth < 768) {
+                setView("grid");
+            } else {
+                const stored = window.localStorage.getItem("tours_view");
+                setView(stored === "list" || stored === "grid" ? stored : "list");
+            }
+        };
+        setInitialView();
+        window.addEventListener("resize", setInitialView);
+        return () => window.removeEventListener("resize", setInitialView);
+    }, []);
+
+    // Persist view changes
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            window.localStorage.setItem("tours_view", view);
+        }
+    }, [view]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setIsLoading(true);
+            const params = await searchParams;
+            const page = Number(params.page) || 1;
+            const pageSize = Number(params.page_size) || 10;
+
+            const paginatedData = await getTours(page, pageSize);
+
+            setTours(paginatedData.items);
+            setPageData({
+                pageCount: paginatedData.total_pages,
+                pageIndex: paginatedData.page - 1,
+                pageSize: paginatedData.page_size,
+            });
+            setIsLoading(false);
+        };
+
+        fetchData();
+    }, [searchParams]);
 
     return (
         <div className="space-y-6">
@@ -33,22 +80,17 @@ export default async function ToursPage({
                         Manage your curated travel journeys and luxury itineraries.
                     </p>
                 </div>
-                <div className="flex items-center gap-2">
-                    <Link href="/admin/tours/new">
-                        <Button className="bg-black text-white hover:bg-neutral-800">
-                            <Plus className="mr-2 h-4 w-4" /> Add Tour
-                        </Button>
-                    </Link>
-                </div>
             </div>
             <DataTable
-                data={paginatedData.items}
+                data={tours}
                 columns={columns}
-                pageCount={paginatedData.total_pages}
+                pageCount={pageData.pageCount}
                 pagination={{
-                    pageIndex: paginatedData.page - 1,
-                    pageSize: paginatedData.page_size,
+                    pageIndex: pageData.pageIndex,
+                    pageSize: pageData.pageSize,
                 }}
+                view={view}
+                onViewChange={setView}
             />
         </div>
     );

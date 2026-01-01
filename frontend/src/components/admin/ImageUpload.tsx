@@ -95,10 +95,10 @@ export function ImageUpload({
         <div className={`space-y-2 ${className}`}>
             <Label className="text-black">{label} {required && "*"}</Label>
             <div
-                className={`relative flex flex-col items-center justify-center border-2 border-dashed transition-colors rounded-lg ${dragActive
+                className={`relative flex flex-col items-center justify-center border-2 border-dashed transition-colors ${dragActive
                     ? "border-primary bg-primary/10"
                     : "border-muted-foreground/25"
-                    } ${previewUrl ? "aspect-video p-0 overflow-hidden" : "h-32"}`}
+                    } ${previewUrl ? "aspect-video p-1 overflow-hidden" : "h-32"}`}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
                 onDragOver={handleDrag}

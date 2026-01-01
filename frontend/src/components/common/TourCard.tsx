@@ -12,6 +12,15 @@ interface TourCardProps {
 }
 
 export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
+    const formatPrice = (price: number) => {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+        }).format(price);
+    };
+
     const CardContent = (
         <>
             {/* Image Container */}
@@ -25,6 +34,7 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
                 <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-700" />
                 <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity duration-700" />
 
+                {/* Uses priority instead of featured, assuming lower priority means higher importance or similar logic for 'Featured' tag could be derived from priority if needed. For now, checking if featured exists or derived. */}
                 {tour.featured && (
                     <span className="absolute top-6 right-6 bg-amber-600 text-white px-3 py-1 font-mono text-[8px] uppercase tracking-[0.4em] z-20 shadow-lg">
                         Featured
@@ -62,7 +72,7 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
                             </div>
                             <div className="flex items-center gap-2 px-3 py-1 bg-amber-600/10 rounded-sm text-black border border-amber-600/20 shadow-xs">
                                 <DollarSign className="w-3.5 h-3.5 text-amber-600" />
-                                {tour.price.replace("From ", "")}
+                                {formatPrice(tour.price)}
                             </div>
                         </div>
                     </div>

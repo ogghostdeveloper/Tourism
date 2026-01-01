@@ -8,10 +8,20 @@ interface TourHeroProps {
     image: string;
     category?: string;
     duration?: string;
-    price?: string;
+    price?: number;
 }
 
 export function TourHero({ title, image, category, duration, price }: TourHeroProps) {
+    const formatPrice = (price?: number) => {
+        if (price === undefined) return null;
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+        }).format(price);
+    };
+
     return (
         <section className="h-screen relative overflow-hidden bg-white">
             {/* Background Image with Reveal */}
@@ -75,12 +85,12 @@ export function TourHero({ title, image, category, duration, price }: TourHeroPr
                             </div>
                         )}
 
-                        {price && (
+                        {price !== undefined && (
                             <div className="flex flex-col gap-2">
                                 <span className="font-mono text-[10px] text-white uppercase tracking-widest font-bold">Pricing</span>
                                 <div className="flex items-center gap-3">
                                     <Tag className="w-4 h-4 text-amber-600" />
-                                    <span className="text-xl font-light uppercase tracking-tight text-white">{price}</span>
+                                    <span className="text-xl font-light uppercase tracking-tight text-white">{formatPrice(price)}</span>
                                 </div>
                             </div>
                         )}

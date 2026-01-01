@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Row } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -44,14 +44,14 @@ export function DataTableRowActions<TData>({
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <Link href={`/tours/${tour.slug}`} target="_blank">
+                    <Link href={`/admin/tours/${tour.slug}/edit`}>
                         <DropdownMenuItem className="text-green-600 focus:text-green-600 data-[variant=default]:text-green-600 data-[variant=default]:focus:bg-green-50">
-                            View on Site
+                            <Pencil className="mr-2 h-4 w-4" /> Edit
                         </DropdownMenuItem>
                     </Link>
-                    <Link href={`/admin/tours/${tour._id}`}>
+                    <Link href={`/admin/tours/${tour.slug}`}>
                         <DropdownMenuItem className="text-blue-500 focus:text-blue-500 data-[variant=default]:text-blue-500 data-[variant=default]:focus:bg-blue-100">
-                            Edit
+                            <Eye className="mr-2 h-4 w-4" /> View
                         </DropdownMenuItem>
                     </Link>
                     <DropdownMenuSeparator />
@@ -59,7 +59,7 @@ export function DataTableRowActions<TData>({
                         onClick={() => setShowDeleteDialog(true)}
                         className="text-red-500 focus:text-red-500 data-[variant=default]:text-red-500 data-[variant=default]:focus:bg-red-100"
                     >
-                        Delete
+                        <Trash2 className="mr-2 h-4 w-4" /> Delete
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

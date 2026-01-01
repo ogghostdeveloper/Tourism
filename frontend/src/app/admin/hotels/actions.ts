@@ -26,12 +26,12 @@ export async function getHotels(
   }
 }
 
-export async function getHotelById(id: string): Promise<Hotel | null> {
+export async function getHotelBySlug(slug: string): Promise<Hotel | null> {
   try {
-    const hotel = await db.getHotelById(id);
+    const hotel = await db.getHotelBySlug(slug);
     return hotel as Hotel | null;
   } catch (error) {
-    console.error("Error fetching hotel:", error);
+    console.error("Error fetching hotel by slug:", error);
     return null;
   }
 }
@@ -48,25 +48,13 @@ export async function getAllHotels() {
 
 export async function createHotel(prevState: any, formData: FormData) {
   const session = await auth();
-  if (!session) {
-    return { success: false, message: "Unauthorized" };
-  }
+  if (!session) return { success: false, message: "Unauthorized" };
 
   try {
-    const name = formData.get("name") as string;
-    const location = formData.get("location") as string;
-    const description = formData.get("description") as string;
-    const destinationSlug = formData.get("destinationSlug") as string;
-    const rating = parseFloat(formData.get("rating") as string);
-    const priceRange = formData.get("priceRange") as string;
-    const roomsStr = formData.get("rooms") as string;
-    const rooms = roomsStr ? parseInt(roomsStr) : undefined;
+    const getValue = (key: string) => formData.get(key) as string;
 
-    const amenitiesStr = formData.get("amenities") as string;
-    const amenities = amenitiesStr ? amenitiesStr.split("\n").filter(a => a.trim()) : [];
-
-    const latStr = formData.get("latitude") as string;
-    const lngStr = formData.get("longitude") as string;
+    const latStr = getValue("latitude");
+    const lngStr = getValue("longitude");
     const latitude = latStr ? parseFloat(latStr) : undefined;
     const longitude = lngStr ? parseFloat(lngStr) : undefined;
 
@@ -75,21 +63,35 @@ export async function createHotel(prevState: any, formData: FormData) {
 
     if (imageInput instanceof File && imageInput.size > 0) {
       const uploadedPath = await uploadImage(imageInput);
-      if (uploadedPath) {
-        imageUrl = uploadedPath;
+      if (uploadedPath) imageUrl = uploadedPath;
+    }
+
+    // Process Gallery
+    const existingGalleryRaw = formData.get("existingGallery") as string;
+    let gallery: string[] = existingGalleryRaw ? JSON.parse(existingGalleryRaw) : [];
+
+    const galleryFiles = formData.getAll("gallery");
+    for (const file of galleryFiles) {
+      if (file instanceof File && file.size > 0) {
+        const uploadedPath = await uploadImage(file);
+        if (uploadedPath) {
+          gallery.push(uploadedPath);
+        }
       }
     }
 
     const hotelData: any = {
-      name,
-      location,
-      description,
-      destinationSlug,
-      rating,
-      priceRange,
-      rooms,
-      amenities,
+      name: getValue("name"),
+      slug: getValue("slug"),
+      location: getValue("location"),
+      description: getValue("description"),
+      destinationSlug: getValue("destinationSlug"),
+      rating: parseFloat(getValue("rating")),
+      priceRange: getValue("priceRange"),
+      rooms: getValue("rooms") ? parseInt(getValue("rooms")) : undefined,
+      amenities: (getValue("amenities") || "").split("\n").filter(a => a.trim()),
       image: imageUrl,
+      gallery: gallery,
     };
 
     if (latitude !== undefined && longitude !== undefined && !isNaN(latitude) && !isNaN(longitude)) {
@@ -97,47 +99,24 @@ export async function createHotel(prevState: any, formData: FormData) {
     }
 
     await db.createHotel(hotelData);
-
     revalidatePath("/admin/hotels");
 
-    return {
-      success: true,
-      message: "Hotel created successfully",
-    };
+    return { success: true, message: "Hotel created successfully" };
   } catch (error) {
     console.error("Error creating hotel:", error);
-    return {
-      success: false,
-      message: "Failed to create hotel",
-    };
+    return { success: false, message: "Failed to create hotel" };
   }
 }
 
-export async function updateHotel(
-  id: string,
-  prevState: any,
-  formData: FormData
-) {
+export async function updateHotel(id: string, prevState: any, formData: FormData) {
   const session = await auth();
-  if (!session) {
-    return { success: false, message: "Unauthorized" };
-  }
+  if (!session) return { success: false, message: "Unauthorized" };
 
   try {
-    const name = formData.get("name") as string;
-    const location = formData.get("location") as string;
-    const description = formData.get("description") as string;
-    const destinationSlug = formData.get("destinationSlug") as string;
-    const rating = parseFloat(formData.get("rating") as string);
-    const priceRange = formData.get("priceRange") as string;
-    const roomsStr = formData.get("rooms") as string;
-    const rooms = roomsStr ? parseInt(roomsStr) : undefined;
+    const getValue = (key: string) => formData.get(key) as string;
 
-    const amenitiesStr = formData.get("amenities") as string;
-    const amenities = amenitiesStr ? amenitiesStr.split("\n").filter(a => a.trim()) : [];
-
-    const latStr = formData.get("latitude") as string;
-    const lngStr = formData.get("longitude") as string;
+    const latStr = getValue("latitude");
+    const lngStr = getValue("longitude");
     const latitude = latStr ? parseFloat(latStr) : undefined;
     const longitude = lngStr ? parseFloat(lngStr) : undefined;
 
@@ -147,64 +126,71 @@ export async function updateHotel(
 
     if (imageInput instanceof File && imageInput.size > 0) {
       const uploadedPath = await uploadImage(imageInput);
-      if (uploadedPath) {
-        imageUrl = uploadedPath;
+      if (uploadedPath) imageUrl = uploadedPath;
+    }
+
+    // Process Gallery
+    const existingGalleryRaw = formData.get("existingGallery") as string;
+    let gallery: string[] = existingGalleryRaw ? JSON.parse(existingGalleryRaw) : (existingHotel?.gallery || []);
+
+    const galleryFiles = formData.getAll("gallery");
+    for (const file of galleryFiles) {
+      if (file instanceof File && file.size > 0) {
+        const uploadedPath = await uploadImage(file);
+        if (uploadedPath) {
+          gallery.push(uploadedPath);
+        }
       }
     }
 
     const hotelData: any = {
-      name,
-      location,
-      description,
-      destinationSlug,
-      rating,
-      priceRange,
-      rooms,
-      amenities,
+      name: getValue("name"),
+      slug: getValue("slug"),
+      location: getValue("location"),
+      description: getValue("description"),
+      destinationSlug: getValue("destinationSlug"),
+      rating: parseFloat(getValue("rating")),
+      priceRange: getValue("priceRange"),
+      rooms: getValue("rooms") ? parseInt(getValue("rooms")) : undefined,
+      amenities: (getValue("amenities") || "").split("\n").filter(a => a.trim()),
       image: imageUrl,
+      gallery: gallery,
     };
 
     if (latitude !== undefined && longitude !== undefined && !isNaN(latitude) && !isNaN(longitude)) {
       hotelData.coordinates = [latitude, longitude];
     }
 
-    await db.updateHotel(id, hotelData);
+    const hotelId = formData.get("id") as string;
+    if (hotelId) {
+      await db.updateHotel(hotelId, hotelData);
+    } else {
+      // Fallback for slug based update if needed, but we still have ID in hidden field or param
+      await db.updateHotel(id, hotelData);
+    }
 
     revalidatePath("/admin/hotels");
-    revalidatePath(`/admin/hotels/${id}/edit`);
+    const revalidateSlug = getValue("slug") || id;
+    revalidatePath(`/admin/hotels/${revalidateSlug}`);
+    revalidatePath(`/admin/hotels/${revalidateSlug}/edit`);
 
-    return {
-      success: true,
-      message: "Hotel updated successfully",
-    };
+    return { success: true, message: "Hotel updated successfully" };
   } catch (error) {
     console.error("Error updating hotel:", error);
-    return {
-      success: false,
-      message: "Failed to update hotel",
-    };
+    return { success: false, message: "Failed to update hotel" };
   }
 }
 
 export async function deleteHotel(id: string) {
   const session = await auth();
-  if (!session) {
-    throw new Error("Unauthorized");
-  }
+  if (!session) throw new Error("Unauthorized");
 
   try {
     await db.deleteHotel(id);
     revalidatePath("/admin/hotels");
-
-    return {
-      success: true,
-      message: "Hotel deleted successfully",
-    };
+    return { success: true, message: "Hotel deleted successfully" };
   } catch (error) {
     console.error("Error deleting hotel:", error);
-    return {
-      success: false,
-      message: "Failed to delete hotel",
-    };
+    return { success: false, message: "Failed to delete hotel" };
   }
 }

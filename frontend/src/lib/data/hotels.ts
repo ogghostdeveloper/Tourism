@@ -42,7 +42,17 @@ export async function listHotels(page: number = 1, pageSize: number = 10) {
 
 export async function getHotelById(id: string) {
     const client = await clientPromise;
-    const doc = await client.db(DB).collection(COLLECTION).findOne({ _id: new ObjectId(id) });
+    try {
+        const doc = await client.db(DB).collection(COLLECTION).findOne({ _id: new ObjectId(id) });
+        return formatDoc(doc);
+    } catch (e) {
+        return null;
+    }
+}
+
+export async function getHotelBySlug(slug: string) {
+    const client = await clientPromise;
+    const doc = await client.db(DB).collection(COLLECTION).findOne({ slug });
     return formatDoc(doc);
 }
 

@@ -1,6 +1,8 @@
-import { useState, useRef } from "react";
+"use client";
+
+import { useState } from "react";
 import { Row } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,11 +11,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { toast } from "sonner";
 import Link from "next/link";
 import { hotelSchema } from "../schema";
-import { AnimatedArrowLeft } from "@/components/ui/animated-arrow-left";
-import type { AnimatedArrowLeftHandle } from "@/components/ui/animated-arrow-left";
 import { DeleteHotelDialog } from "./delete-hotel-dialog";
 
 interface DataTableRowActionsProps<TData> {
@@ -27,17 +26,11 @@ export function DataTableRowActions<TData>({
   if (!parseResult.success) {
     console.error("Zod validation failed for hotel row:", {
       errors: parseResult.error.flatten().fieldErrors,
-      data: row.original
+      data: row.original,
     });
   }
   const hotel = parseResult.success ? parseResult.data : (row.original as any);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const editRef = useRef<AnimatedArrowLeftHandle>(null);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(hotel.name);
-    toast.success("Hotel name copied to clipboard");
-  };
 
   return (
     <>
@@ -58,24 +51,25 @@ export function DataTableRowActions<TData>({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
-          <Link href={`/admin/hotels/${hotel.id}/edit`}>
-            <DropdownMenuItem
-              className="text-blue-500 focus:text-blue-500 data-[variant=default]:text-blue-500 data-[variant=default]:focus:bg-blue-100"
-            >
+          <Link href={`/admin/hotels/${hotel.slug}/edit`}>
+            <DropdownMenuItem className="text-green-500 focus:text-green-500 data-[variant=default]:text-green-500 data-[variant=default]:focus:bg-green-100">
+              <Pencil className="mr-2 h-4 w-4 text-green-500 focus:text-green-500 data-[variant=default]:text-green-500" />{" "}
               Edit
             </DropdownMenuItem>
           </Link>
-          <DropdownMenuItem
-            onClick={handleCopy}
-            className="text-black focus:text-black data-[variant=default]:text-black data-[variant=default]:focus:bg-gray-100"
-          >
-            Copy Name
-          </DropdownMenuItem>
+          <Link href={`/admin/hotels/${hotel.slug}`}>
+            <DropdownMenuItem className="text-blue-500 focus:text-blue-500 data-[variant=default]:text-blue-500 data-[variant=default]:focus:bg-blue-100">
+              <Eye className="mr-2 h-4 w-4 text-blue-500 focus:text-blue-500 data-[variant=default]:text-blue-500" />{" "}
+              View
+            </DropdownMenuItem>
+          </Link>
+
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => setShowDeleteDialog(true)}
             className="text-red-500 focus:text-red-500 data-[variant=default]:text-red-500 data-[variant=default]:focus:bg-red-100"
           >
+            <Trash2 className="mr-2 h-4 w-4 text-red-500 focus:text-red-500 data-[variant=default]:text-red-500" />{" "}
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>

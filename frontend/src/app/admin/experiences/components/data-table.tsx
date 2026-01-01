@@ -65,6 +65,15 @@ export function DataTable<TData, TValue>({
   );
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
+  // Determine if mobile (show actions on click/tap)
+  const [isMobile, setIsMobile] = React.useState(false);
+  React.useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   // Maintain pagination state locally
   const [paginationState, setPaginationState] =
     React.useState<PaginationState>(pagination);
@@ -185,7 +194,7 @@ export function DataTable<TData, TValue>({
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {data.map((item: any) => (
-            <ExperienceCard key={item._id} experience={item as Experience} />
+            <ExperienceCard key={item._id} experience={item as Experience} showActionsOnClick={isMobile} />
           ))}
         </div>
       )}

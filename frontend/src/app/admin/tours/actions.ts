@@ -8,6 +8,7 @@ import { auth } from "@/auth";
 import * as experienceDb from "@/lib/data/experiences";
 import * as hotelDb from "@/lib/data/hotels";
 import * as destinationDb from "@/lib/data/destinations";
+import * as experienceTypeDb from "@/lib/data/experience-types";
 
 export async function getTours(page: number = 1, pageSize: number = 10): Promise<PaginatedTours> {
     try {
@@ -36,6 +37,17 @@ export async function getTourBySlug(slug: string): Promise<Tour | null> {
     }
 }
 
+export async function getRelatedTours(slug: string): Promise<Tour[]> {
+    try {
+        const tours = await tourDb.getRelatedTours(slug);
+        return tours as Tour[];
+    } catch (error) {
+        console.error("Error fetching related tours:", error);
+        return [];
+    }
+}
+
+
 export async function getTourById(id: string): Promise<Tour | null> {
     try {
         const tour = await tourDb.getTourById(id);
@@ -56,8 +68,8 @@ export async function createTourAction(prevState: any, formData: FormData) {
         const category = formData.get("category") as string;
         const description = formData.get("description") as string;
         const duration = formData.get("duration") as string;
-        const price = formData.get("price") as string;
-        const featured = formData.get("featured") === "true";
+        const price = parseFloat(formData.get("price") as string || "0");
+        const priority = parseInt(formData.get("priority") as string || "0");
         const highlightsStr = formData.get("highlights") as string;
         const highlights = JSON.parse(highlightsStr || "[]");
 
@@ -90,7 +102,7 @@ export async function createTourAction(prevState: any, formData: FormData) {
             description,
             duration,
             price,
-            featured,
+            priority,
             highlights,
             days,
             image: imageUrl,
@@ -99,7 +111,7 @@ export async function createTourAction(prevState: any, formData: FormData) {
         const id = await tourDb.createTour(tourData);
         revalidatePath("/admin/tours");
         revalidatePath("/tours");
-        return { success: true, message: "Tour created successfully", id };
+        return { success: true, message: "Tour created successfully", id: String(id) };
     } catch (error) {
         console.error("Error creating tour:", error);
         return { success: false, message: "Failed to create tour" };
@@ -116,8 +128,8 @@ export async function updateTourAction(id: string, prevState: any, formData: For
         const category = formData.get("category") as string;
         const description = formData.get("description") as string;
         const duration = formData.get("duration") as string;
-        const price = formData.get("price") as string;
-        const featured = formData.get("featured") === "true";
+        const price = parseFloat(formData.get("price") as string || "0");
+        const priority = parseInt(formData.get("priority") as string || "0");
         const highlightsStr = formData.get("highlights") as string;
         const highlights = JSON.parse(highlightsStr || "[]");
 
@@ -150,7 +162,7 @@ export async function updateTourAction(id: string, prevState: any, formData: For
             description,
             duration,
             price,
-            featured,
+            priority,
             highlights,
             days,
             image: imageUrl,
@@ -185,10 +197,10 @@ export async function deleteTourAction(id: string) {
 
 export async function getCategoriesForDropdown(): Promise<{ value: string; label: string }[]> {
     try {
-        const categories = await tourDb.listCategories();
+        const categories = await experienceTypeDb.getAllExperienceTypes();
         return categories.map((cat: any) => ({
-            value: cat.id,
-            label: cat.name,
+            value: cat.title, // or cat.slug or cat._id depending on preference, title seems consistent with 'category' field
+            label: cat.title,
         }));
     } catch (error) {
         console.error("Error fetching categories for dropdown:", error);

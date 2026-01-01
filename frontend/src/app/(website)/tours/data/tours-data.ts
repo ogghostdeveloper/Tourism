@@ -9,7 +9,8 @@ export const tours: Tour[] = [
       "A transformative journey through the spiritual heartlands of the Himalayas. Experience ancient monasteries, vibrant culture, and breathtaking landscapes across Nepal and Bhutan.",
     image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2940&auto=format&fit=crop",
     duration: "14 Days / 13 Nights",
-    price: "From $8,500 per person",
+    price: 8500,
+    priority: 1,
     featured: true,
     category: "Spiritual & Cultural",
     highlights: [
@@ -135,7 +136,8 @@ export const tours: Tour[] = [
       "The ultimate romantic escape. Private villas, intimate dining, and exclusive cultural experiences in the Land of the Thunder Dragon.",
     image: "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=2940&auto=format&fit=crop",
     duration: "10 Days / 9 Nights",
-    price: "From $12,000 per person",
+    price: 12000,
+    priority: 0,
     featured: false,
     category: "Honeymoon & Romance",
     highlights: [
@@ -176,7 +178,8 @@ export const tours: Tour[] = [
       "Challenge yourself with spectacular treks through pristine Himalayan wilderness. Experience remote villages, high-altitude lakes, and breathtaking mountain vistas.",
     image: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=2940&auto=format&fit=crop",
     duration: "12 Days / 11 Nights",
-    price: "From $6,800 per person",
+    price: 6800,
+    priority: 2,
     featured: true,
     category: "Adventure & Trekking",
     highlights: [
@@ -217,7 +220,8 @@ export const tours: Tour[] = [
       "Deep dive into Bhutanese culture, traditions, and daily life. Stay with local families, participate in traditional crafts, and attend authentic festivals.",
     image: "https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=2940&auto=format&fit=crop",
     duration: "8 Days / 7 Nights",
-    price: "From $4,500 per person",
+    price: 4500,
+    priority: 0,
     featured: false,
     category: "Cultural & Traditional",
     highlights: [
@@ -248,7 +252,8 @@ export const tours: Tour[] = [
       "Time your visit to witness the spectacular Tshechu festivals. Masked dances, colorful costumes, and deep spiritual ceremonies come alive.",
     image: "https://images.unsplash.com/photo-1528127269322-539801943592?w=2940&auto=format&fit=crop",
     duration: "7 Days / 6 Nights",
-    price: "From $5,200 per person",
+    price: 5200,
+    priority: 0,
     featured: false,
     category: "Festivals & Events",
     highlights: [
@@ -279,7 +284,8 @@ export const tours: Tour[] = [
       "Find inner peace in the Himalayan kingdom. Meditation sessions, yoga, traditional healing, and spiritual guidance combine for a transformative experience.",
     image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=2940&auto=format&fit=crop",
     duration: "9 Days / 8 Nights",
-    price: "From $7,800 per person",
+    price: 7800,
+    priority: 3,
     featured: true,
     category: "Wellness & Spa",
     highlights: [

@@ -38,7 +38,7 @@ export default async function TourDayPage({ params }: PageProps) {
       />
 
       {/* Narrative & Protocol Controls */}
-      <div className="container mx-auto px-6 py-24">
+      <div className="container mx-auto px-6 py-12">
         {/* Superior Navigation */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-24 gap-8 pb-12">
           <Link
@@ -94,7 +94,7 @@ export default async function TourDayPage({ params }: PageProps) {
                   The <span className="italic font-serif normal-case text-amber-600">Experience</span> <br />of {dayData.title}
                 </h2>
                 <div className="relative pl-8 border-l border-black/10">
-                  <p className="text-2xl text-gray-600 leading-relaxed font-light italic">
+                  <p className="text-xl text-gray-500 leading-relaxed font-light italic">
                     "{dayData.description}"
                   </p>
                   <div className="mt-8 font-mono text-[10px] text-gray-500 uppercase tracking-widest flex items-center gap-3 font-bold">

@@ -3,8 +3,6 @@ import { z } from "zod";
 export const travelSchema = z.object({
     from: z.string(),
     to: z.string(),
-    location: z.string().optional(),
-    timing: z.string().optional(),
 });
 
 export const itineraryItemSchema = z.object({
@@ -34,8 +32,24 @@ export const tourSchema = z.object({
     description: z.string(),
     image: z.string(), // Cover image URL
     duration: z.string(),
-    price: z.string(),
-    featured: z.boolean().default(false),
+    price: z.preprocess((val) => {
+        if (typeof val === 'string') {
+            // Remove non-numeric chars except dot
+            const cleaned = val.replace(/[^0-9.]/g, '');
+            const num = parseFloat(cleaned);
+            return isNaN(num) ? 0 : num;
+        }
+        if (typeof val === 'number') return val;
+        return 0;
+    }, z.number()),
+    priority: z.preprocess((val) => {
+        if (typeof val === 'string') {
+            const num = parseFloat(val);
+            return isNaN(num) ? 0 : num;
+        }
+        if (typeof val === 'number') return val;
+        return 0;
+    }, z.number().default(0)),
     category: z.string().optional(),
     highlights: z.array(z.string()).optional(),
     days: z.array(tourDaySchema),

@@ -30,7 +30,7 @@ export default async function HotelsPage() {
                     {hotels.map((hotel, index) => (
                         <Link
                             key={hotel.id}
-                            href={`/hotels/${hotel.id}`}
+                            href={`/hotels/${hotel.slug}`}
                             className="group relative"
                         >
                             {/* Image Container */}

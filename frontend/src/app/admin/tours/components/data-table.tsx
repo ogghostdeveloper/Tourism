@@ -27,9 +27,9 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
+import { TourCard } from "./tour-card";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -39,6 +39,8 @@ interface DataTableProps<TData, TValue> {
         pageIndex: number;
         pageSize: number;
     };
+    view?: "list" | "grid";
+    onViewChange?: (view: "list" | "grid") => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -46,6 +48,8 @@ export function DataTable<TData, TValue>({
     data,
     pageCount,
     pagination,
+    view,
+    onViewChange,
 }: DataTableProps<TData, TValue>) {
     const router = useRouter();
     const pathname = usePathname();
@@ -59,13 +63,25 @@ export function DataTable<TData, TValue>({
     );
     const [sorting, setSorting] = React.useState<SortingState>([]);
 
+    // Determine if mobile (show actions on click/tap)
+    const [isMobile, setIsMobile] = React.useState(false);
+    React.useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener("resize", checkMobile);
+        return () => window.removeEventListener("resize", checkMobile);
+    }, []);
+
+    // Maintain pagination state locally
     const [paginationState, setPaginationState] =
         React.useState<PaginationState>(pagination);
 
+    // Sync pagination state when props change
     React.useEffect(() => {
         setPaginationState(pagination);
     }, [pagination]);
 
+    // Handle pagination changes
     const onPaginationChange: OnChangeFn<PaginationState> = React.useCallback(
         (updaterOrValue) => {
             const newPagination =
@@ -73,6 +89,7 @@ export function DataTable<TData, TValue>({
                     ? updaterOrValue(paginationState)
                     : updaterOrValue;
 
+            // Update local state immediately for responsive UI
             setPaginationState(newPagination);
 
             const params = new URLSearchParams(searchParams.toString());
@@ -112,65 +129,90 @@ export function DataTable<TData, TValue>({
 
     return (
         <div className="space-y-4">
-            <DataTableToolbar table={table} />
-            <div className="rounded-md border bg-white overflow-hidden shadow-sm">
-                <Table>
-                    <TableHeader className="bg-gray-50 border-b border-gray-100">
-                        {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow
-                                key={headerGroup.id}
-                                className="h-12 hover:bg-gray-50/20"
-                            >
-                                {headerGroup.headers.map((header) => {
-                                    return (
-                                        <TableHead
-                                            key={header.id}
-                                            colSpan={header.colSpan}
-                                            className="px-4 text-black font-semibold uppercase text-[11px] tracking-wider"
-                                        >
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )}
-                                        </TableHead>
-                                    );
-                                })}
-                            </TableRow>
-                        ))}
-                    </TableHeader>
-                    <TableBody>
-                        {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
+            <DataTableToolbar table={table} view={view} onViewChange={onViewChange} />
+            {view === "list" ? (
+                <div className="rounded-md border bg-card">
+                    <Table>
+                        <TableHeader className="bg-gray-100">
+                            {table.getHeaderGroups().map((headerGroup) => (
                                 <TableRow
-                                    key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
-                                    className="h-16 border-b border-gray-50 hover:bg-neutral-50/50 transition-colors"
+                                    key={headerGroup.id}
+                                    className="h-16 hover:bg-gray-100/20"
                                 >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id} className="px-4 py-3 text-black">
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </TableCell>
-                                    ))}
+                                    {headerGroup.headers.map((header) => {
+                                        return (
+                                            <TableHead
+                                                key={header.id}
+                                                colSpan={header.colSpan}
+                                                className="px-4"
+                                            >
+                                                {header.isPlaceholder
+                                                    ? null
+                                                    : flexRender(
+                                                        header.column.columnDef.header,
+                                                        header.getContext()
+                                                    )}
+                                            </TableHead>
+                                        );
+                                    })}
                                 </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell
-                                    colSpan={columns.length}
-                                    className="h-32 text-center text-gray-400 font-light italic"
-                                >
-                                    No tours found.
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </div>
+                            ))}
+                        </TableHeader>
+                        <TableBody>
+                            {table.getRowModel().rows?.length ? (
+                                table.getRowModel().rows.map((row) => (
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={row.getIsSelected() && "selected"}
+                                        className="h-12"
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell key={cell.id} className="px-4 py-3">
+                                                {flexRender(
+                                                    cell.column.columnDef.cell,
+                                                    cell.getContext()
+                                                )}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell
+                                        colSpan={columns.length}
+                                        className="h-24 text-center text-black"
+                                    >
+                                        No results.
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {table.getRowModel().rows?.length ? (
+                        table.getRowModel().rows.map((row) => {
+                            const tour = row.original as any;
+
+                            // Ensure we have a valid slug, fallback to ID if needed (though TourCard expects slug)
+                            if (!tour || (!tour.slug && !tour.id)) return null;
+
+                            return (
+                                <TourCard
+                                    key={tour.slug || tour.id}
+                                    tour={tour}
+                                    showActionsOnClick={isMobile}
+                                />
+                            );
+                        })
+                    ) : (
+                        <div className="col-span-full text-center text-black py-12">
+                            No results.
+                        </div>
+                    )}
+                </div>
+            )}
             <DataTablePagination table={table} />
         </div>
     );

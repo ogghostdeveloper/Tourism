@@ -41,7 +41,7 @@ export function HotelOverview({ description, amenities, rooms }: HotelOverviewPr
                                 The <span className="italic font-serif normal-case text-amber-600">Spirit</span> of Your Stay
                             </h2>
                             <div className="relative pl-8 border-l border-black/10">
-                                <p className="text-2xl text-gray-600 leading-relaxed font-light italic">
+                                <p className="text-xl text-gray-500 leading-relaxed font-light italic">
                                     "{description}"
                                 </p>
                                 <div className="mt-8 font-mono text-[10px] text-gray-500 uppercase tracking-widest flex items-center gap-3 font-bold">

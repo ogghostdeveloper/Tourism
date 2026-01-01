@@ -1,4 +1,4 @@
-import { getHotelById, getRelatedHotels } from "../actions";
+import { getHotelBySlug, getRelatedHotels } from "../actions";
 import { notFound } from "next/navigation";
 import { HotelHero } from "./components/HotelHero";
 import { HotelOverview } from "./components/HotelOverview";
@@ -8,18 +8,18 @@ import { RelatedHotels } from "./components/RelatedHotels";
 import CallToAction from "@/components/shared/CallToAction";
 
 interface PageProps {
-    params: Promise<{ id: string }>;
+    params: Promise<{ slug: string }>;
 }
 
 export default async function HotelPage({ params }: PageProps) {
-    const { id } = await params;
-    const hotel = await getHotelById(id);
+    const { slug } = await params;
+    const hotel = await getHotelBySlug(slug);
 
     if (!hotel) {
         notFound();
     }
 
-    const relatedHotels = await getRelatedHotels(hotel.destinationSlug, id);
+    const relatedHotels = await getRelatedHotels(hotel.destinationSlug, hotel.id);
 
     return (
         <div className="min-h-screen bg-white text-black font-sans">

@@ -80,20 +80,23 @@ export const columns: ColumnDef<Tour>[] = [
             <DataTableColumnHeader column={column} title="Price" />
         ),
         cell: ({ row }) => {
-            return <div className="text-sm text-gray-600">{row.getValue("price")}</div>;
+            const amount = parseFloat(row.getValue("price") as string);
+            const formatted = new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+            }).format(isNaN(amount) ? 0 : amount);
+            return <div className="text-sm text-gray-600">{formatted}</div>;
         },
     },
     {
-        accessorKey: "featured",
+        accessorKey: "priority",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Featured" />
+            <DataTableColumnHeader column={column} title="Priority" />
         ),
         cell: ({ row }) => {
-            const isFeatured = row.getValue("featured") as boolean;
+            const priority = row.getValue("priority") as number;
             return (
-                <Badge variant={isFeatured ? "default" : "secondary"} className="font-normal">
-                    {isFeatured ? "Yes" : "No"}
-                </Badge>
+                <div className="font-mono text-xs text-center">{priority ?? 0}</div>
             );
         },
     },
