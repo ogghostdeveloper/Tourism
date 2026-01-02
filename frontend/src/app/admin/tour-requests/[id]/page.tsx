@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { notFound, useRouter } from "next/navigation";
 import { format, isValid } from "date-fns";
-import { ArrowLeft, Calendar, Clock, Mail, MapPin, Phone, User, CheckCircle2, XCircle, Archive, Trash2, Copy } from "lucide-react";
+import { ArrowLeft, Clock, MapPin, CheckCircle2, XCircle, Archive, Trash2, Copy } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";

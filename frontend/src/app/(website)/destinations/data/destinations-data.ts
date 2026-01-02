@@ -9,17 +9,10 @@ export const destinationsData: Destination[] = [
     image:
       "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=2940&auto=format&fit=crop",
     region: "Western Bhutan",
-    highlights: [
-      "Tashichho Dzong - Fortress monastery",
-      "Buddha Dordenma Statue - Giant golden Buddha",
-      "National Memorial Chorten - Memorial stupa",
-      "Weekend Market - Local crafts and produce",
-      "Folk Heritage Museum",
-      "Takin Preserve - National animal sanctuary",
-    ],
+
     coordinates: [27.4728, 89.6393],
-    experiences: ["trekking-druk-path", "hot-stone-bath", "archery-experience"],
-    hotels: ["six-senses-thimphu", "le-meridien-thimphu"],
+    priority: 0,
+
   },
   {
     slug: "paro",
@@ -29,17 +22,10 @@ export const destinationsData: Destination[] = [
     image:
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2940&auto=format&fit=crop",
     region: "Western Bhutan",
-    highlights: [
-      "Tiger's Nest Monastery (Taktsang) - Iconic cliff-side monastery",
-      "Rinpung Dzong - Impressive fortress",
-      "National Museum - Cultural artifacts",
-      "Kyichu Lhakhang - Ancient temple",
-      "Drukgyel Dzong - Historic ruins",
-      "Paro Valley - Scenic landscapes",
-    ],
+
     coordinates: [27.4287, 89.4164],
-    experiences: ["paro-tshechu-festival", "meditation-retreat"],
-    hotels: ["amankora-paro", "zhiwa-ling-heritage", "hotel-olathang"],
+    priority: 0,
+
   },
   {
     slug: "punakha",
@@ -49,17 +35,10 @@ export const destinationsData: Destination[] = [
     image:
       "https://images.unsplash.com/photo-1548013146-72479768bada?w=2940&auto=format&fit=crop",
     region: "Western Bhutan",
-    highlights: [
-      "Punakha Dzong - Palace of Great Happiness",
-      "Suspension Bridge - Longest in Bhutan",
-      "Chimi Lhakhang - Fertility temple",
-      "Mo Chhu River - White-water rafting",
-      "Khamsum Yulley Namgyal Chorten",
-      "Rice Terraces - Scenic farmlands",
-    ],
+
     coordinates: [27.5833, 89.8667],
-    experiences: ["hot-stone-bath"],
-    hotels: ["como-uma-punakha"],
+    priority: 0,
+
   },
   {
     slug: "bumthang",
@@ -69,17 +48,10 @@ export const destinationsData: Destination[] = [
     image:
       "https://images.unsplash.com/photo-1528127269322-539801943592?w=2940&auto=format&fit=crop",
     region: "Central Bhutan",
-    highlights: [
-      "Jakar Dzong - Fortress of the White Bird",
-      "Jambay Lhakhang - Ancient 7th-century temple",
-      "Kurjey Lhakhang - Sacred monastery complex",
-      "Tamshing Monastery - Treasure revealer's monastery",
-      "Swiss Farm - Cheese and apple production",
-      "Tang Valley - Remote spiritual valley",
-    ],
+
     coordinates: [27.5475, 90.7333],
-    experiences: ["meditation-retreat"],
-    hotels: [],
+    priority: 0,
+
   },
   {
     slug: "gangtey",
@@ -89,17 +61,10 @@ export const destinationsData: Destination[] = [
     image:
       "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=2940&auto=format&fit=crop",
     region: "Central Bhutan",
-    highlights: [
-      "Gangtey Monastery - Historic hilltop monastery",
-      "Black-Necked Crane Observation - Winter migrants",
-      "Phobjikha Valley - Glacial valley",
-      "Nature Trails - Scenic hiking paths",
-      "Traditional Farmhouses",
-      "Crane Information Centre",
-    ],
+
     coordinates: [27.4667, 90.1667],
-    experiences: ["trekking-druk-path"],
-    hotels: [],
+    priority: 0,
+
   },
   {
     slug: "haa",
@@ -109,16 +74,9 @@ export const destinationsData: Destination[] = [
     image:
       "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=2940&auto=format&fit=crop",
     region: "Western Bhutan",
-    highlights: [
-      "Lhakhang Karpo - White Temple",
-      "Lhakhang Nagpo - Black Temple",
-      "Traditional Villages - Authentic culture",
-      "Haa Summer Festival - Annual celebration",
-      "Miri Pun Sum - Three brother hills",
-      "Apple Orchards - Local produce",
-    ],
+
     coordinates: [27.3833, 89.2833],
-    experiences: [],
-    hotels: [],
+    priority: 0,
+
   },
 ];

@@ -20,29 +20,23 @@ import {
 
 interface ComboboxProps {
     options: { value: string; label: string }[];
-    value: string;
+    value?: string;
     onChange: (value: string) => void;
     placeholder?: string;
-    className?: string;
+    className?: string; // Add className prop support
 }
 
-export function Combobox({
-    options,
-    value,
-    onChange,
-    placeholder = "Select...",
-    className,
-}: ComboboxProps) {
+export function Combobox({ options, value, onChange, placeholder = "Select option...", className }: ComboboxProps) {
     const [open, setOpen] = React.useState(false);
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger className="rounded-none" asChild>
+            <PopoverTrigger asChild>
                 <Button
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className={cn("w-full justify-between bg-white border-gray-200 text-black font-normal hover:bg-white", className)}
+                    className={cn("w-full justify-between bg-white border-gray-200 text-black", className)}
                 >
                     {value
                         ? options.find((option) => option.value === value)?.label
@@ -50,11 +44,11 @@ export function Combobox({
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+            <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
                 <Command>
                     <CommandInput placeholder={`Search ${placeholder.toLowerCase()}...`} />
                     <CommandList>
-                        <CommandEmpty>No results found.</CommandEmpty>
+                        <CommandEmpty>No option found.</CommandEmpty>
                         <CommandGroup>
                             {options.map((option) => (
                                 <CommandItem

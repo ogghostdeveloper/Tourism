@@ -1,9 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import Link from "next/link";
+// Button, Plus, Link removed as unused
 import { columns } from "./components/columns";
 import { DataTable } from "./components/data-table";
 import { getTours } from "./actions";
@@ -76,7 +74,7 @@ export default function ToursPage({
                     <h2 className="text-2xl font-semibold tracking-tight text-black">
                         Expeditions & Tours
                     </h2>
-                    <p className="text-black text-sm text-neutral-500">
+                    <p className="text-sm text-neutral-500">
                         Manage your curated travel journeys and luxury itineraries.
                     </p>
                 </div>

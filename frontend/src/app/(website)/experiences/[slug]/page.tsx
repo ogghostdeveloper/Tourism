@@ -29,8 +29,8 @@ export default async function ExperiencePage({ params }: PageProps) {
         category={experience.category}
         duration={experience.duration}
         difficulty={experience.difficulty}
-        startDate={experience.startDate}
-        endDate={experience.endDate}
+        startDate={experience.startDate || undefined}
+        endDate={experience.endDate || undefined}
       />
 
       <div className="container mx-auto px-6 py-40">

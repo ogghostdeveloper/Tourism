@@ -10,6 +10,7 @@ interface BhutanMapProps {
     start: [number, number];
     end: [number, number];
   };
+  coordinates?: [number, number];
 }
 
 export function BhutanMap({ highlightDestination, coordinates, route }: BhutanMapProps) {

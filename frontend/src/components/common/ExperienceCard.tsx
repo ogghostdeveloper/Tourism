@@ -9,6 +9,7 @@ export interface Experience {
     description: string;
     image: string;
     duration?: string;
+    destinationSlug?: string;
 }
 
 export interface ExperienceCardProps {
