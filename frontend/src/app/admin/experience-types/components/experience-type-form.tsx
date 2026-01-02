@@ -43,7 +43,7 @@ export function ExperienceTypeForm({ initialData, action, title, isReadOnly = fa
         <div className="flex-1 max-w-7xl mx-auto space-y-4 md:p-8 pt-6 relative">
             {isReadOnly && (
                 <Link
-                    href={`/admin/experience-types/${initialData?.slug}/edit`}
+                    href={`/admin/experience-types/${initialData?._id || initialData?.slug}/edit`}
                     className="fixed top-24 right-8 z-50"
                 >
                     <Button className="bg-amber-600 text-white hover:bg-amber-700 shadow-lg rounded-full w-12 h-12 p-0 flex items-center justify-center transition-transform hover:scale-110">

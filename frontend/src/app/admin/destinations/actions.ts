@@ -36,6 +36,16 @@ export async function getDestinationBySlug(slug: string): Promise<Destination | 
   }
 }
 
+export async function getDestinationById(id: string): Promise<Destination | null> {
+  try {
+    const destination = await db.getDestinationById(id);
+    return destination as Destination | null;
+  } catch (error) {
+    console.error("Error fetching destination by id:", error);
+    return null;
+  }
+}
+
 export async function getAllDestinations() {
   try {
     const destinations = await db.getAllDestinations();
@@ -105,7 +115,7 @@ export async function createDestination(prevState: any, formData: FormData) {
 }
 
 export async function updateDestination(
-  slug: string,
+  id: string,
   prevState: any,
   formData: FormData
 ) {
@@ -116,6 +126,7 @@ export async function updateDestination(
 
   try {
     const name = formData.get("name") as string;
+    const slug = formData.get("slug") as string;
     const region = formData.get("region") as string;
     const description = formData.get("description") as string;
     const priority = parseInt(formData.get("priority") as string) || 0;
@@ -126,7 +137,7 @@ export async function updateDestination(
     const longitude = lngStr ? parseFloat(lngStr) : undefined;
 
     const imageInput = formData.get("image");
-    const existingDestination = await db.getDestinationBySlug(slug);
+    const existingDestination = await db.getDestinationById(id);
     let imageUrl = existingDestination?.image || "https://images.unsplash.com/photo-1578500263628-936ddec022cf";
 
     if (imageInput instanceof File && imageInput.size > 0) {
@@ -138,6 +149,7 @@ export async function updateDestination(
 
     const destinationData: any = {
       name,
+      slug,
       region,
       description,
       priority,
@@ -148,10 +160,10 @@ export async function updateDestination(
       destinationData.coordinates = [latitude, longitude];
     }
 
-    await db.updateDestination(slug, destinationData);
+    await db.updateDestination(id, destinationData);
 
     revalidatePath("/admin/destinations");
-    revalidatePath(`/admin/destinations/${slug}/edit`);
+    revalidatePath(`/admin/destinations/${id}/edit`);
 
     return {
       success: true,
@@ -166,14 +178,14 @@ export async function updateDestination(
   }
 }
 
-export async function deleteDestination(slug: string) {
+export async function deleteDestination(id: string) {
   const session = await auth();
   if (!session) {
     throw new Error("Unauthorized");
   }
 
   try {
-    await db.deleteDestination(slug);
+    await db.deleteDestination(id);
     revalidatePath("/admin/destinations");
 
     return {

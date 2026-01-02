@@ -32,7 +32,7 @@ export function DeleteDestinationDialog({
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
-      const result = await deleteDestination(destination.slug);
+      const result = await deleteDestination(destination._id!);
       if (result.success) {
         toast.success(result.message);
         onOpenChange(false);

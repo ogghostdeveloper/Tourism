@@ -44,12 +44,12 @@ export function DataTableRowActions<TData>({
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <Link href={`/admin/tours/${tour.slug}/edit`}>
+                    <Link href={`/admin/tours/${tour.id || tour._id}/edit`}>
                         <DropdownMenuItem className="text-green-600 focus:text-green-600 data-[variant=default]:text-green-600 data-[variant=default]:focus:bg-green-50">
                             <Pencil className="mr-2 h-4 w-4 text-green-500 focus:text-green-500 data-[variant=default]:text-green-500" /> Edit
                         </DropdownMenuItem>
                     </Link>
-                    <Link href={`/admin/tours/${tour.slug}`}>
+                    <Link href={`/admin/tours/${tour.id || tour._id}`}>
                         <DropdownMenuItem className="text-blue-500 focus:text-blue-500 data-[variant=default]:text-blue-500 data-[variant=default]:focus:bg-blue-100">
                             <Eye className="mr-2 h-4 w-4 text-blue-500 focus:text-blue-500 data-[variant=default]:text-blue-500" /> View
                         </DropdownMenuItem>

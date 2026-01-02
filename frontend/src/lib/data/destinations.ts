@@ -76,10 +76,10 @@ export async function createDestination(data: Partial<Destination>) {
     return res.insertedId;
 }
 
-export async function updateDestination(slug: string, data: Partial<Destination>) {
+export async function updateDestination(id: string, data: Partial<Destination>) {
     const client = await clientPromise;
     return client.db(DB).collection(COLLECTION).updateOne(
-        { slug },
+        { _id: new ObjectId(id) },
         {
             $set: {
                 ...data,
@@ -89,7 +89,7 @@ export async function updateDestination(slug: string, data: Partial<Destination>
     );
 }
 
-export async function deleteDestination(slug: string) {
+export async function deleteDestination(id: string) {
     const client = await clientPromise;
-    return client.db(DB).collection(COLLECTION).deleteOne({ slug });
+    return client.db(DB).collection(COLLECTION).deleteOne({ _id: new ObjectId(id) });
 }

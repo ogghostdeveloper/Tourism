@@ -45,7 +45,7 @@ interface ExperienceFormProps {
 export function ExperienceForm({ initialData, action, slug = null, title: pageTitle, isReadOnly = false }: ExperienceFormProps) {
     const router = useRouter();
     const [isPending, startTransition] = React.useTransition();
-    const [selectedDestination, setSelectedDestination] = React.useState<string>(initialData?.destinations?.[0] || initialData?.destinationSlug || "");
+    const [selectedDestination, setSelectedDestination] = React.useState<string>(initialData?.destinationIds?.[0] || initialData?.destinations?.[0] || initialData?.destinationSlug || "");
     const [destinationOptions, setDestinationOptions] = React.useState<MultiSelectOption[]>([]);
     const [categoryOptions, setCategoryOptions] = React.useState<{ value: string; label: string }[]>([]);
     const [isLoading, setIsLoading] = React.useState(true);
@@ -60,7 +60,7 @@ export function ExperienceForm({ initialData, action, slug = null, title: pageTi
 
     const [startDate, setStartDate] = React.useState<Date | undefined>(initialData?.startDate ? parseISO(initialData.startDate) : undefined);
     const [endDate, setEndDate] = React.useState<Date | undefined>(initialData?.endDate ? parseISO(initialData.endDate) : undefined);
-    const [category, setCategory] = React.useState<string>(initialData?.category || "");
+    const [category, setCategory] = React.useState<string>(initialData?.categoryId || initialData?.category || "");
 
     const iconRef = React.useRef<AnimatedArrowLeftHandle>(null);
 
@@ -72,19 +72,41 @@ export function ExperienceForm({ initialData, action, slug = null, title: pageTi
                     getExperienceTypes(1, 100),
                 ]);
 
-                setDestinationOptions(
-                    destinations.map((dest) => ({
-                        value: dest.slug,
-                        label: dest.name,
-                    }))
-                );
+                const destOptions = destinations.map((dest) => ({
+                    value: dest._id || dest.slug, // Prefer ID
+                    label: dest.name,
+                }));
 
-                setCategoryOptions(
-                    expTypes.items.map((type) => ({
-                        value: type.title,
-                        label: type.title,
-                    }))
-                );
+                const catOptions = expTypes.items.map((type) => ({
+                    value: type._id || type.title, // Prefer ID
+                    label: type.title,
+                }));
+
+                setDestinationOptions(destOptions);
+                setCategoryOptions(catOptions);
+
+                // Attempt to match legacy string values to IDs
+                if (initialData) {
+                    // Match Category
+                    if (initialData.category && !catOptions.some(o => o.value === initialData.category)) {
+                        const match = catOptions.find(o => o.label === initialData.category);
+                        if (match) setCategory(match.value);
+                    } else if (initialData.category && typeof initialData.category === 'object') {
+                        setCategory(initialData.category._id || initialData.category.id);
+                    }
+
+                    // Match Destination
+                    const initialDest = initialData.destinations?.[0] || initialData.destinationSlug;
+                    if (initialDest && !destOptions.some(o => o.value === initialDest)) {
+                        // Try to match by slug or label (if initialDest is slug)
+                        // Destinations usually store slug in legacy.
+                        const match = destinations.find(d => d.slug === initialDest || d.name === initialDest);
+                        if (match) setSelectedDestination(match.id || match._id);
+                    } else if (initialDest && typeof initialDest === 'object') {
+                        setSelectedDestination(initialDest._id || initialDest.id);
+                    }
+                }
+
             } catch (error) {
                 toast.error("Failed to fetch form dependencies");
             } finally {
@@ -92,7 +114,7 @@ export function ExperienceForm({ initialData, action, slug = null, title: pageTi
             }
         };
         fetchData();
-    }, []);
+    }, [initialData]);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();

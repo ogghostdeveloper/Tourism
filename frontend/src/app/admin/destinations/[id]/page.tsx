@@ -1,4 +1,4 @@
-import { getDestinationBySlug } from "@/lib/data/destinations";
+import { getDestinationById } from "@/lib/data/destinations";
 import { getExperiencesByDestination } from "@/lib/data/experiences";
 import { getHotelsByDestination } from "@/lib/data/hotels";
 import { notFound, redirect } from "next/navigation";
@@ -13,30 +13,30 @@ import { DestinationFestivals } from "@/app/(website)/destinations/[slug]/compon
 import { DestinationHotels } from "@/app/(website)/destinations/[slug]/components/DestinationHotels";
 
 interface PageProps {
-  params: { slug: string };
+  params: { id: string };
 }
 
 // Destination View Page - Admin
 export default async function DestinationViewPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ id: string }>;
 }) {
-  const { slug } = await params;
+  const { id } = await params;
 
-  if (slug === "new") {
+  if (id === "new") {
     redirect("/admin/destinations/new/edit");
   }
 
-  const destination = await getDestinationBySlug(slug);
+  const destination = await getDestinationById(id);
 
   if (!destination) {
     notFound();
   }
 
   // Fetch related data
-  const experiences = await getExperiencesByDestination(slug);
-  const hotels = await getHotelsByDestination(slug);
+  const experiences = await getExperiencesByDestination(destination.slug);
+  const hotels = await getHotelsByDestination(destination.slug);
 
   // Filter festivals
   const festivals = experiences.filter(
@@ -50,7 +50,7 @@ export default async function DestinationViewPage({
     <div className="relative min-h-screen bg-white text-black">
       {/* Fixed Edit Button */}
       <Link
-        href={`/admin/destinations/${slug}/edit`}
+        href={`/admin/destinations/${id}/edit`}
         className="fixed top-24 right-8 z-50"
       >
         <Button className="bg-amber-600 text-white hover:bg-amber-700 shadow-lg rounded-full w-12 h-12 p-0 flex items-center justify-center transition-transform hover:scale-110">

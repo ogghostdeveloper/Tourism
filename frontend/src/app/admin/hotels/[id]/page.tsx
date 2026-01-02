@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import { getHotelBySlug as getHotelFromWebsite, getRelatedHotels } from "@/app/(website)/hotels/actions";
+import { getRelatedHotels } from "@/app/(website)/hotels/actions";
+import { getHotelById } from "@/lib/data/hotels";
 import { HotelHero } from "@/app/(website)/hotels/[slug]/components/HotelHero";
 import { HotelOverview } from "@/app/(website)/hotels/[slug]/components/HotelOverview";
 import { VisualGallery } from "@/components/common/VisualGallery";
@@ -11,12 +12,12 @@ import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface PageProps {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ id: string }>;
 }
 
 export default async function HotelDetailPage({ params }: PageProps) {
-  const { slug } = await params;
-  const hotel = await getHotelFromWebsite(slug);
+  const { id } = await params;
+  const hotel = await getHotelById(id);
 
   if (!hotel) {
     notFound();
@@ -28,7 +29,7 @@ export default async function HotelDetailPage({ params }: PageProps) {
     <div className="relative min-h-screen bg-white text-black font-sans">
       {/* Admin Floating Edit Button */}
       <Link
-        href={`/admin/hotels/${slug}/edit`}
+        href={`/admin/hotels/${id}/edit`}
         className="fixed top-24 right-8 z-50 text-white"
       >
         <Button className="bg-amber-600 hover:bg-amber-700 shadow-lg rounded-full w-12 h-12 p-0 flex items-center justify-center transition-transform hover:scale-110">

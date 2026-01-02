@@ -5,22 +5,22 @@ import { use } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { HotelForm } from "../../components/hotel-form";
-import { getHotelBySlug, updateHotel } from "../../actions";
+import { getHotelById, updateHotel } from "../../actions";
 import { Hotel } from "../../schema";
 
 export default function EditHotelPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ id: string }>;
 }) {
-  const { slug } = use(params);
+  const { id } = use(params);
   const [hotel, setHotel] = React.useState<Hotel | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getHotelBySlug(slug);
+        const data = await getHotelById(id);
         if (data) {
           setHotel(data);
         }
@@ -31,7 +31,7 @@ export default function EditHotelPage({
       }
     };
     fetchData();
-  }, [slug]);
+  }, [id]);
 
   if (isLoading) {
     return (
@@ -53,7 +53,7 @@ export default function EditHotelPage({
     <HotelForm
       title={`Edit Hotel: ${hotel.name}`}
       initialData={hotel}
-      action={(id, prevState, formData) => updateHotel(id, prevState, formData)}
+      action={(formData) => updateHotel(id, null, formData)}
     />
   );
 }

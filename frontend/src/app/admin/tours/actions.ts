@@ -170,7 +170,8 @@ export async function updateTourAction(id: string, prevState: any, formData: For
 
         await tourDb.updateTour(id, tourData);
         revalidatePath("/admin/tours");
-        revalidatePath(`/admin/tours/${slug}`);
+        revalidatePath(`/admin/tours/${id}`);
+        revalidatePath(`/admin/tours/${id}/edit`);
         revalidatePath("/tours");
         revalidatePath(`/tours/${slug}`);
         return { success: true, message: "Tour updated successfully" };
@@ -199,7 +200,7 @@ export async function getCategoriesForDropdown(): Promise<{ value: string; label
     try {
         const categories = await experienceTypeDb.getAllExperienceTypes();
         return categories.map((cat: any) => ({
-            value: cat.title, // or cat.slug or cat._id depending on preference, title seems consistent with 'category' field
+            value: cat._id || cat.id || cat.title,
             label: cat.title,
         }));
     } catch (error) {

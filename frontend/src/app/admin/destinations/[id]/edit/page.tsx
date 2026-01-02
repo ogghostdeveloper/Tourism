@@ -4,23 +4,23 @@ import * as React from "react";
 import { use } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { getDestinationBySlug, updateDestination } from "../../actions";
+import { getDestinationById, updateDestination } from "../../actions";
 import { DestinationForm } from "../../components/destination-form";
 import { Destination } from "../../schema";
 
 export default function EditDestinationPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ id: string }>;
 }) {
-  const { slug } = use(params);
+  const { id } = use(params);
   const [destination, setDestination] = React.useState<Destination | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getDestinationBySlug(slug);
+        const data = await getDestinationById(id);
         if (data) {
           setDestination(data as Destination);
         } else {
@@ -33,7 +33,7 @@ export default function EditDestinationPage({
       }
     };
     fetchData();
-  }, [slug]);
+  }, [id]);
 
   if (isLoading) {
     return (

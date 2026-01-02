@@ -49,6 +49,16 @@ export async function getExperienceBySlug(slug: string): Promise<Experience | nu
   }
 }
 
+export async function getExperienceById(id: string): Promise<Experience | null> {
+  try {
+    const experience = await db.getExperienceById(id);
+    return experience as Experience | null;
+  } catch (error) {
+    console.error("Error fetching experience by id:", error);
+    return null;
+  }
+}
+
 export async function getAllExperiences() {
   try {
     const experiences = await db.getAllExperiences();
@@ -148,7 +158,7 @@ export async function createExperience(prevState: any, formData: FormData) {
 }
 
 export async function updateExperience(
-  slug: string,
+  id: string,
   prevState: any,
   formData: FormData
 ) {
@@ -160,6 +170,7 @@ export async function updateExperience(
 
   try {
     const title = formData.get("title") as string;
+    const slug = formData.get("slug") as string;
     const category = formData.get("category") as string;
     const description = formData.get("description") as string;
     const duration = formData.get("duration") as string;
@@ -177,11 +188,11 @@ export async function updateExperience(
 
     const imageInput = formData.get("image");
     // Get existing experience to keep image if not changed
-    const existingExperience = await db.getExperienceBySlug(slug);
+    const existingExperience = await db.getExperienceById(id);
     let imageUrl = existingExperience?.image || "https://images.unsplash.com/photo-1581330560232-474c3e8a4a58";
 
     if (imageInput instanceof File && imageInput.size > 0) {
-      const existingImageFilename = extractFilenameFromUrl(existingExperience?.image);
+      const existingImageFilename = extractFilenameFromUrl(existingExperience?.image || "");
 
       if (existingImageFilename) {
         const uploadedPath = await updateImage(existingImageFilename, imageInput);
@@ -234,6 +245,7 @@ export async function updateExperience(
 
     const experienceData: any = {
       title,
+      slug,
       category,
       description,
       duration,
@@ -252,10 +264,11 @@ export async function updateExperience(
       experienceData.coordinates = [latitude, longitude];
     }
 
-    await db.updateExperience(slug, experienceData);
+    await db.updateExperience(id, experienceData);
 
     revalidatePath("/admin/experiences");
-    revalidatePath(`/admin/experiences/${slug}/edit`);
+    revalidatePath(`/admin/experiences/${id}`);
+    revalidatePath(`/admin/experiences/${id}/edit`);
 
     return {
       success: true,
@@ -272,7 +285,7 @@ export async function updateExperience(
 
 
 
-export async function deleteExperience(slug: string) {
+export async function deleteExperience(id: string) {
   const session = await auth();
   if (!session) {
     throw new Error("Unauthorized");
@@ -280,7 +293,7 @@ export async function deleteExperience(slug: string) {
 
   try {
     // Get experience to delete its images
-    const experience = await db.getExperienceBySlug(slug);
+    const experience = await db.getExperienceById(id);
 
     // Delete main image
     if (experience?.image) {
@@ -306,7 +319,7 @@ export async function deleteExperience(slug: string) {
       }
     }
 
-    await db.deleteExperience(slug);
+    await db.deleteExperience(id);
 
     revalidatePath("/admin/experiences");
 

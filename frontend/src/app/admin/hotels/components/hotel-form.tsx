@@ -33,7 +33,7 @@ import { Hotel } from "../schema";
 
 interface HotelFormProps {
     initialData?: Hotel;
-    action: (id: string, prevState: any, formData: FormData) => Promise<{ success: boolean; message: string }>;
+    action: (formData: FormData) => Promise<{ success: boolean; message: string }>;
     title: string;
     isReadOnly?: boolean;
 }
@@ -46,7 +46,7 @@ export function HotelForm({ initialData, action, title, isReadOnly = false }: Ho
     // Form fields
     const [name, setName] = useState(initialData?.name || "");
     const [slug, setSlug] = useState(initialData?.slug || "");
-    const [selectedDestination, setSelectedDestination] = useState<string>(initialData?.destinationSlug || "");
+    const [selectedDestination, setSelectedDestination] = useState<string>(initialData?.destinationId || initialData?.destinationSlug || "");
     const [priceRange, setPriceRange] = useState<string>(initialData?.priceRange || "");
     const [location, setLocation] = useState(initialData?.location || "");
     const [rating, setRating] = useState(initialData?.rating?.toString() || "");
@@ -79,7 +79,7 @@ export function HotelForm({ initialData, action, title, isReadOnly = false }: Ho
                 const destinations = await getAllDestinations();
                 setDestinationOptions(
                     destinations.map((dest) => ({
-                        value: dest.slug,
+                        value: dest._id || dest.slug,
                         label: dest.name,
                     }))
                 );
@@ -111,7 +111,7 @@ export function HotelForm({ initialData, action, title, isReadOnly = false }: Ho
         formData.set("amenities", amenities.join("\n"));
 
         // Add dynamic fields
-        formData.set("destinationSlug", selectedDestination);
+        formData.set("destinationId", selectedDestination);
         formData.set("priceRange", priceRange);
 
         // Add gallery
@@ -129,7 +129,7 @@ export function HotelForm({ initialData, action, title, isReadOnly = false }: Ho
 
         startTransition(async () => {
             try {
-                const result = await action(initialData?.id || "", null, formData);
+                const result = await action(formData);
 
                 if (result.success) {
                     toast.success(result.message);
@@ -156,7 +156,7 @@ export function HotelForm({ initialData, action, title, isReadOnly = false }: Ho
         <div className="flex-1 max-w-7xl mx-auto space-y-4 md:p-8 pt-6 relative border-black">
             {isReadOnly && (
                 <Link
-                    href={`/admin/hotels/${initialData?.slug || initialData?.id}/edit`}
+                    href={`/admin/hotels/${initialData?.id}/edit`}
                     className="fixed top-24 right-8 z-50 text-white"
                 >
                     <Button className="bg-amber-600 hover:bg-amber-700 shadow-lg rounded-full w-12 h-12 p-0 flex items-center justify-center transition-transform hover:scale-110">

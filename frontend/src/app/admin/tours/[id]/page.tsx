@@ -1,4 +1,4 @@
-import { getTourBySlug, getRelatedTours } from "@/app/admin/tours/actions";
+import { getTourById, getRelatedTours } from "@/app/admin/tours/actions";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Pencil } from "lucide-react";
@@ -11,18 +11,18 @@ import { TourCarousel } from "@/app/(website)/tours/[slug]/components/TourCarous
 import { Tour as WebsiteTour, TourDay as WebsiteTourDay } from "@/app/(website)/tours/schema";
 
 interface PageProps {
-    params: Promise<{ slug: string }>;
+    params: Promise<{ id: string }>;
 }
 
 export default async function AdminTourViewPage({ params }: PageProps) {
-    const { slug } = await params;
-    const tour = await getTourBySlug(slug);
+    const { id } = await params;
+    const tour = await getTourById(id);
 
     if (!tour) {
         notFound();
     }
 
-    const relatedTours = await getRelatedTours(slug);
+    const relatedTours = await getRelatedTours(tour.slug);
 
     // Cast admin data to website types for display components
     // The data structure should be compatible enough for display purposes
@@ -34,7 +34,7 @@ export default async function AdminTourViewPage({ params }: PageProps) {
         <div className="min-h-screen bg-white text-black relative">
             {/* Fixed Edit Button */}
             <Link
-                href={`/admin/tours/${slug}/edit`}
+                href={`/admin/tours/${id}/edit`}
                 className="fixed top-24 right-8 z-50"
             >
                 <Button className="bg-amber-600 text-white hover:bg-amber-700 shadow-lg rounded-full w-12 h-12 p-0 flex items-center justify-center transition-transform hover:scale-110">
@@ -61,7 +61,7 @@ export default async function AdminTourViewPage({ params }: PageProps) {
             </div>
 
             {/* Related Tours Section */}
-            <TourCarousel tours={displayRelatedTours} currentSlug={slug} />
+            <TourCarousel tours={displayRelatedTours} currentSlug={tour.slug} />
         </div>
     );
 }

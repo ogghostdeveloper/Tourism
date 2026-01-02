@@ -31,7 +31,7 @@ export function DeleteExperienceTypeDialog({
     const onDelete = () => {
         startTransition(async () => {
             try {
-                const result = await deleteExperienceType(experienceType.slug);
+                const result = await deleteExperienceType(experienceType._id!);
                 if (result.success) {
                     toast.success(result.message);
                     onOpenChange(false);

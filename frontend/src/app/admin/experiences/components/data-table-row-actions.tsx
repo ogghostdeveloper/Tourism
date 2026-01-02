@@ -47,14 +47,14 @@ export function DataTableRowActions<TData>({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
-          <Link href={`/admin/experiences/${experience.slug}/edit`}>
+          <Link href={`/admin/experiences/${experience._id}/edit`}>
             <DropdownMenuItem
               className="text-green-500 focus:text-green-500 data-[variant=default]:text-green-500 data-[variant=default]:focus:bg-green-100"
             >
               <Pencil className="mr-2 h-4 w-4 text-green-500 focus:text-green-500 data-[variant=default]:text-green-500" /> Edit
             </DropdownMenuItem>
           </Link>
-          <Link href={`/admin/experiences/${experience.slug}`}>
+          <Link href={`/admin/experiences/${experience._id}`}>
             <DropdownMenuItem
               className="text-blue-500 focus:text-blue-500 data-[variant=default]:text-blue-500 data-[variant=default]:focus:bg-blue-100"
             >

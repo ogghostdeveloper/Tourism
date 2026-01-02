@@ -1,16 +1,16 @@
 import { notFound } from "next/navigation";
-import { getExperienceTypeBySlug } from "../actions";
+import { getExperienceTypeById } from "../actions";
 import { ExperienceTypeForm } from "../components/experience-type-form";
 
 interface ExperienceTypeViewPageProps {
-    params: Promise<{ slug: string }>;
+    params: Promise<{ id: string }>;
 }
 
 export default async function ExperienceTypeViewPage({
     params,
 }: ExperienceTypeViewPageProps) {
-    const { slug } = await params;
-    const experienceType = await getExperienceTypeBySlug(slug);
+    const { id } = await params;
+    const experienceType = await getExperienceTypeById(id);
 
     if (!experienceType) {
         notFound();

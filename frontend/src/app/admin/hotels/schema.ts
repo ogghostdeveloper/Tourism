@@ -1,13 +1,17 @@
 import { z } from "zod";
 
 export const hotelSchema = z.object({
-  id: z.string(),
+  id: z.string().optional(),
+  _id: z.string().optional(),
   name: z.string(),
   slug: z.string().optional(),
   location: z.string().optional(),
   description: z.string(),
   image: z.string(),
   destinationSlug: z.string(),
+  destinationId: z.string().optional(),
+  resolvedDestinationName: z.string().optional(),
+  resolvedDestinationSlug: z.string().optional(),
   rating: z.number().min(1).max(5),
   amenities: z.array(z.string()).optional(),
   priceRange: z.string(), // Making it a string for maximum leniency since we have mixed data

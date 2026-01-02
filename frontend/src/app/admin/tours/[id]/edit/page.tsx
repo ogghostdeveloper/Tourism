@@ -1,20 +1,20 @@
-import { getTourBySlug, updateTourAction } from "../../actions";
+import { getTourById, updateTourAction } from "../../actions";
 import { notFound } from "next/navigation";
 import { TourForm } from "../../components/tour-form";
 
 interface PageProps {
-    params: Promise<{ slug: string }>;
+    params: Promise<{ id: string }>;
 }
 
 export default async function EditTourPage({ params }: PageProps) {
-    const { slug } = await params;
-    const tour = await getTourBySlug(slug);
+    const { id } = await params;
+    const tour = await getTourById(id);
 
     if (!tour) {
         notFound();
     }
 
-    const updateTourWithId = updateTourAction.bind(null, String(tour._id), null);
+    const updateTourWithId = updateTourAction.bind(null, id, null);
 
     return (
         <TourForm

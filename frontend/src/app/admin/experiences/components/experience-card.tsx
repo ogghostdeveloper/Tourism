@@ -31,7 +31,7 @@ export function ExperienceCard({ experience, showActionsOnClick }: ExperienceCar
                 className="relative overflow-hidden bg-gray-900 group cursor-pointer rounded-xs"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
-                onClick={() => router.push(`/admin/experiences/${experience.slug}`)}
+                onClick={() => router.push(`/admin/experiences/${experience._id}`)}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
@@ -86,7 +86,7 @@ export function ExperienceCard({ experience, showActionsOnClick }: ExperienceCar
                     transition={{ duration: 0.2 }}
                 >
                     <Link
-                        href={`/admin/experiences/${experience.slug}/edit`}
+                        href={`/admin/experiences/${experience._id}/edit`}
                         onClick={(e) => e.stopPropagation()}
                     >
                         <Button

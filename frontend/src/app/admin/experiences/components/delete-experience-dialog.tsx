@@ -32,7 +32,7 @@ export function DeleteExperienceDialog({
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
-      const result = await deleteExperience(experience.slug);
+      const result = await deleteExperience(experience._id!);
       if (result.success) {
         toast.success(result.message);
         onOpenChange(false);

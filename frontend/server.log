@@ -1,0 +1,248 @@
+
+> bhutan-tourism@0.1.0 dev
+> next dev
+
+   ▲ Next.js 16.0.10 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://192.168.8.59:3000
+   - Environments: .env
+   - Experiments (use with caution):
+     · serverActions
+
+ ✓ Starting...
+ ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+ ✓ Ready in 623ms
+[getHotelById] Fetching with ID: 6954b0071c921f6819c15202
+[getExperienceTypeById] Fetching with ID: 69536b12f382b55ae59bea32
+[getHotelById] Found document: YES
+[getTourById] Fetching tour with ID: 695603a01c921f6819c15208
+[getTourById] Fetching tour with ID: 695603a01c921f6819c15208
+[getTourById] Found document: YES
+[getExperienceTypeById] Found document: YES
+[getTourById] Found document: YES
+[getTourById] Fetching tour with ID: 695603a01c921f6819c15208
+[getTourById] Found document: YES
+ GET /admin/experience-types/69536b12f382b55ae59bea32 200 in 2.8s (compile: 2.4s, proxy.ts: 4ms, render: 358ms)
+ GET /admin/tours/695603a01c921f6819c15208 200 in 2.9s (compile: 2.4s, proxy.ts: 170ms, render: 345ms)
+ GET /admin/tours/695603a01c921f6819c15208 200 in 523ms (compile: 172ms, proxy.ts: 5ms, render: 346ms)
+ GET /admin/hotels/6954b0071c921f6819c15202 200 in 2.8s (compile: 2.3s, proxy.ts: 14ms, render: 454ms)
+ GET /admin/tours/695603a01c921f6819c15208 200 in 242ms (compile: 4ms, proxy.ts: 146ms, render: 93ms)
+ GET /api/uploads/3ab2435e-c851-4024-b612-58cfd96aad7c.webp 200 in 654ms (compile: 643ms, render: 11ms)
+ GET /api/uploads/d01bebbe-a217-4c8d-a388-ca622b4dd187.webp 200 in 645ms (compile: 633ms, render: 12ms)
+ GET /api/uploads/58af2c05-b669-43d5-ae85-00e98f2a6bd5.webp 200 in 707ms (compile: 695ms, render: 12ms)
+ GET /api/uploads/39471c24-cae0-40c9-ab03-5d160177d02f.webp 200 in 339ms (compile: 326ms, render: 13ms)
+ GET /api/uploads/47855aa0-80b8-4330-bf0f-d4f38ec8cd69.webp 200 in 315ms (compile: 302ms, render: 13ms)
+ GET /api/uploads/f9a20a86-6f31-4279-91b3-6dbc3b01c58e.webp 200 in 359ms (compile: 345ms, render: 14ms)
+ GET /api/uploads/e2f5019c-0993-4577-917c-6428c2516078.webp 200 in 4ms (compile: 1627µs, render: 1887µs)
+ GET /api/uploads/9afb2dbb-d684-4dd3-9975-08805aaa7f3b.webp 200 in 3ms (compile: 581µs, render: 2ms)
+ GET /api/uploads/3cdc5305-b7f5-4055-9ad5-89c91e7e319f.webp 200 in 10ms (compile: 2ms, render: 8ms)
+ GET /api/uploads/20989fbd-61bc-4fdc-a882-142e7470b2f6.webp 200 in 16ms (compile: 1078µs, render: 15ms)
+ GET /api/uploads/0dd7fc28-34e0-4e48-a625-e72c55abfdbd.webp 200 in 12ms (compile: 2ms, render: 10ms)
+ GET /api/uploads/cb780a76-f955-4699-af51-5227a0c9f091.webp 200 in 6ms (compile: 1193µs, render: 5ms)
+[getTourById] Fetching tour with ID: 695603a01c921f6819c15208
+[getTourById] Found document: YES
+ GET /admin/tours/695603a01c921f6819c15208 200 in 92ms (compile: 4ms, proxy.ts: 4ms, render: 84ms)
+ GET /admin 200 in 354ms (compile: 301ms, proxy.ts: 5ms, render: 48ms)
+ GET /admin/destinations 200 in 567ms (compile: 549ms, proxy.ts: 3ms, render: 14ms)
+ POST /admin/destinations 200 in 28ms (compile: 9ms, proxy.ts: 8ms, render: 10ms)
+ POST /admin/destinations 200 in 17ms (compile: 1472µs, proxy.ts: 5ms, render: 10ms)
+ GET /api/uploads/eae56d8f-71ec-4ce6-a79c-61773eb4686f.webp 200 in 17ms (compile: 6ms, render: 11ms)
+ GET /api/uploads/5ed42540-c405-4f16-82cb-f364921a50f7.webp 200 in 17ms (compile: 11ms, render: 6ms)
+ GET /api/uploads/96441f68-edc5-45d3-ad15-e7ae64c3a468.webp 200 in 19ms (compile: 8ms, render: 11ms)
+ GET /api/uploads/7e3ab3ee-d018-4deb-b389-d79f7c117dce.webp 200 in 18ms (compile: 11ms, render: 7ms)
+[getExperienceTypeById] Fetching with ID: 69536b12f382b55ae59bea32
+[getExperienceTypeById] Found document: YES
+ GET /admin/destinations/69535550f382b55ae59bea31 200 in 768ms (compile: 644ms, proxy.ts: 5ms, render: 120ms)
+ GET /admin/experience-types/69536b12f382b55ae59bea32 200 in 148ms (compile: 21ms, proxy.ts: 7ms, render: 120ms)
+[getHotelById] Fetching with ID: 6954b0071c921f6819c15202
+[getHotelById] Found document: YES
+ GET /admin/hotels/6954b0071c921f6819c15202 200 in 138ms (compile: 4ms, proxy.ts: 18ms, render: 116ms)
+ GET /admin/experiences 200 in 644ms (compile: 624ms, proxy.ts: 6ms, render: 14ms)
+ POST /admin/experiences 200 in 47ms (compile: 7ms, proxy.ts: 26ms, render: 14ms)
+ POST /admin/experiences 200 in 19ms (compile: 2ms, proxy.ts: 7ms, render: 9ms)
+ POST /admin/experiences 200 in 18ms (compile: 1407µs, proxy.ts: 4ms, render: 13ms)
+ POST /admin/experiences 200 in 16ms (compile: 1339µs, proxy.ts: 3ms, render: 12ms)
+ GET /api/uploads/991ccf5b-74ce-4c84-bab5-aa811dba66b4.webp 200 in 7ms (compile: 4ms, render: 3ms)
+[getTourById] Fetching tour with ID: 695603a01c921f6819c15208
+[getTourById] Found document: YES
+ GET /admin/tours/695603a01c921f6819c15208 200 in 121ms (compile: 8ms, proxy.ts: 7ms, render: 106ms)
+[getTourById] Fetching tour with ID: 695603a01c921f6819c15208
+[getTourById] Found document: YES
+ GET /admin/tours/695603a01c921f6819c15208 200 in 110ms (compile: 7ms, proxy.ts: 8ms, render: 95ms)
+[getExperienceTypeById] Fetching with ID: 69536b12f382b55ae59bea32
+[getExperienceTypeById] Found document: YES
+ GET /admin/experience-types/69536b12f382b55ae59bea32 200 in 125ms (compile: 8ms, proxy.ts: 14ms, render: 103ms)
+[getHotelById] Fetching with ID: 6954b0071c921f6819c15202
+[getHotelById] Found document: YES
+ GET /admin/hotels/6954b0071c921f6819c15202 200 in 123ms (compile: 7ms, proxy.ts: 5ms, render: 110ms)
+[getTourById] Fetching tour with ID: 695603a01c921f6819c15208
+[getTourById] Found document: YES
+ GET /admin/tours/695603a01c921f6819c15208/edit 200 in 1040ms (compile: 920ms, proxy.ts: 8ms, render: 111ms)
+ POST /admin/tours/695603a01c921f6819c15208/edit 200 in 21ms (compile: 9ms, proxy.ts: 5ms, render: 7ms)
+ POST /admin/tours/695603a01c921f6819c15208/edit 200 in 13ms (compile: 2ms, proxy.ts: 3ms, render: 8ms)
+ POST /admin/tours/695603a01c921f6819c15208/edit 200 in 14ms (compile: 2ms, proxy.ts: 5ms, render: 7ms)
+ POST /admin/tours/695603a01c921f6819c15208/edit 200 in 13ms (compile: 1906µs, proxy.ts: 4ms, render: 7ms)
+ GET /admin/destinations 200 in 36ms (compile: 6ms, proxy.ts: 15ms, render: 15ms)
+ POST /admin/destinations 200 in 21ms (compile: 1584µs, proxy.ts: 4ms, render: 16ms)
+ POST /admin/destinations 200 in 9ms (compile: 1334µs, proxy.ts: 3ms, render: 5ms)
+ GET /admin/experience-types 200 in 243ms (compile: 231ms, proxy.ts: 6ms, render: 7ms)
+ POST /admin/experience-types 200 in 14ms (compile: 2ms, proxy.ts: 3ms, render: 8ms)
+ POST /admin/experience-types 200 in 9ms (compile: 1074µs, proxy.ts: 2ms, render: 6ms)
+ GET /api/uploads/2afdd9e2-8b44-4d95-b160-9c7661d59aec.webp 200 in 11ms (compile: 4ms, render: 7ms)
+ GET /api/uploads/44498887-732a-48de-84cd-3d1ade89c76e.webp 200 in 13ms (compile: 7ms, render: 6ms)
+[getExperienceTypeById] Fetching with ID: 69536b12f382b55ae59bea32
+[getExperienceTypeById] Found document: YES
+ GET /admin/experience-types/69536b12f382b55ae59bea32 200 in 21ms (compile: 5ms, proxy.ts: 4ms, render: 12ms)
+ GET /admin/experience-types 200 in 19ms (compile: 3ms, proxy.ts: 6ms, render: 11ms)
+ POST /admin/experience-types 200 in 13ms (compile: 2ms, proxy.ts: 6ms, render: 5ms)
+ POST /admin/experience-types 200 in 9ms (compile: 1191µs, proxy.ts: 2ms, render: 5ms)
+ GET /admin/tours 200 in 261ms (compile: 244ms, proxy.ts: 8ms, render: 9ms)
+ POST /admin/tours 200 in 11ms (compile: 1718µs, proxy.ts: 4ms, render: 6ms)
+ POST /admin/tours 200 in 9ms (compile: 1059µs, proxy.ts: 3ms, render: 5ms)
+[getTourById] Fetching tour with ID: 695603a01c921f6819c15208
+[getTourById] Found document: YES
+ GET /admin/tours/695603a01c921f6819c15208 200 in 30ms (compile: 9ms, proxy.ts: 5ms, render: 16ms)
+ GET /admin/tour-requests 200 in 262ms (compile: 248ms, proxy.ts: 4ms, render: 11ms)
+ POST /admin/tour-requests 200 in 9ms (compile: 1220µs, proxy.ts: 3ms, render: 5ms)
+ POST /admin/tour-requests 200 in 10ms (compile: 1540µs, proxy.ts: 3ms, render: 5ms)
+ GET /admin/hotels 200 in 271ms (compile: 256ms, proxy.ts: 6ms, render: 10ms)
+ POST /admin/hotels 200 in 14ms (compile: 1546µs, proxy.ts: 3ms, render: 9ms)
+ POST /admin/hotels 200 in 10ms (compile: 1158µs, proxy.ts: 3ms, render: 6ms)
+ GET /api/uploads/337b143e-f7f5-4b41-a09f-28421a48c59c.webp 200 in 6ms (compile: 3ms, render: 4ms)
+ GET /api/uploads/dcd46cc2-3d08-403d-9894-ce393a180a42.webp 200 in 7ms (compile: 4ms, render: 3ms)
+[getHotelById] Fetching with ID: 6954b0071c921f6819c15202
+[getHotelById] Found document: YES
+ GET /admin/hotels/6954b0071c921f6819c15202 200 in 30ms (compile: 7ms, proxy.ts: 4ms, render: 18ms)
+ GET /admin/tour-requests 200 in 21ms (compile: 3ms, proxy.ts: 5ms, render: 13ms)
+ POST /admin/tour-requests 200 in 15ms (compile: 5ms, proxy.ts: 5ms, render: 6ms)
+ POST /admin/tour-requests 200 in 9ms (compile: 1134µs, proxy.ts: 2ms, render: 5ms)
+ GET /admin/tours 200 in 23ms (compile: 4ms, proxy.ts: 7ms, render: 12ms)
+ POST /admin/tours 200 in 19ms (compile: 3ms, proxy.ts: 6ms, render: 10ms)
+ POST /admin/tours 200 in 12ms (compile: 1906µs, proxy.ts: 4ms, render: 6ms)
+[getTourById] Fetching tour with ID: 695603a01c921f6819c15208
+[getTourById] Found document: YES
+ GET /admin/tours/695603a01c921f6819c15208 200 in 33ms (compile: 7ms, proxy.ts: 6ms, render: 20ms)
+ GET /admin/experience-types 200 in 13ms (compile: 3ms, proxy.ts: 3ms, render: 6ms)
+ POST /admin/experience-types 200 in 19ms (compile: 2ms, proxy.ts: 11ms, render: 6ms)
+ POST /admin/experience-types 200 in 10ms (compile: 1091µs, proxy.ts: 2ms, render: 7ms)
+[getExperienceTypeById] Fetching with ID: 69536b12f382b55ae59bea32
+[getExperienceTypeById] Found document: YES
+ GET /admin/experience-types/69536b12f382b55ae59bea32 200 in 36ms (compile: 10ms, proxy.ts: 7ms, render: 20ms)
+[getTourById] Fetching tour with ID: 695603a01c921f6819c15208
+[getTourById] Found document: YES
+ GET /admin/tours/695603a01c921f6819c15208/edit 200 in 106ms (compile: 5ms, proxy.ts: 5ms, render: 96ms)
+ POST /admin/tours/695603a01c921f6819c15208/edit 200 in 25ms (compile: 4ms, proxy.ts: 10ms, render: 12ms)
+ POST /admin/tours/695603a01c921f6819c15208/edit 200 in 17ms (compile: 4ms, proxy.ts: 5ms, render: 8ms)
+ POST /admin/tours/695603a01c921f6819c15208/edit 200 in 15ms (compile: 6ms, proxy.ts: 3ms, render: 6ms)
+ POST /admin/tours/695603a01c921f6819c15208/edit 200 in 12ms (compile: 2ms, proxy.ts: 3ms, render: 7ms)
+[getTourById] Fetching tour with ID: 695603a01c921f6819c15208
+[getTourById] Found document: YES
+ POST /admin/tours/695603a01c921f6819c15208/edit 200 in 66ms (compile: 9ms, proxy.ts: 10ms, render: 48ms)
+ GET /admin/tours 200 in 40ms (compile: 3ms, proxy.ts: 8ms, render: 28ms)
+ GET /admin/tours 200 in 42ms (compile: 3ms, proxy.ts: 16ms, render: 23ms)
+ POST /admin/tours 200 in 23ms (compile: 1841µs, proxy.ts: 13ms, render: 9ms)
+ POST /admin/tours 200 in 10ms (compile: 1203µs, proxy.ts: 3ms, render: 6ms)
+[getTourById] Fetching tour with ID: 695603a01c921f6819c15208
+[getTourById] Found document: YES
+ GET /admin/tours/695603a01c921f6819c15208/edit 200 in 129ms (compile: 7ms, proxy.ts: 8ms, render: 114ms)
+ POST /admin/tours/695603a01c921f6819c15208/edit 200 in 20ms (compile: 7ms, proxy.ts: 6ms, render: 7ms)
+ POST /admin/tours/695603a01c921f6819c15208/edit 200 in 14ms (compile: 3ms, proxy.ts: 5ms, render: 7ms)
+ POST /admin/tours/695603a01c921f6819c15208/edit 200 in 13ms (compile: 4ms, proxy.ts: 2ms, render: 7ms)
+ POST /admin/tours/695603a01c921f6819c15208/edit 200 in 10ms (compile: 1590µs, proxy.ts: 2ms, render: 6ms)
+ GET /admin/experience-types 200 in 18ms (compile: 5ms, proxy.ts: 4ms, render: 9ms)
+ POST /admin/experience-types 200 in 12ms (compile: 1657µs, proxy.ts: 4ms, render: 6ms)
+ POST /admin/experience-types 200 in 12ms (compile: 1352µs, proxy.ts: 3ms, render: 7ms)
+[getExperienceTypeById] Fetching with ID: 69536b12f382b55ae59bea32
+[getExperienceTypeById] Found document: YES
+ GET /admin/experience-types/69536b12f382b55ae59bea32/edit 200 in 569ms (compile: 551ms, proxy.ts: 5ms, render: 14ms)
+ GET /admin/tours 200 in 23ms (compile: 4ms, proxy.ts: 10ms, render: 9ms)
+ POST /admin/tours 200 in 21ms (compile: 2ms, proxy.ts: 5ms, render: 13ms)
+ POST /admin/tours 200 in 12ms (compile: 2ms, proxy.ts: 3ms, render: 7ms)
+[getTourById] Fetching tour with ID: 695603a01c921f6819c15208
+[getTourById] Found document: YES
+ GET /admin/tours/695603a01c921f6819c15208 200 in 28ms (compile: 5ms, proxy.ts: 6ms, render: 16ms)
+[getTourById] Fetching tour with ID: 695603a01c921f6819c15208
+[getTourById] Found document: YES
+ POST /admin/tours/695603a01c921f6819c15208/edit 200 in 56ms (compile: 6ms, proxy.ts: 4ms, render: 47ms)
+ GET /admin/tours 200 in 18ms (compile: 5ms, proxy.ts: 4ms, render: 9ms)
+ GET /admin/tours 200 in 48ms (compile: 3ms, proxy.ts: 17ms, render: 28ms)
+ POST /admin/tours 200 in 19ms (compile: 5ms, proxy.ts: 6ms, render: 8ms)
+ POST /admin/tours 200 in 10ms (compile: 1589µs, proxy.ts: 3ms, render: 6ms)
+ GET /admin/hotels/6954b0071c921f6819c15202/edit 200 in 683ms (compile: 615ms, proxy.ts: 5ms, render: 63ms)
+[getHotelById] Fetching with ID: 6954b0071c921f6819c15202
+[getHotelById] Found document: YES
+ POST /admin/hotels/6954b0071c921f6819c15202/edit 200 in 15ms (compile: 4ms, proxy.ts: 4ms, render: 8ms)
+ POST /admin/hotels/6954b0071c921f6819c15202/edit 200 in 10ms (compile: 1606µs, proxy.ts: 2ms, render: 6ms)
+ POST /admin/hotels/6954b0071c921f6819c15202/edit 200 in 15ms (compile: 3ms, proxy.ts: 4ms, render: 7ms)
+[getHotelById] Fetching with ID: 6954b0071c921f6819c15202
+[getHotelById] Found document: YES
+ POST /admin/hotels/6954b0071c921f6819c15202/edit 200 in 74ms (compile: 4ms, proxy.ts: 4ms, render: 67ms)
+ GET /admin/hotels 200 in 51ms (compile: 5ms, proxy.ts: 21ms, render: 25ms)
+ GET /admin/hotels 200 in 44ms (compile: 8ms, proxy.ts: 13ms, render: 23ms)
+ POST /admin/hotels 200 in 18ms (compile: 2ms, proxy.ts: 5ms, render: 10ms)
+ POST /admin/hotels 200 in 19ms (compile: 3ms, proxy.ts: 7ms, render: 9ms)
+[getExperienceTypeById] Fetching with ID: 69536b12f382b55ae59bea32
+[getExperienceTypeById] Found document: YES
+ GET /admin/experience-types/69536b12f382b55ae59bea32/edit 200 in 161ms (compile: 5ms, proxy.ts: 6ms, render: 150ms)
+[getExperienceTypeById] Fetching with ID: 69536b12f382b55ae59bea32
+[getExperienceTypeById] Found document: YES
+[getExperienceTypeById] Fetching with ID: 69536b12f382b55ae59bea32
+[getExperienceTypeById] Found document: YES
+ POST /admin/experience-types/69536b12f382b55ae59bea32/edit 200 in 57ms (compile: 5ms, proxy.ts: 5ms, render: 47ms)
+ GET /admin/experience-types 200 in 21ms (compile: 6ms, proxy.ts: 5ms, render: 10ms)
+ POST /admin/experience-types 200 in 19ms (compile: 2ms, proxy.ts: 6ms, render: 11ms)
+ POST /admin/experience-types 200 in 14ms (compile: 1670µs, proxy.ts: 3ms, render: 9ms)
+ GET /admin/hotels 200 in 178ms (compile: 4ms, proxy.ts: 7ms, render: 168ms)
+ POST /admin/hotels 200 in 19ms (compile: 4ms, proxy.ts: 5ms, render: 10ms)
+ GET /admin/tours 200 in 89ms (compile: 4ms, proxy.ts: 3ms, render: 83ms)
+ POST /admin/tours 200 in 17ms (compile: 2ms, proxy.ts: 4ms, render: 10ms)
+ GET /admin/hotels 200 in 84ms (compile: 4ms, proxy.ts: 4ms, render: 77ms)
+ POST /admin/hotels 200 in 20ms (compile: 2ms, proxy.ts: 6ms, render: 11ms)
+ GET /admin/experience-types 200 in 109ms (compile: 7ms, proxy.ts: 6ms, render: 97ms)
+ POST /admin/experience-types 200 in 21ms (compile: 4ms, proxy.ts: 9ms, render: 8ms)
+ GET /admin/tours 200 in 81ms (compile: 6ms, proxy.ts: 3ms, render: 71ms)
+ POST /admin/tours 200 in 25ms (compile: 5ms, proxy.ts: 8ms, render: 13ms)
+ GET /admin/hotels 200 in 72ms (compile: 6ms, proxy.ts: 5ms, render: 60ms)
+ POST /admin/hotels 200 in 25ms (compile: 4ms, proxy.ts: 11ms, render: 10ms)
+ GET /admin/experience-types 200 in 75ms (compile: 5ms, proxy.ts: 5ms, render: 65ms)
+ POST /admin/experience-types 200 in 25ms (compile: 3ms, proxy.ts: 9ms, render: 13ms)
+[getTourById] Fetching tour with ID: 695603a01c921f6819c15208
+[getTourById] Found document: YES
+ GET /admin/tours/695603a01c921f6819c15208/edit 200 in 101ms (compile: 7ms, proxy.ts: 4ms, render: 90ms)
+ POST /admin/tours/695603a01c921f6819c15208/edit 200 in 18ms (compile: 3ms, proxy.ts: 6ms, render: 8ms)
+ POST /admin/tours/695603a01c921f6819c15208/edit 200 in 12ms (compile: 1527µs, proxy.ts: 2ms, render: 8ms)
+ POST /admin/tours/695603a01c921f6819c15208/edit 200 in 11ms (compile: 2ms, proxy.ts: 2ms, render: 6ms)
+ POST /admin/tours/695603a01c921f6819c15208/edit 200 in 12ms (compile: 1644µs, proxy.ts: 4ms, render: 6ms)
+[getTourById] Fetching tour with ID: 695603a01c921f6819c15208
+[getTourById] Found document: YES
+ POST /admin/tours/695603a01c921f6819c15208/edit 200 in 52ms (compile: 7ms, proxy.ts: 6ms, render: 39ms)
+ GET /admin/tours 200 in 26ms (compile: 6ms, proxy.ts: 10ms, render: 10ms)
+ GET /admin/tours 200 in 38ms (compile: 4ms, proxy.ts: 16ms, render: 18ms)
+ POST /admin/tours 200 in 27ms (compile: 4ms, proxy.ts: 11ms, render: 12ms)
+ POST /admin/tours 200 in 25ms (compile: 4ms, proxy.ts: 9ms, render: 12ms)
+ GET /admin/hotels/6954b0071c921f6819c15202/edit 200 in 158ms (compile: 11ms, proxy.ts: 8ms, render: 139ms)
+[getHotelById] Fetching with ID: 6954b0071c921f6819c15202
+[getHotelById] Found document: YES
+ POST /admin/hotels/6954b0071c921f6819c15202/edit 200 in 18ms (compile: 3ms, proxy.ts: 5ms, render: 10ms)
+ POST /admin/hotels/6954b0071c921f6819c15202/edit 200 in 12ms (compile: 1528µs, proxy.ts: 2ms, render: 8ms)
+ POST /admin/hotels/6954b0071c921f6819c15202/edit 200 in 24ms (compile: 7ms, proxy.ts: 5ms, render: 11ms)
+[getHotelById] Fetching with ID: 6954b0071c921f6819c15202
+[getHotelById] Found document: YES
+ POST /admin/hotels/6954b0071c921f6819c15202/edit 200 in 47ms (compile: 5ms, proxy.ts: 4ms, render: 37ms)
+ GET /admin/hotels 200 in 28ms (compile: 5ms, proxy.ts: 5ms, render: 18ms)
+ GET /admin/hotels 200 in 52ms (compile: 5ms, proxy.ts: 18ms, render: 29ms)
+ POST /admin/hotels 200 in 30ms (compile: 5ms, proxy.ts: 11ms, render: 14ms)
+ POST /admin/hotels 200 in 12ms (compile: 1518µs, proxy.ts: 3ms, render: 8ms)
+[getExperienceTypeById] Fetching with ID: 69536b12f382b55ae59bea32
+[getExperienceTypeById] Found document: YES
+ GET /admin/experience-types/69536b12f382b55ae59bea32/edit 200 in 145ms (compile: 8ms, proxy.ts: 8ms, render: 129ms)
+[getExperienceTypeById] Fetching with ID: 69536b12f382b55ae59bea32
+[getExperienceTypeById] Found document: YES
+[getExperienceTypeById] Fetching with ID: 69536b12f382b55ae59bea32
+[getExperienceTypeById] Found document: YES
+ POST /admin/experience-types/69536b12f382b55ae59bea32/edit 200 in 54ms (compile: 5ms, proxy.ts: 6ms, render: 43ms)
+ GET /admin/experience-types 200 in 32ms (compile: 7ms, proxy.ts: 11ms, render: 15ms)
+ POST /admin/experience-types 200 in 27ms (compile: 6ms, proxy.ts: 11ms, render: 11ms)
+ POST /admin/experience-types 200 in 17ms (compile: 1512µs, proxy.ts: 5ms, render: 11ms)
+ GET /admin/tours 200 in 176ms (compile: 6ms, proxy.ts: 9ms, render: 161ms)
+ POST /admin/tours 200 in 25ms (compile: 6ms, proxy.ts: 8ms, render: 11ms)

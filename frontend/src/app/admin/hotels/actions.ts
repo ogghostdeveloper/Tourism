@@ -36,6 +36,16 @@ export async function getHotelBySlug(slug: string): Promise<Hotel | null> {
   }
 }
 
+export async function getHotelById(id: string): Promise<Hotel | null> {
+  try {
+    const hotel = await db.getHotelById(id);
+    return hotel as Hotel | null;
+  } catch (error) {
+    console.error("Error fetching hotel by id:", error);
+    return null;
+  }
+}
+
 export async function getAllHotels() {
   try {
     const hotels = await db.getAllHotels();
@@ -85,7 +95,8 @@ export async function createHotel(prevState: any, formData: FormData) {
       slug: getValue("slug"),
       location: getValue("location"),
       description: getValue("description"),
-      destinationSlug: getValue("destinationSlug"),
+      destinationSlug: getValue("destinationSlug") || getValue("destinationId"),
+      destinationId: getValue("destinationId"),
       rating: parseFloat(getValue("rating")),
       priceRange: getValue("priceRange"),
       rooms: getValue("rooms") ? parseInt(getValue("rooms")) : undefined,
@@ -148,7 +159,8 @@ export async function updateHotel(id: string, prevState: any, formData: FormData
       slug: getValue("slug"),
       location: getValue("location"),
       description: getValue("description"),
-      destinationSlug: getValue("destinationSlug"),
+      destinationSlug: getValue("destinationSlug") || getValue("destinationId"),
+      destinationId: getValue("destinationId"),
       rating: parseFloat(getValue("rating")),
       priceRange: getValue("priceRange"),
       rooms: getValue("rooms") ? parseInt(getValue("rooms")) : undefined,
@@ -170,9 +182,8 @@ export async function updateHotel(id: string, prevState: any, formData: FormData
     }
 
     revalidatePath("/admin/hotels");
-    const revalidateSlug = getValue("slug") || id;
-    revalidatePath(`/admin/hotels/${revalidateSlug}`);
-    revalidatePath(`/admin/hotels/${revalidateSlug}/edit`);
+    revalidatePath(`/admin/hotels/${id}`);
+    revalidatePath(`/admin/hotels/${id}/edit`);
 
     return { success: true, message: "Hotel updated successfully" };
   } catch (error) {

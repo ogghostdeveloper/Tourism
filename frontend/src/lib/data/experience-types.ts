@@ -1,4 +1,5 @@
 import clientPromise from "../mongodb";
+import { ObjectId } from "mongodb";
 import { ExperienceType } from "@/app/admin/experience-types/schema";
 
 const DB = process.env.MONGODB_DB || "bhutan_tourism";
@@ -8,6 +9,7 @@ const formatDoc = (doc: any) => {
     if (!doc) return null;
     return {
         ...doc,
+        id: doc._id.toString(),
         _id: doc._id.toString(),
     };
 };
@@ -43,6 +45,19 @@ export async function getExperienceTypeBySlug(slug: string) {
     return formatDoc(doc);
 }
 
+export async function getExperienceTypeById(id: string) {
+    try {
+        console.log('[getExperienceTypeById] Fetching with ID:', id);
+        const client = await clientPromise;
+        const doc = await client.db(DB).collection<ExperienceType>(COLLECTION).findOne({ _id: new ObjectId(id) } as any);
+        console.log('[getExperienceTypeById] Found document:', doc ? 'YES' : 'NO');
+        return formatDoc(doc);
+    } catch (error) {
+        console.error('[getExperienceTypeById] Error:', error, 'ID:', id);
+        return null;
+    }
+}
+
 export async function getAllExperienceTypes() {
     const client = await clientPromise;
     const items = await client.db(DB).collection<ExperienceType>(COLLECTION)
@@ -64,10 +79,10 @@ export async function createExperienceType(data: Partial<ExperienceType>) {
     return res.insertedId;
 }
 
-export async function updateExperienceType(slug: string, data: Partial<ExperienceType>) {
+export async function updateExperienceType(id: string, data: Partial<ExperienceType>) {
     const client = await clientPromise;
     return client.db(DB).collection(COLLECTION).updateOne(
-        { slug },
+        { _id: new ObjectId(id) },
         {
             $set: {
                 ...data,
@@ -77,7 +92,7 @@ export async function updateExperienceType(slug: string, data: Partial<Experienc
     );
 }
 
-export async function deleteExperienceType(slug: string) {
+export async function deleteExperienceType(id: string) {
     const client = await clientPromise;
-    return client.db(DB).collection(COLLECTION).deleteOne({ slug });
+    return client.db(DB).collection(COLLECTION).deleteOne({ _id: new ObjectId(id) });
 }

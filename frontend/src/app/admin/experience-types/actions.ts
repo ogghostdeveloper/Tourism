@@ -36,6 +36,16 @@ export async function getExperienceTypeBySlug(slug: string): Promise<ExperienceT
     }
 }
 
+export async function getExperienceTypeById(id: string): Promise<ExperienceType | null> {
+    try {
+        const experienceType = await db.getExperienceTypeById(id);
+        return experienceType as ExperienceType | null;
+    } catch (error) {
+        console.error("Error fetching experience type by id:", error);
+        return null;
+    }
+}
+
 export async function createExperienceType(prevState: any, formData: FormData) {
     const session = await auth();
     if (!session) {
@@ -85,7 +95,7 @@ export async function createExperienceType(prevState: any, formData: FormData) {
 }
 
 export async function updateExperienceType(
-    slug: string,
+    id: string,
     prevState: any,
     formData: FormData
 ) {
@@ -96,11 +106,12 @@ export async function updateExperienceType(
 
     try {
         const title = formData.get("title") as string;
+        const slug = formData.get("slug") as string;
         const description = formData.get("description") as string;
         const displayOrder = parseInt(formData.get("displayOrder") as string || "0");
 
         const imageInput = formData.get("image");
-        const existingExperienceType = await db.getExperienceTypeBySlug(slug);
+        const existingExperienceType = await db.getExperienceTypeById(id);
         let imageUrl = existingExperienceType?.image || "";
 
         if (imageInput instanceof File && imageInput.size > 0) {
@@ -112,12 +123,13 @@ export async function updateExperienceType(
 
         const experienceTypeData: any = {
             title,
+            slug,
             description,
             displayOrder,
             image: imageUrl,
         };
 
-        await db.updateExperienceType(slug, experienceTypeData);
+        await db.updateExperienceType(id, experienceTypeData);
 
         revalidatePath("/admin/experience-types");
         revalidatePath("/");
@@ -135,14 +147,14 @@ export async function updateExperienceType(
     }
 }
 
-export async function deleteExperienceType(slug: string) {
+export async function deleteExperienceType(id: string) {
     const session = await auth();
     if (!session) {
         throw new Error("Unauthorized");
     }
 
     try {
-        await db.deleteExperienceType(slug);
+        await db.deleteExperienceType(id);
 
         revalidatePath("/admin/experience-types");
         revalidatePath("/");

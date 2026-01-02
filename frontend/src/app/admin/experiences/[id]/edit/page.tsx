@@ -3,22 +3,22 @@
 import * as React from "react";
 import { use } from "react";
 import { Loader2 } from "lucide-react";
-import { getExperienceBySlug, updateExperience } from "../../actions";
+import { getExperienceById, updateExperience } from "../../actions";
 import { ExperienceForm } from "../../components/experience-form";
 
 export default function EditExperiencePage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ id: string }>;
 }) {
-  const { slug } = use(params);
+  const { id } = use(params);
   const [experience, setExperience] = React.useState<any>(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getExperienceBySlug(slug);
+        const data = await getExperienceById(id);
         setExperience(data);
       } catch (error) {
         console.error("Failed to fetch experience", error);
@@ -27,7 +27,7 @@ export default function EditExperiencePage({
       }
     };
     fetchData();
-  }, [slug]);
+  }, [id]);
 
   if (isLoading) {
     return (
@@ -39,10 +39,9 @@ export default function EditExperiencePage({
 
   return (
     <ExperienceForm
-      slug={slug}
       title="Edit Experience"
       initialData={experience}
-      action={(formData) => updateExperience(slug, null, formData)}
+      action={(formData) => updateExperience(id, null, formData)}
     />
   );
 }

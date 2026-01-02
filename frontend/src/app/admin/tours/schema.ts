@@ -27,6 +27,7 @@ export const tourDaySchema = z.object({
 
 export const tourSchema = z.object({
     _id: z.string().optional(),
+    id: z.string().optional(),
     slug: z.string(),
     title: z.string(),
     description: z.string(),

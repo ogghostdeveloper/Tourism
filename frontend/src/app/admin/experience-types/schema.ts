@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const experienceTypeSchema = z.object({
     _id: z.string().optional(),
+    id: z.string().optional(),
     slug: z.string().min(1, "Slug is required"),
     title: z.string().min(1, "Title is required"),
     description: z.string().min(1, "Description is required"),

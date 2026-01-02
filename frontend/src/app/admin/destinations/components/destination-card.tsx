@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 
 interface DestinationCardProps {
   destination: {
+    _id: string;
     slug: string;
     name: string;
     region: string;
@@ -24,7 +25,7 @@ export function DestinationCard({ destination }: DestinationCardProps) {
       className="relative overflow-hidden bg-gray-900 group cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={() => router.push(`/admin/destinations/${destination.slug}`)}
+      onClick={() => router.push(`/admin/destinations/${destination._id}`)}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -59,7 +60,7 @@ export function DestinationCard({ destination }: DestinationCardProps) {
         transition={{ duration: 0.2 }}
       >
         <Link
-          href={`/admin/destinations/${destination.slug}/edit`}
+          href={`/admin/destinations/${destination._id}/edit`}
           onClick={(e) => e.stopPropagation()}
         >
           <Button

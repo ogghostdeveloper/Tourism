@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getExperienceBySlug, getAllExperiences } from "@/app/(website)/experiences/actions";
+import { getExperienceById, getAllExperiences } from "../actions";
 import { ExperienceHero } from "@/app/(website)/experiences/[slug]/components/ExperienceHero";
 import { ExperienceDetails } from "@/app/(website)/experiences/[slug]/components/ExperienceDetails";
 import { LocationMap } from "@/components/common/LocationMap";
@@ -11,14 +11,14 @@ import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface ExperienceViewPageProps {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ id: string }>;
 }
 
 export default async function ExperienceViewPage({
   params,
 }: ExperienceViewPageProps) {
-  const { slug } = await params;
-  const experience = await getExperienceBySlug(slug);
+  const { id } = await params;
+  const experience = await getExperienceById(id);
 
   if (!experience) {
     notFound();
@@ -30,7 +30,7 @@ export default async function ExperienceViewPage({
     <div className="relative min-h-screen bg-white text-black">
       {/* Fixed Edit Button */}
       <Link
-        href={`/admin/experiences/${slug}/edit`}
+        href={`/admin/experiences/${id}/edit`}
         className="fixed top-24 right-8 z-50"
       >
         <Button className="bg-amber-600 text-white hover:bg-amber-700 shadow-lg rounded-full w-12 h-12 p-0 flex items-center justify-center transition-transform hover:scale-110">
