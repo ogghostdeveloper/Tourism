@@ -51,13 +51,13 @@ export function DeleteHotelDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="text-black">Are you sure?</AlertDialogTitle>
-          <AlertDialogDescription className="text-black">
+          <AlertDialogDescription >
             This action cannot be undone. This will permanently delete the
-            hotel <strong>{hotel.name}</strong>.
+            hotel <strong className="text-amber-600">{hotel.name}</strong>.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isDeleting} className="border-gray-200 text-gray-500 hover:bg-gray-50">Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={isDeleting}

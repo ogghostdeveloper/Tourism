@@ -12,13 +12,13 @@ interface StatCardProps {
 
 export function StatCard({ title, value, change, trend, icon: Icon }: StatCardProps) {
     return (
-        <Card className="border border-gray-300 shadow-sm hover:shadow-md transition-shadow">
+        <Card className="shadow-sm hover:shadow-md transition-shadow">
             <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                     <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">
                         {title}
                     </span>
-                    <div className="w-10 h-10 bg-gray-100 flex items-center justify-center">
+                    <div className="w-10 h-10 bg-gray-100 flex items-center justify-center rounded-lg">
                         <Icon className="w-5 h-5 text-gray-700" />
                     </div>
                 </div>

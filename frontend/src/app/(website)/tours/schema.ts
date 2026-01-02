@@ -29,8 +29,23 @@ export const tourSchema = z.object({
   description: z.string(),
   image: z.string().url(),
   duration: z.string(),
-  price: z.number(), // Changed from string to number
-  priority: z.number().default(0), // Replaces featured
+  price: z.preprocess((val) => {
+    if (typeof val === 'string') {
+      const cleaned = val.replace(/[^0-9.]/g, '');
+      const num = parseFloat(cleaned);
+      return isNaN(num) ? 0 : num;
+    }
+    if (typeof val === 'number') return val;
+    return 0;
+  }, z.number()),
+  priority: z.preprocess((val) => {
+    if (typeof val === 'string') {
+      const num = parseFloat(val);
+      return isNaN(num) ? 0 : num;
+    }
+    if (typeof val === 'number') return val;
+    return 0;
+  }, z.number().default(0)),
   featured: z.preprocess((val) => {
     // Backward compatibility for featured boolean -> simplified logic if needed or just keep optional
     return val === true;

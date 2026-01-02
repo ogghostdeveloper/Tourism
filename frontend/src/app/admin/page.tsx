@@ -62,7 +62,7 @@ export default async function AdminDashboard() {
                   key={activity.id}
                   className="flex items-start gap-4 pb-6 border-b border-gray-200 last:border-0 last:pb-0"
                 >
-                  <div className="w-10 h-10 bg-gray-100 flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 bg-gray-100 flex items-center justify-center shrink-0 rounded-lg">
                     <span className="text-sm font-semibold text-gray-700">
                       {activity.userName.split(" ").map(n => n[0]).join("")}
                     </span>
@@ -96,21 +96,21 @@ export default async function AdminDashboard() {
             <div className="space-y-3">
               <Link
                 href="/admin/tours/new"
-                className="flex items-center justify-between p-4 bg-white/10 hover:bg-white/20 transition-colors group border border-white/20"
+                className="flex items-center justify-between p-4 bg-white/10 hover:bg-white/20 transition-colors group border border-white/20 rounded-lg"
               >
                 <span className="text-sm font-medium">Add New Tour</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 href="/admin/experiences/new"
-                className="flex items-center justify-between p-4 bg-white/10 hover:bg-white/20 transition-colors group border border-white/20"
+                className="flex items-center justify-between p-4 bg-white/10 hover:bg-white/20 transition-colors group border border-white/20 rounded-lg"
               >
                 <span className="text-sm font-medium">Add Experience</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 href="/admin/destinations/new"
-                className="flex items-center justify-between p-4 bg-white/10 hover:bg-white/20 transition-colors group border border-white/20"
+                className="flex items-center justify-between p-4 bg-white/10 hover:bg-white/20 transition-colors group border border-white/20 rounded-lg"
               >
                 <span className="text-sm font-medium">Add Destination</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

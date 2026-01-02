@@ -170,7 +170,7 @@ export async function updateTourAction(id: string, prevState: any, formData: For
 
         await tourDb.updateTour(id, tourData);
         revalidatePath("/admin/tours");
-        revalidatePath(`/admin/tours/${id}`);
+        revalidatePath(`/admin/tours/${slug}`);
         revalidatePath("/tours");
         revalidatePath(`/tours/${slug}`);
         return { success: true, message: "Tour updated successfully" };

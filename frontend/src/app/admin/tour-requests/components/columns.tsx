@@ -12,11 +12,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
-import Link from "next/link";
-import { MoreHorizontal } from "lucide-react";
 import { RequestStatus, TourRequest } from "../types";
-import { deleteTourRequest, updateTourRequestStatus } from "../actions";
-import { toast } from "sonner";
+import { DataTableRowActions } from "./data-table-row-actions";
 
 export const columns: ColumnDef<TourRequest>[] = [
     {
@@ -75,80 +72,13 @@ export const columns: ColumnDef<TourRequest>[] = [
         cell: ({ row }) => {
             return (
                 <span className="text-xs text-gray-500">
-                    {new Date(row.original.createdAt).toLocaleDateString()}
+                    {row.original.createdAt ? new Date(row.original.createdAt).toLocaleDateString() : "N/A"}
                 </span>
             )
         }
     },
     {
         id: "actions",
-        cell: ({ row }) => {
-            const request = row.original;
-
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <Link href={`/admin/tour-requests/${request._id}`}>
-                            <DropdownMenuItem>
-                                View Details
-                            </DropdownMenuItem>
-                        </Link>
-                        <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(request._id!)}
-                        >
-                            Copy request ID
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(request.email)}
-                        >
-                            Copy Email
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuLabel>Update Status</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={async () => {
-                            const res = await updateTourRequestStatus(request._id!, RequestStatus.APPROVED);
-                            if (res.success) toast.success("Request approved");
-                            else toast.error("Failed to approve");
-                        }}>
-                            Mark Approved
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={async () => {
-                            const res = await updateTourRequestStatus(request._id!, RequestStatus.REJECTED);
-                            if (res.success) toast.success("Request rejected");
-                            else toast.error("Failed to reject");
-                        }}>
-                            Mark Rejected
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={async () => {
-                            const res = await updateTourRequestStatus(request._id!, RequestStatus.ARCHIVED);
-                            if (res.success) toast.success("Request archived");
-                            else toast.error("Failed to archive");
-                        }}>
-                            Archive
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                            onClick={async () => {
-                                if (confirm("Are you sure you want to delete this request?")) {
-                                    const res = await deleteTourRequest(request._id!);
-                                    if (res.success) toast.success("Request deleted");
-                                    else toast.error("Failed to delete");
-                                }
-                            }}
-                            className="text-red-600 focus:text-red-600"
-                        >
-                            Delete
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            );
-        },
+        cell: ({ row }) => <DataTableRowActions row={row} />,
     },
 ];

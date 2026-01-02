@@ -30,6 +30,7 @@ import {
 
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
+import { TourRequestCard } from "./tour-request-card";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -39,6 +40,8 @@ interface DataTableProps<TData, TValue> {
         pageIndex: number;
         pageSize: number;
     };
+    view?: "list" | "grid";
+    onViewChange?: (view: "list" | "grid") => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -46,6 +49,8 @@ export function DataTable<TData, TValue>({
     data,
     pageCount,
     pagination,
+    view,
+    onViewChange,
 }: DataTableProps<TData, TValue>) {
     const router = useRouter();
     const pathname = usePathname();
@@ -58,6 +63,15 @@ export function DataTable<TData, TValue>({
         []
     );
     const [sorting, setSorting] = React.useState<SortingState>([]);
+
+    // Determine if mobile (show actions on click/tap)
+    const [isMobile, setIsMobile] = React.useState(false);
+    React.useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener("resize", checkMobile);
+        return () => window.removeEventListener("resize", checkMobile);
+    }, []);
 
     // Maintain pagination state locally
     const [paginationState, setPaginationState] =
@@ -116,65 +130,88 @@ export function DataTable<TData, TValue>({
 
     return (
         <div className="space-y-4">
-            <DataTableToolbar table={table} />
-            <div className="rounded-md border bg-card">
-                <Table>
-                    <TableHeader className="bg-gray-100">
-                        {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow
-                                key={headerGroup.id}
-                                className="h-16 hover:bg-gray-100/20 shadow-xs"
-                            >
-                                {headerGroup.headers.map((header) => {
-                                    return (
-                                        <TableHead
-                                            key={header.id}
-                                            colSpan={header.colSpan}
-                                            className="px-4 text-black font-semibold"
-                                        >
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )}
-                                        </TableHead>
-                                    );
-                                })}
-                            </TableRow>
-                        ))}
-                    </TableHeader>
-                    <TableBody>
-                        {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
+            <DataTableToolbar table={table} view={view} onViewChange={onViewChange} />
+            {view === "list" ? (
+                <div className="rounded-none border bg-card overflow-hidden">
+                    <Table>
+                        <TableHeader className="bg-gray-100">
+                            {table.getHeaderGroups().map((headerGroup) => (
                                 <TableRow
-                                    key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
-                                    className="h-12 border-b border-gray-100"
+                                    key={headerGroup.id}
+                                    className="h-16 hover:bg-gray-100/20"
                                 >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id} className="px-4 py-3 text-black">
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </TableCell>
-                                    ))}
+                                    {headerGroup.headers.map((header) => {
+                                        return (
+                                            <TableHead
+                                                key={header.id}
+                                                colSpan={header.colSpan}
+                                                className="px-4 text-black font-semibold"
+                                            >
+                                                {header.isPlaceholder
+                                                    ? null
+                                                    : flexRender(
+                                                        header.column.columnDef.header,
+                                                        header.getContext()
+                                                    )}
+                                            </TableHead>
+                                        );
+                                    })}
                                 </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell
-                                    colSpan={columns.length}
-                                    className="h-24 text-center"
-                                >
-                                    No results.
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </div>
+                            ))}
+                        </TableHeader>
+                        <TableBody>
+                            {table.getRowModel().rows?.length ? (
+                                table.getRowModel().rows.map((row) => (
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={row.getIsSelected() && "selected"}
+                                        className="h-12 border-b border-gray-100 last:border-0"
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell key={cell.id} className="px-4 py-3 text-black">
+                                                {flexRender(
+                                                    cell.column.columnDef.cell,
+                                                    cell.getContext()
+                                                )}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell
+                                        colSpan={columns.length}
+                                        className="h-24 text-center text-black"
+                                    >
+                                        No results.
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {table.getRowModel().rows?.length ? (
+                        table.getRowModel().rows.map((row) => {
+                            const request = row.original as any;
+                            if (!request) return null;
+
+                            return (
+                                <TourRequestCard
+                                    key={request._id}
+                                    request={request}
+                                    isMobile={isMobile}
+                                />
+                            );
+                        })
+                    ) : (
+                        <div className="col-span-full text-center text-black py-12">
+                            No results.
+                        </div>
+                    )}
+                </div>
+            )}
             <DataTablePagination table={table} />
         </div>
     );

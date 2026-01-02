@@ -13,32 +13,31 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { deleteTourAction } from "../actions";
-import { Tour } from "../schema";
+import { deleteTourRequest } from "../actions";
+import { TourRequest } from "../types";
 
-interface DeleteTourDialogProps {
-    tour: Tour;
+interface DeleteTourRequestDialogProps {
+    request: TourRequest;
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }
 
-export function DeleteTourDialog({
-    tour,
+export function DeleteTourRequestDialog({
+    request,
     open,
     onOpenChange,
-}: DeleteTourDialogProps) {
+}: DeleteTourRequestDialogProps) {
     const [isDeleting, setIsDeleting] = useState(false);
 
     const handleDelete = async () => {
         setIsDeleting(true);
         try {
-            if (!tour._id) return;
-            const result = await deleteTourAction(tour._id);
+            const result = await deleteTourRequest(request._id || "");
             if (result.success) {
-                toast.success("Tour deleted successfully");
+                toast.success("Request deleted successfully");
                 onOpenChange(false);
             } else {
-                toast.error(result.message || "Failed to delete tour");
+                toast.error(result.error || "Failed to delete request");
             }
         } catch (error) {
             toast.error("An unexpected error occurred");
@@ -53,14 +52,19 @@ export function DeleteTourDialog({
                 <AlertDialogHeader>
                     <AlertDialogTitle className="text-black">Are you sure?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete the
-                        tour <strong className="text-amber-600">{tour.title}</strong>.
+                        This action cannot be undone. This will permanently delete the tour request from
+                        <strong className="text-amber-600 ml-1">{request.firstName} {request.lastName}</strong>.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel disabled={isDeleting} className="border-gray-200 text-gray-500 hover:bg-gray-50">Cancel</AlertDialogCancel>
+                    <AlertDialogCancel disabled={isDeleting} className="border-gray-200 text-gray-500 hover:bg-gray-50">
+                        Cancel
+                    </AlertDialogCancel>
                     <AlertDialogAction
-                        onClick={handleDelete}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            handleDelete();
+                        }}
                         disabled={isDeleting}
                         className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
                     >

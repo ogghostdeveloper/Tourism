@@ -46,12 +46,12 @@ export function DataTableRowActions<TData>({
                 <DropdownMenuContent align="end" className="w-[160px]">
                     <Link href={`/admin/tours/${tour.slug}/edit`}>
                         <DropdownMenuItem className="text-green-600 focus:text-green-600 data-[variant=default]:text-green-600 data-[variant=default]:focus:bg-green-50">
-                            <Pencil className="mr-2 h-4 w-4" /> Edit
+                            <Pencil className="mr-2 h-4 w-4 text-green-500 focus:text-green-500 data-[variant=default]:text-green-500" /> Edit
                         </DropdownMenuItem>
                     </Link>
                     <Link href={`/admin/tours/${tour.slug}`}>
                         <DropdownMenuItem className="text-blue-500 focus:text-blue-500 data-[variant=default]:text-blue-500 data-[variant=default]:focus:bg-blue-100">
-                            <Eye className="mr-2 h-4 w-4" /> View
+                            <Eye className="mr-2 h-4 w-4 text-blue-500 focus:text-blue-500 data-[variant=default]:text-blue-500" /> View
                         </DropdownMenuItem>
                     </Link>
                     <DropdownMenuSeparator />
@@ -59,7 +59,7 @@ export function DataTableRowActions<TData>({
                         onClick={() => setShowDeleteDialog(true)}
                         className="text-red-500 focus:text-red-500 data-[variant=default]:text-red-500 data-[variant=default]:focus:bg-red-100"
                     >
-                        <Trash2 className="mr-2 h-4 w-4" /> Delete
+                        <Trash2 className="mr-2 h-4 w-4 text-red-500 focus:text-red-500 data-[variant=default]:text-red-500" /> Delete
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

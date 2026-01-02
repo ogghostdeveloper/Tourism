@@ -40,3 +40,13 @@ export async function deleteTourRequest(id: string) {
         return { success: false, error: "Internal server error" };
     }
 }
+
+export async function getTourRequestById(id: string) {
+    try {
+        const data = await tourRequestDb.getTourRequestById(id);
+        return data;
+    } catch (error) {
+        console.error("Error fetching tour request by id:", error);
+        return null;
+    }
+}

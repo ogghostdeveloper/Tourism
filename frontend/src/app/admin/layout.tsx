@@ -143,9 +143,9 @@ export default async function AdminLayout({
             </div>
           </div>
         </header>
-        <ScrollArea className="h-[calc(100vh-6rem)] bg-gray-50">
+        <div className="h-full bg-gray-50">
           <div className="p-8">{children}</div>
-        </ScrollArea>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

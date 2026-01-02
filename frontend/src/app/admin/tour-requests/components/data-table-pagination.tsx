@@ -37,7 +37,7 @@ export function DataTablePagination<TData>({
                             table.setPageSize(Number(value));
                         }}
                     >
-                        <SelectTrigger className="h-8 w-[70px] text-black">
+                        <SelectTrigger className="h-8 w-[70px] text-black rounded-none">
                             <SelectValue placeholder={table.getState().pagination.pageSize} />
                         </SelectTrigger>
                         <SelectContent side="top">
@@ -57,7 +57,7 @@ export function DataTablePagination<TData>({
                     <Button
                         variant="outline"
                         size="icon"
-                        className="hidden size-8 lg:flex"
+                        className="hidden size-8 lg:flex rounded-none"
                         onClick={() => table.setPageIndex(0)}
                         disabled={!table.getCanPreviousPage()}
                     >
@@ -67,7 +67,7 @@ export function DataTablePagination<TData>({
                     <Button
                         variant="outline"
                         size="icon"
-                        className="size-8"
+                        className="size-8 rounded-none"
                         onClick={() => table.previousPage()}
                         disabled={!table.getCanPreviousPage()}
                     >
@@ -77,7 +77,7 @@ export function DataTablePagination<TData>({
                     <Button
                         variant="outline"
                         size="icon"
-                        className="size-8"
+                        className="size-8 rounded-none"
                         onClick={() => table.nextPage()}
                         disabled={!table.getCanNextPage()}
                     >
@@ -87,7 +87,7 @@ export function DataTablePagination<TData>({
                     <Button
                         variant="outline"
                         size="icon"
-                        className="hidden size-8 lg:flex"
+                        className="hidden size-8 lg:flex rounded-none"
                         onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                         disabled={!table.getCanNextPage()}
                     >

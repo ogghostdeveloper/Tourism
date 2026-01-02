@@ -14,11 +14,13 @@ export default async function EditTourPage({ params }: PageProps) {
         notFound();
     }
 
+    const updateTourWithId = updateTourAction.bind(null, String(tour._id), null);
+
     return (
         <TourForm
             initialData={tour}
             title={`Edit Tour: ${tour.title}`}
-            action={(formData) => updateTourAction(tour._id!, null, formData)}
+            action={updateTourWithId}
         />
     );
 }

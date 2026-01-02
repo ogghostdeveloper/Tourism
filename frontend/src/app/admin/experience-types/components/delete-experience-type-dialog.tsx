@@ -51,9 +51,9 @@ export function DeleteExperienceTypeDialog({
                     <AlertDialogTitle className="text-black">Are you sure?</AlertDialogTitle>
                     <AlertDialogDescription className="text-gray-500">
                         This will permanently delete the experience type{" "}
-                        <span className="font-semibold text-black">
+                        <strong className="text-amber-600">
                             "{experienceType.title}"
-                        </span>
+                        </strong>
                         . This action cannot be undone.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
