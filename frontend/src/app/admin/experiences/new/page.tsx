@@ -91,7 +91,7 @@ export default function CreateExperiencePage() {
     if (e.target.files) {
       const files = Array.from(e.target.files).filter(file => file.type.startsWith("image/"));
       setGalleryFiles(prev => [...prev, ...files]);
-      
+
       const newPreviews = files.map(file => URL.createObjectURL(file));
       setGalleryPreviews(prev => [...prev, ...newPreviews]);
     }
@@ -104,12 +104,10 @@ export default function CreateExperiencePage() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Form: handleSubmit triggered");
     const formData = new FormData(event.currentTarget);
 
     // Add selected destinations to formData
     formData.set("destinations", JSON.stringify(selectedDestinations));
-    console.log("Form: Destinations added", selectedDestinations);
 
     // Add gallery images
     galleryFiles.forEach((file, index) => {
@@ -117,9 +115,7 @@ export default function CreateExperiencePage() {
     });
 
     try {
-      console.log("Form: Calling createExperience action...");
       const result = await createExperience(null, formData);
-      console.log("Form: Action result received", result);
 
       if (result.success) {
         toast.success(result.message);
@@ -128,7 +124,6 @@ export default function CreateExperiencePage() {
         toast.error(result.message);
       }
     } catch (error) {
-      console.error("Form: Action error", error);
       toast.error("An error occurred while creating experience");
     }
   };
@@ -342,7 +337,7 @@ export default function CreateExperiencePage() {
                 accept="image/*"
                 multiple
               />
-              
+
               {galleryPreviews.length > 0 && (
                 <div className="grid grid-cols-3 gap-4 mb-4">
                   {galleryPreviews.map((preview, index) => (
@@ -363,7 +358,7 @@ export default function CreateExperiencePage() {
                   ))}
                 </div>
               )}
-              
+
               <button
                 type="button"
                 onClick={() => galleryInputRef.current?.click()}

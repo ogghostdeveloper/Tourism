@@ -46,7 +46,6 @@ export async function getTourRequestById(id: string) {
         const data = await tourRequestDb.getTourRequestById(id);
         return data;
     } catch (error) {
-        console.error("Error fetching tour request by id:", error);
         return null;
     }
 }

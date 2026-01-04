@@ -152,7 +152,6 @@ export async function getAllExperiences() {
 }
 
 export async function createExperience(data: Partial<Experience>) {
-    console.log("DB Layer: createExperience called");
     const client = await clientPromise;
     const { _id, ...rest } = data;
     const doc = {
@@ -162,11 +161,9 @@ export async function createExperience(data: Partial<Experience>) {
     };
     try {
         const res = await client.db(DB).collection(COLLECTION).insertOne(doc as any);
-        console.log("DB Layer: insertOne success, ID:", res.insertedId);
         return res.insertedId;
     } catch (error) {
-        console.error("DB Layer: insertOne failed:", error);
-        throw error;
+        return null;
     }
 }
 

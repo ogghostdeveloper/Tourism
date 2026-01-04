@@ -47,13 +47,10 @@ export async function getExperienceTypeBySlug(slug: string) {
 
 export async function getExperienceTypeById(id: string) {
     try {
-        console.log('[getExperienceTypeById] Fetching with ID:', id);
         const client = await clientPromise;
         const doc = await client.db(DB).collection<ExperienceType>(COLLECTION).findOne({ _id: new ObjectId(id) } as any);
-        console.log('[getExperienceTypeById] Found document:', doc ? 'YES' : 'NO');
         return formatDoc(doc);
     } catch (error) {
-        console.error('[getExperienceTypeById] Error:', error, 'ID:', id);
         return null;
     }
 }

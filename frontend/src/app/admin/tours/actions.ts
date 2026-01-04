@@ -15,7 +15,6 @@ export async function getTours(page: number = 1, pageSize: number = 10): Promise
         const data = await tourDb.listTours(page, pageSize);
         return data as PaginatedTours;
     } catch (error) {
-        console.error("Error fetching tours:", error);
         return {
             items: [],
             page,
@@ -32,7 +31,6 @@ export async function getTourBySlug(slug: string): Promise<Tour | null> {
         const tour = await tourDb.getTourBySlug(slug);
         return tour as Tour | null;
     } catch (error) {
-        console.error("Error fetching tour by slug:", error);
         return null;
     }
 }
@@ -42,7 +40,6 @@ export async function getRelatedTours(slug: string): Promise<Tour[]> {
         const tours = await tourDb.getRelatedTours(slug);
         return tours as Tour[];
     } catch (error) {
-        console.error("Error fetching related tours:", error);
         return [];
     }
 }
@@ -53,7 +50,6 @@ export async function getTourById(id: string): Promise<Tour | null> {
         const tour = await tourDb.getTourById(id);
         return tour as Tour | null;
     } catch (error) {
-        console.error("Error fetching tour by id:", error);
         return null;
     }
 }
@@ -113,7 +109,6 @@ export async function createTourAction(prevState: any, formData: FormData) {
         revalidatePath("/tours");
         return { success: true, message: "Tour created successfully", id: String(id) };
     } catch (error) {
-        console.error("Error creating tour:", error);
         return { success: false, message: "Failed to create tour" };
     }
 }
@@ -176,7 +171,6 @@ export async function updateTourAction(id: string, prevState: any, formData: For
         revalidatePath(`/tours/${slug}`);
         return { success: true, message: "Tour updated successfully" };
     } catch (error) {
-        console.error("Error updating tour:", error);
         return { success: false, message: "Failed to update tour" };
     }
 }
@@ -191,7 +185,6 @@ export async function deleteTourAction(id: string) {
         revalidatePath("/tours");
         return { success: true, message: "Tour deleted successfully" };
     } catch (error) {
-        console.error("Error deleting tour:", error);
         return { success: false, message: "Failed to delete tour" };
     }
 }
@@ -204,7 +197,6 @@ export async function getCategoriesForDropdown(): Promise<{ value: string; label
             label: cat.title,
         }));
     } catch (error) {
-        console.error("Error fetching categories for dropdown:", error);
         return [];
     }
 }
@@ -217,7 +209,6 @@ export async function getExperiencesForDropdown(): Promise<{ value: string; labe
             label: exp.title,
         }));
     } catch (error) {
-        console.error("Error fetching experiences for dropdown:", error);
         return [];
     }
 }
@@ -230,7 +221,6 @@ export async function getHotelsForDropdown(): Promise<{ value: string; label: st
             label: hotel.name,
         }));
     } catch (error) {
-        console.error("Error fetching hotels for dropdown:", error);
         return [];
     }
 }
@@ -243,7 +233,6 @@ export async function getDestinationsForDropdown(): Promise<{ value: string; lab
             label: dest.name,
         }));
     } catch (error) {
-        console.error("Error fetching destinations for dropdown:", error);
         return [];
     }
 }

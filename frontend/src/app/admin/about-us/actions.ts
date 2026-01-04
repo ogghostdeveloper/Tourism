@@ -10,7 +10,6 @@ export async function getAboutContentAction() {
     // Serialize the data to plain objects
     return JSON.parse(JSON.stringify(content));
   } catch (error) {
-    console.error("Error fetching about content:", error);
     throw new Error("Failed to fetch about content");
   }
 }
@@ -79,7 +78,6 @@ export async function updateAboutContentAction(formData: FormData) {
 
     return { success: true, message: "Content updated successfully" };
   } catch (error) {
-    console.error("Error updating about content:", error);
     return { success: false, message: "Failed to update content" };
   }
 }

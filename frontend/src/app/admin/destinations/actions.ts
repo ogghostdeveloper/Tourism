@@ -14,7 +14,6 @@ export async function getDestinations(
     const data = await db.listDestinations(page, pageSize);
     return data as PaginatedDestinations;
   } catch (error) {
-    console.error("Error fetching destinations:", error);
     return {
       items: [],
       page: 1,
@@ -31,7 +30,6 @@ export async function getDestinationBySlug(slug: string): Promise<Destination | 
     const destination = await db.getDestinationBySlug(slug);
     return destination as Destination | null;
   } catch (error) {
-    console.error("Error fetching destination:", error);
     return null;
   }
 }
@@ -41,7 +39,6 @@ export async function getDestinationById(id: string): Promise<Destination | null
     const destination = await db.getDestinationById(id);
     return destination as Destination | null;
   } catch (error) {
-    console.error("Error fetching destination by id:", error);
     return null;
   }
 }
@@ -51,7 +48,6 @@ export async function getAllDestinations() {
     const destinations = await db.getAllDestinations();
     return destinations;
   } catch (error) {
-    console.error("Error fetching all destinations:", error);
     return [];
   }
 }
@@ -106,7 +102,6 @@ export async function createDestination(prevState: any, formData: FormData) {
       message: "Destination created successfully",
     };
   } catch (error) {
-    console.error("Error creating destination:", error);
     return {
       success: false,
       message: "Failed to create destination",
@@ -170,7 +165,6 @@ export async function updateDestination(
       message: "Destination updated successfully",
     };
   } catch (error) {
-    console.error("Error updating destination:", error);
     return {
       success: false,
       message: "Failed to update destination",
@@ -193,7 +187,6 @@ export async function deleteDestination(id: string) {
       message: "Destination deleted successfully",
     };
   } catch (error) {
-    console.error("Error deleting destination:", error);
     return {
       success: false,
       message: "Failed to delete destination",

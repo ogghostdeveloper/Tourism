@@ -21,7 +21,7 @@ export default function EditExperiencePage({
         const data = await getExperienceById(id);
         setExperience(data);
       } catch (error) {
-        console.error("Failed to fetch experience", error);
+        // Silent fail, handled by state
       } finally {
         setIsLoading(false);
       }

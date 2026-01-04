@@ -98,14 +98,11 @@ export async function listHotels(page: number = 1, pageSize: number = 10) {
 
 export async function getHotelById(id: string) {
     try {
-        console.log('[getHotelById] Fetching with ID:', id);
         const client = await clientPromise;
         const collection = client.db(DB).collection(COLLECTION);
         const items = await collection.aggregate(getHotelLookupPipeline({ _id: new ObjectId(id) })).toArray();
-        console.log('[getHotelById] Found document:', items.length > 0 ? 'YES' : 'NO');
         return formatDoc(items[0]);
     } catch (e) {
-        console.error('[getHotelById] Error:', e, 'ID:', id);
         return null;
     }
 }

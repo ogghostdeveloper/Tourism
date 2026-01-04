@@ -14,7 +14,6 @@ export async function getHotels(
     const data = await db.listHotels(page, pageSize);
     return data as PaginatedHotels;
   } catch (error) {
-    console.error("Error fetching hotels:", error);
     return {
       items: [],
       page: 1,
@@ -31,7 +30,6 @@ export async function getHotelBySlug(slug: string): Promise<Hotel | null> {
     const hotel = await db.getHotelBySlug(slug);
     return hotel as Hotel | null;
   } catch (error) {
-    console.error("Error fetching hotel by slug:", error);
     return null;
   }
 }
@@ -41,7 +39,6 @@ export async function getHotelById(id: string): Promise<Hotel | null> {
     const hotel = await db.getHotelById(id);
     return hotel as Hotel | null;
   } catch (error) {
-    console.error("Error fetching hotel by id:", error);
     return null;
   }
 }
@@ -51,7 +48,6 @@ export async function getAllHotels() {
     const hotels = await db.getAllHotels();
     return hotels;
   } catch (error) {
-    console.error("Error fetching all hotels:", error);
     return [];
   }
 }
@@ -114,7 +110,6 @@ export async function createHotel(prevState: any, formData: FormData) {
 
     return { success: true, message: "Hotel created successfully" };
   } catch (error) {
-    console.error("Error creating hotel:", error);
     return { success: false, message: "Failed to create hotel" };
   }
 }
@@ -187,7 +182,6 @@ export async function updateHotel(id: string, prevState: any, formData: FormData
 
     return { success: true, message: "Hotel updated successfully" };
   } catch (error) {
-    console.error("Error updating hotel:", error);
     return { success: false, message: "Failed to update hotel" };
   }
 }
@@ -201,7 +195,6 @@ export async function deleteHotel(id: string) {
     revalidatePath("/admin/hotels");
     return { success: true, message: "Hotel deleted successfully" };
   } catch (error) {
-    console.error("Error deleting hotel:", error);
     return { success: false, message: "Failed to delete hotel" };
   }
 }

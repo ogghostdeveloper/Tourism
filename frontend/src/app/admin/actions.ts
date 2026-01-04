@@ -40,7 +40,6 @@ export async function getDashboardData() {
             recentActivity
         };
     } catch (error) {
-        console.error("Error fetching dashboard data:", error);
         throw new Error("Failed to fetch dashboard data");
     }
 }

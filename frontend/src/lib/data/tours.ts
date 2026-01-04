@@ -48,13 +48,10 @@ export async function getTourBySlug(slug: string) {
 
 export async function getTourById(id: string) {
     try {
-        console.log('[getTourById] Fetching tour with ID:', id);
         const client = await clientPromise;
         const doc = await client.db(DB).collection<Tour>(COLLECTION).findOne({ _id: new ObjectId(id) } as any);
-        console.log('[getTourById] Found document:', doc ? 'YES' : 'NO');
         return formatDoc(doc);
     } catch (error) {
-        console.error('[getTourById] Error fetching tour:', error, 'ID:', id);
         return null;
     }
 }

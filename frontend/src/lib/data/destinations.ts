@@ -60,7 +60,6 @@ export async function getDestinationById(id: string) {
         const doc = await client.db(DB).collection<Destination>(COLLECTION).findOne({ _id: new ObjectId(id) } as any);
         return formatDoc(doc);
     } catch (error) {
-        console.error("Error fetching destination by id:", error);
         return null;
     }
 }

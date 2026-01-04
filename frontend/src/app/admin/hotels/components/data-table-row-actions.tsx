@@ -24,10 +24,7 @@ export function DataTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const parseResult = hotelSchema.safeParse(row.original);
   if (!parseResult.success) {
-    console.error("Zod validation failed for hotel row:", {
-      errors: parseResult.error.flatten().fieldErrors,
-      data: row.original,
-    });
+    // Silent fail, fallback to raw data
   }
   const hotel = parseResult.success ? parseResult.data : (row.original as any);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);

@@ -14,7 +14,6 @@ function extractFilenameFromUrl(imageUrl: string): string | null {
     const filename = parts[parts.length - 1];
     return filename && filename.length > 0 ? filename : null;
   } catch (error) {
-    console.error("Error extracting filename from URL:", imageUrl, error);
     return null;
   }
 }
@@ -27,7 +26,6 @@ export async function getExperiences(
     const data = await db.listExperiences(page, pageSize);
     return data as PaginatedExperiences;
   } catch (error) {
-    console.error("Error fetching experiences:", error);
     return {
       items: [],
       page: 1,
@@ -44,7 +42,6 @@ export async function getExperienceBySlug(slug: string): Promise<Experience | nu
     const experience = await db.getExperienceBySlug(slug);
     return experience as Experience | null;
   } catch (error) {
-    console.error("Error fetching experience:", error);
     return null;
   }
 }
@@ -54,7 +51,6 @@ export async function getExperienceById(id: string): Promise<Experience | null> 
     const experience = await db.getExperienceById(id);
     return experience as Experience | null;
   } catch (error) {
-    console.error("Error fetching experience by id:", error);
     return null;
   }
 }
@@ -64,7 +60,6 @@ export async function getAllExperiences() {
     const experiences = await db.getAllExperiences();
     return experiences;
   } catch (error) {
-    console.error("Error fetching all experiences:", error);
     return [];
   }
 }
@@ -73,7 +68,6 @@ export async function createExperience(prevState: any, formData: FormData) {
   const session = await auth();
 
   if (!session) {
-    console.error("Action: Unauthorized access attempt");
     return { success: false, message: "Unauthorized" };
   }
 
@@ -149,7 +143,6 @@ export async function createExperience(prevState: any, formData: FormData) {
       message: "Experience created successfully",
     };
   } catch (error) {
-    console.error("Error creating experience:", error);
     return {
       success: false,
       message: "Failed to create experience",
@@ -164,7 +157,6 @@ export async function updateExperience(
 ) {
   const session = await auth();
   if (!session) {
-    console.error("Action: Unauthorized access attempt");
     return { success: false, message: "Unauthorized" };
   }
 
@@ -199,7 +191,6 @@ export async function updateExperience(
         if (uploadedPath) {
           imageUrl = uploadedPath;
         } else {
-          console.warn("Failed to update image, uploading as new");
           const newPath = await uploadImage(imageInput);
           if (newPath) imageUrl = newPath;
         }
@@ -275,7 +266,6 @@ export async function updateExperience(
       message: "Experience updated successfully",
     };
   } catch (error) {
-    console.error("Error updating experience:", error);
     return {
       success: false,
       message: "Failed to update experience",
@@ -301,7 +291,7 @@ export async function deleteExperience(id: string) {
       if (imageFilename) {
         const deleted = await deleteImage(imageFilename);
         if (!deleted) {
-          console.warn("Failed to delete main image:", imageFilename);
+          // Silent fail
         }
       }
     }
@@ -313,7 +303,7 @@ export async function deleteExperience(id: string) {
         if (galleryFilename) {
           const deleted = await deleteImage(galleryFilename);
           if (!deleted) {
-            console.warn("Failed to delete gallery image:", galleryFilename);
+            // Silent fail
           }
         }
       }
@@ -328,7 +318,6 @@ export async function deleteExperience(id: string) {
       message: "Experience deleted successfully",
     };
   } catch (error) {
-    console.error("Error deleting experience:", error);
     return {
       success: false,
       message: "Failed to delete experience",

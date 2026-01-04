@@ -14,7 +14,6 @@ export async function getExperienceTypes(
         const data = await db.listExperienceTypes(page, pageSize);
         return data as PaginatedExperienceTypes;
     } catch (error) {
-        console.error("Error fetching experience types:", error);
         return {
             items: [],
             page: 1,
@@ -31,7 +30,6 @@ export async function getExperienceTypeBySlug(slug: string): Promise<ExperienceT
         const experienceType = await db.getExperienceTypeBySlug(slug);
         return experienceType as ExperienceType | null;
     } catch (error) {
-        console.error("Error fetching experience type:", error);
         return null;
     }
 }
@@ -41,7 +39,6 @@ export async function getExperienceTypeById(id: string): Promise<ExperienceType 
         const experienceType = await db.getExperienceTypeById(id);
         return experienceType as ExperienceType | null;
     } catch (error) {
-        console.error("Error fetching experience type by id:", error);
         return null;
     }
 }
@@ -86,7 +83,6 @@ export async function createExperienceType(prevState: any, formData: FormData) {
             message: "Experience type created successfully",
         };
     } catch (error) {
-        console.error("Error creating experience type:", error);
         return {
             success: false,
             message: "Failed to create experience type",
@@ -139,7 +135,6 @@ export async function updateExperienceType(
             message: "Experience type updated successfully",
         };
     } catch (error) {
-        console.error("Error updating experience type:", error);
         return {
             success: false,
             message: "Failed to update experience type",
@@ -164,7 +159,6 @@ export async function deleteExperienceType(id: string) {
             message: "Experience type deleted successfully",
         };
     } catch (error) {
-        console.error("Error deleting experience type:", error);
         return {
             success: false,
             message: "Failed to delete experience type",
