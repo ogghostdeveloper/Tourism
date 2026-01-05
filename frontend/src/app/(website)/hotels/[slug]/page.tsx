@@ -19,7 +19,7 @@ export default async function HotelPage({ params }: PageProps) {
         notFound();
     }
 
-    const relatedHotels = await getRelatedHotels(hotel.destinationSlug, hotel.id);
+    const relatedHotels = await getRelatedHotels(hotel.destination || hotel.destinationSlug || "", hotel.id);
 
     return (
         <div className="min-h-screen bg-white text-black font-sans">

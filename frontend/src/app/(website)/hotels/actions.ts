@@ -41,11 +41,15 @@ export async function getHotelBySlug(slug: string): Promise<Hotel | null> {
     }
 }
 
-export async function getRelatedHotels(destinationSlug: string, excludeId: string, limit: number = 3): Promise<Hotel[]> {
+export async function getRelatedHotels(destinationIdOrSlug: string, excludeId: string, limit: number = 3): Promise<Hotel[]> {
     try {
         const all = await hotelDb.getAllHotels();
         return all
-            .filter((h) => h.destinationSlug === destinationSlug && h.id !== excludeId)
+            .filter((h) => {
+                // Check both destination ID and destinationSlug for compatibility
+                const hotelDest = h.destination || h.destinationSlug;
+                return hotelDest === destinationIdOrSlug && h.id !== excludeId;
+            })
             .slice(0, limit) as Hotel[];
     } catch (error) {
         console.error("Error fetching related hotels:", error);

@@ -91,8 +91,7 @@ export async function createHotel(prevState: any, formData: FormData) {
       slug: getValue("slug"),
       location: getValue("location"),
       description: getValue("description"),
-      destinationSlug: getValue("destinationSlug") || getValue("destinationId"),
-      destinationId: getValue("destinationId"),
+      destination: getValue("destinationId"), // Store destination ID
       rating: parseFloat(getValue("rating")),
       priceRange: getValue("priceRange"),
       rooms: getValue("rooms") ? parseInt(getValue("rooms")) : undefined,
@@ -154,8 +153,7 @@ export async function updateHotel(id: string, prevState: any, formData: FormData
       slug: getValue("slug"),
       location: getValue("location"),
       description: getValue("description"),
-      destinationSlug: getValue("destinationSlug") || getValue("destinationId"),
-      destinationId: getValue("destinationId"),
+      destination: getValue("destinationId"), // Store destination ID
       rating: parseFloat(getValue("rating")),
       priceRange: getValue("priceRange"),
       rooms: getValue("rooms") ? parseInt(getValue("rooms")) : undefined,

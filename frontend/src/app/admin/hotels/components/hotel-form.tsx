@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Loader2, Save, Pencil, Check, ChevronsUpDown, X, Plus } from "lucide-react";
+import { Loader2, Pencil, Check, ChevronsUpDown, X, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition, useState, useEffect, useRef } from "react";
 import Link from "next/link";
@@ -46,7 +46,7 @@ export function HotelForm({ initialData, action, title, isReadOnly = false }: Ho
     // Form fields
     const [name, setName] = useState(initialData?.name || "");
     const [slug, setSlug] = useState(initialData?.slug || "");
-    const [selectedDestination, setSelectedDestination] = useState<string>(initialData?.destinationId || initialData?.destinationSlug || "");
+    const [selectedDestination, setSelectedDestination] = useState<string>(initialData?.destination || initialData?.destinationId || initialData?.destinationSlug || "");
     const [priceRange, setPriceRange] = useState<string>(initialData?.priceRange || "");
     const [location, setLocation] = useState(initialData?.location || "");
     const [rating, setRating] = useState(initialData?.rating?.toString() || "");
@@ -196,7 +196,7 @@ export function HotelForm({ initialData, action, title, isReadOnly = false }: Ho
                             value={name}
                             onChange={(e) => {
                                 setName(e.target.value);
-                                if (!initialData && !isReadOnly) {
+                                if (!isReadOnly) {
                                     setSlug(generateSlug(e.target.value));
                                 }
                             }}
@@ -212,9 +212,8 @@ export function HotelForm({ initialData, action, title, isReadOnly = false }: Ho
                             required
                             placeholder="aman-kora"
                             value={slug}
-                            onChange={(e) => setSlug(e.target.value)}
-                            readOnly={!!initialData || isReadOnly}
-                            className="bg-white border-gray-200 text-black"
+                            readOnly
+                            className="text-black bg-gray-100 cursor-not-allowed"
                         />
                     </div>
                 </div>
@@ -502,7 +501,6 @@ export function HotelForm({ initialData, action, title, isReadOnly = false }: Ho
                                 </>
                             ) : (
                                 <>
-                                    <Save className="w-4 h-4 mr-2 text-white" />
                                     {initialData ? "Update Hotel" : "Create Hotel"}
                                 </>
                             )}

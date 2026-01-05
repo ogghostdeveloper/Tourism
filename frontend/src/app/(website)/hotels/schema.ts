@@ -7,7 +7,8 @@ export const hotelSchema = z.object({
     location: z.string().optional(),
     description: z.string(),
     image: z.string(),
-    destinationSlug: z.string(),
+    destination: z.string().optional(), // Destination ID
+    destinationSlug: z.string().optional(), // Legacy field
     rating: z.number().min(1).max(5),
     amenities: z.array(z.string()).optional(),
     priceRange: z.string(),

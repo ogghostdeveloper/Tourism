@@ -7,7 +7,7 @@ export default function CreateHotelPage() {
   return (
     <HotelForm
       title="Create New Hotel"
-      action={(id, prevState, formData) => createHotel(prevState, formData)}
+      action={(formData) => createHotel(null, formData)}
     />
   );
 }

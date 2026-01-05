@@ -5,6 +5,8 @@ import { format } from "date-fns";
 import { Hotel } from "../schema";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
+import { useEffect, useState } from "react";
+import { getDestinationById } from "@/app/admin/destinations/actions";
 
 
 function ImageCell({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
@@ -21,6 +23,34 @@ function ImageCell({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
           e.currentTarget.style.display = "none";
         }}
       />
+    </div>
+  );
+}
+
+function DestinationCell({ destinationId }: { destinationId?: string }) {
+  const [destinationName, setDestinationName] = useState<string>("Loading...");
+
+  useEffect(() => {
+    if (!destinationId) {
+      setDestinationName("-");
+      return;
+    }
+
+    const fetchDestination = async () => {
+      try {
+        const destination = await getDestinationById(destinationId);
+        setDestinationName(destination?.name || destinationId);
+      } catch (error) {
+        setDestinationName(destinationId);
+      }
+    };
+
+    fetchDestination();
+  }, [destinationId]);
+
+  return (
+    <div className="text-black capitalize">
+      {destinationName}
     </div>
   );
 }
@@ -50,17 +80,14 @@ export const columns: ColumnDef<Hotel>[] = [
     },
   },
   {
-    accessorKey: "destinationSlug",
+    accessorKey: "destination",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Destination" />
     ),
     cell: ({ row }) => {
-      const slug = row.getValue("destinationSlug") as string;
-      return (
-        <div className="text-black capitalize">
-          {slug}
-        </div>
-      );
+      // Try to get destination ID from multiple possible fields
+      const destinationId = row.original.destination || row.original.destinationId || row.original.destinationSlug;
+      return <DestinationCell destinationId={destinationId} />;
     },
   },
   {
