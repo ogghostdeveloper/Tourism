@@ -41,7 +41,7 @@ const getExperienceLookupPipeline = (match: any = {}) => [
     },
     {
         $lookup: {
-            from: "experience-types",
+            from: "experience_types",
             localField: "categoryObjectId",
             foreignField: "_id",
             as: "categoryDoc"

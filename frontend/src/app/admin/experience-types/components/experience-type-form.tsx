@@ -80,11 +80,9 @@ export function ExperienceTypeForm({ initialData, action, title, isReadOnly = fa
                                 readOnly={isReadOnly}
                                 className="bg-white border-gray-200 text-black"
                                 onChange={(e) => {
-                                    if (!initialData) {
-                                        const slugInput = document.getElementById('slug') as HTMLInputElement;
-                                        if (slugInput) {
-                                            slugInput.value = generateSlug(e.target.value);
-                                        }
+                                    const slugInput = document.getElementById('slug') as HTMLInputElement;
+                                    if (slugInput) {
+                                        slugInput.value = generateSlug(e.target.value);
                                     }
                                 }}
                             />
@@ -99,7 +97,7 @@ export function ExperienceTypeForm({ initialData, action, title, isReadOnly = fa
                                 placeholder="e.g. wellness"
                                 required
                                 className="bg-white border-gray-200 text-black"
-                                readOnly={!!initialData || isReadOnly}
+                                readOnly={isReadOnly}
                             />
                         </div>
                     </div>

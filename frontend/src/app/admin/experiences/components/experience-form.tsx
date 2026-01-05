@@ -209,7 +209,7 @@ export function ExperienceForm({ initialData, action, slug = null, title: pageTi
                             readOnly={isReadOnly}
                             className="bg-white border-gray-200 text-black"
                             onChange={(e) => {
-                                if (!initialData && !isReadOnly) {
+                                if (!isReadOnly) {
                                     const slugInput = document.getElementById('slug') as HTMLInputElement;
                                     if (slugInput) {
                                         slugInput.value = generateSlug(e.target.value);
@@ -227,7 +227,7 @@ export function ExperienceForm({ initialData, action, slug = null, title: pageTi
                             required
                             placeholder="tigers-nest-hike"
                             defaultValue={initialData?.slug}
-                            readOnly={!!initialData || isReadOnly}
+                            readOnly={isReadOnly}
                             className="bg-white border-gray-200 text-black"
                         />
                     </div>
@@ -504,7 +504,6 @@ export function ExperienceForm({ initialData, action, slug = null, title: pageTi
                                 </>
                             ) : (
                                 <>
-                                    <Save className="w-4 h-4 mr-2" />
                                     {initialData ? "Update Experience" : "Create Experience"}
                                 </>
                             )}
