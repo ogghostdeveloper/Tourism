@@ -72,11 +72,11 @@ export function TourForm({ initialData, action, title: pageTitle }: TourFormProp
     const watchedTitle = watch("title");
 
     React.useEffect(() => {
-        if (!initialData && watchedTitle) {
+        if (watchedTitle) {
             const slug = generateSlug(watchedTitle);
             setValue("slug", slug);
         }
-    }, [watchedTitle, initialData, setValue]);
+    }, [watchedTitle, setValue]);
 
     const { fields: dayFields, append: appendDay, remove: removeDay, move: moveDay } = useFieldArray({
         control,
@@ -179,8 +179,8 @@ export function TourForm({ initialData, action, title: pageTitle }: TourFormProp
                         <Input
                             {...register("slug")}
                             placeholder="spiritual-discovery-nepal-bhutan"
-                            className="bg-white border-gray-200 text-black"
-                            readOnly={!!initialData?._id}
+                            className="text-black bg-gray-100 cursor-not-allowed"
+                            readOnly
                         />
                         {errors.slug && <p className="text-xs text-red-500">{errors.slug.message}</p>}
                     </div>

@@ -31,7 +31,7 @@ export function Combobox({ options, value, onChange, placeholder = "Select optio
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
+            <PopoverTrigger asChild className="rounded-none">
                 <Button
                     variant="outline"
                     role="combobox"

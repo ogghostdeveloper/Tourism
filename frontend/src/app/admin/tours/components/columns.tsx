@@ -6,6 +6,8 @@ import { Tour } from "../schema";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { Badge } from "@/components/ui/badge";
+import { useEffect, useState } from "react";
+import { getExperienceTypeById } from "@/app/admin/experience-types/actions";
 
 function ImageCell({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
     if (!imageUrl) {
@@ -22,6 +24,36 @@ function ImageCell({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
                 }}
             />
         </div>
+    );
+}
+
+function CategoryCell({ categoryId }: { categoryId?: string }) {
+    const [categoryName, setCategoryName] = useState<string>("Loading...");
+
+    useEffect(() => {
+        if (!categoryId) {
+            setCategoryName("-");
+            return;
+        }
+
+        const fetchCategory = async () => {
+            try {
+                const experienceType = await getExperienceTypeById(categoryId);
+                setCategoryName(experienceType?.title || categoryId);
+            } catch (error) {
+                setCategoryName(categoryId);
+            }
+        };
+
+        fetchCategory();
+    }, [categoryId]);
+
+    if (!categoryName || categoryName === "-") return <span className="text-gray-400">-</span>;
+
+    return (
+        <Badge variant="outline" className="font-normal border-gray-200 text-black bg-gray-50/50">
+            {categoryName}
+        </Badge>
     );
 }
 
@@ -66,12 +98,7 @@ export const columns: ColumnDef<Tour>[] = [
         ),
         cell: ({ row }) => {
             const category = row.getValue("category") as string;
-            if (!category) return "-";
-            return (
-                <Badge variant="outline" className="font-normal border-gray-200 text-black bg-gray-50/50">
-                    {category}
-                </Badge>
-            );
+            return <CategoryCell categoryId={category} />;
         },
     },
     {

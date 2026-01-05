@@ -136,7 +136,7 @@ export function DestinationForm({ initialData, action, title, isReadOnly = false
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label htmlFor="name" className="text-black">Name *</Label>
+                            <Label htmlFor="name" className="text-black">Hotel Name *</Label>
                             <Popover open={open} onOpenChange={setOpen}>
                                 <PopoverTrigger className="rounded-none" asChild>
                                     <Button
