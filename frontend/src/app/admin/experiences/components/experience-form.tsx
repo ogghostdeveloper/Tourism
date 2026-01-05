@@ -227,8 +227,8 @@ export function ExperienceForm({ initialData, action, slug = null, title: pageTi
                             required
                             placeholder="tigers-nest-hike"
                             defaultValue={initialData?.slug}
-                            readOnly={isReadOnly}
-                            className="bg-white border-gray-200 text-black"
+                            readOnly
+                            className="text-black bg-gray-100 cursor-not-allowed"
                         />
                     </div>
                 </div>

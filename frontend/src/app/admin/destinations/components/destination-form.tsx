@@ -28,10 +28,11 @@ import {
 import { DZONGKHAGS, DZONGKHAG_REGIONS } from "@/constants/dzongkhags";
 import { generateSlug } from "@/utils/slugGenerator";
 import { Destination } from "../schema";
+import { getAllDestinations } from "../actions";
 
 interface DestinationFormProps {
     initialData?: Destination;
-    action: (slug: string, prevState: any, formData: FormData) => Promise<{ success: boolean; message: string }>;
+    action: (idOrSlug: string, prevState: any, formData: FormData) => Promise<{ success: boolean; message: string }>;
     title: string;
     isReadOnly?: boolean;
 }
@@ -51,6 +52,35 @@ export function DestinationForm({ initialData, action, title, isReadOnly = false
     const [longitude, setLongitude] = React.useState(initialData?.coordinates?.[1]?.toString() || "");
     const [priority, setPriority] = React.useState(initialData?.priority || 0);
     const [previewUrl, setPreviewUrl] = React.useState<string | null>(initialData?.image || null);
+    const [availableDzongkhags, setAvailableDzongkhags] = React.useState<string[]>([]);
+    const [isLoadingDzongkhags, setIsLoadingDzongkhags] = React.useState(true);
+
+    // Fetch existing destinations and filter available Dzongkhags
+    React.useEffect(() => {
+        const fetchAvailableDzongkhags = async () => {
+            try {
+                const allDestinations = await getAllDestinations();
+                const usedDzongkhags = allDestinations.map((dest: any) => dest.name);
+
+                // Filter out used Dzongkhags, but keep the current one if editing
+                const available = DZONGKHAGS.filter(dzongkhag => {
+                    if (initialData && dzongkhag === initialData.name) {
+                        return true; // Allow current destination's name
+                    }
+                    return !usedDzongkhags.includes(dzongkhag);
+                });
+
+                setAvailableDzongkhags(available);
+            } catch (error) {
+                toast.error("Failed to load available Dzongkhags");
+                setAvailableDzongkhags(DZONGKHAGS); // Fallback to all
+            } finally {
+                setIsLoadingDzongkhags(false);
+            }
+        };
+
+        fetchAvailableDzongkhags();
+    }, [initialData]);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -58,7 +88,9 @@ export function DestinationForm({ initialData, action, title, isReadOnly = false
 
         startTransition(async () => {
             try {
-                const result = await action(initialData?.slug || "", null, formData);
+                // For updates, use _id; for creates, use empty string or slug
+                const idOrSlug = initialData?._id || initialData?.slug || "";
+                const result = await action(idOrSlug, null, formData);
 
                 if (result.success) {
                     toast.success(result.message);
@@ -114,8 +146,8 @@ export function DestinationForm({ initialData, action, title, isReadOnly = false
                                         disabled={isReadOnly}
                                         className="w-full justify-between text-black bg-white"
                                     >
-                                        {name
-                                            ? DZONGKHAGS.find((framework) => framework === name) || name
+                                        {isLoadingDzongkhags ? "Loading..." : name
+                                            ? availableDzongkhags.find((dzongkhag) => dzongkhag === name) || name
                                             : "Select a Dzongkhag..."}
                                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                     </Button>
@@ -125,17 +157,15 @@ export function DestinationForm({ initialData, action, title, isReadOnly = false
                                         <Command>
                                             <CommandInput placeholder="Search dzongkhag..." className="h-9" />
                                             <CommandList>
-                                                <CommandEmpty>No dzongkhag found.</CommandEmpty>
+                                                <CommandEmpty>{isLoadingDzongkhags ? "Loading..." : "No available dzongkhag found."}</CommandEmpty>
                                                 <CommandGroup>
-                                                    {DZONGKHAGS.map((dzongkhag) => (
+                                                    {availableDzongkhags.map((dzongkhag) => (
                                                         <CommandItem
                                                             key={dzongkhag}
                                                             value={dzongkhag}
                                                             onSelect={() => {
                                                                 setName(dzongkhag);
-                                                                if (!initialData) {
-                                                                    setSlug(generateSlug(dzongkhag));
-                                                                }
+                                                                setSlug(generateSlug(dzongkhag));
                                                                 setRegion(DZONGKHAG_REGIONS[dzongkhag] || "");
                                                                 setOpen(false);
                                                             }}
@@ -164,11 +194,10 @@ export function DestinationForm({ initialData, action, title, isReadOnly = false
                                 id="slug"
                                 name="slug"
                                 required
-                                readOnly={!!initialData || isReadOnly}
+                                readOnly
                                 placeholder="destination-slug"
                                 value={slug}
-                                onChange={(e) => setSlug(e.target.value)}
-                                className={cn("text-black", (!!initialData || isReadOnly) && "bg-gray-100")}
+                                className="text-black bg-gray-100 cursor-not-allowed"
                             />
                         </div>
                     </div>
@@ -183,7 +212,7 @@ export function DestinationForm({ initialData, action, title, isReadOnly = false
                                 placeholder="e.g., Western Bhutan"
                                 value={region}
                                 readOnly
-                                className="text-black bg-gray-100"
+                                className="text-black bg-gray-100 cursor-not-allowed"
                             />
                         </div>
 

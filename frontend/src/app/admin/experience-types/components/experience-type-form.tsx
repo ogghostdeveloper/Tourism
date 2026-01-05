@@ -96,8 +96,8 @@ export function ExperienceTypeForm({ initialData, action, title, isReadOnly = fa
                                 defaultValue={initialData?.slug}
                                 placeholder="e.g. wellness"
                                 required
-                                className="bg-white border-gray-200 text-black"
-                                readOnly={isReadOnly}
+                                className="text-black bg-gray-100 cursor-not-allowed"
+                                readOnly
                             />
                         </div>
                     </div>
