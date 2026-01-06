@@ -44,9 +44,34 @@ export async function getPlanMyTripData(): Promise<PlanMyTripData> {
     }
 }
 
+import { sendMail } from "@/lib/mail";
+import { emailTemplates } from "@/lib/email/templates";
+
 export async function submitTourRequest(data: any) {
     try {
-        await tourRequestDb.createTourRequest(data);
+        const result = await tourRequestDb.createTourRequest(data);
+
+        // Send email to User
+        const userMail = sendMail({
+            to: data.email,
+            subject: "Your Tour Request - Black Tomato Bhutan",
+            html: emailTemplates.userConfirmation(result),
+        });
+
+        // Send email to Operator
+        const operatorMail = sendMail({
+            to: process.env.OPERATOR_EMAIL || "info@blacktomato.com",
+            subject: "New Tour Request Notification",
+            html: emailTemplates.operatorNotification(result),
+        });
+
+        // Fire and forget or wait? For robustness, we might want to wait, 
+        // but we don't want to block the user UI if mail is slow.
+        // However, Promise.all ensures both are sent.
+        Promise.all([userMail, operatorMail]).catch(err =>
+            console.error("Delayed error in sending emails:", err)
+        );
+
         return { success: true };
     } catch (error) {
         console.error("Failed to submit tour request:", error);
