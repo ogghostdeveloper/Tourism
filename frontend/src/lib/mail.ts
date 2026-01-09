@@ -3,8 +3,8 @@ import nodemailer from "nodemailer";
 const transOptions: any = {
     service: "gmail",
     auth: {
-        user: "2107.subham@gmail.com",
-        pass: "gjps wmvo qvyw weyz",
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
     },
 };
 
