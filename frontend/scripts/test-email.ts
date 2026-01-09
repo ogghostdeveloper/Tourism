@@ -7,12 +7,14 @@ dotenv.config();
 
 async function testEmail() {
     console.log("Starting email test...");
-
+    console.log("Using SMTP_USER:", process.env.SMTP_USER); 
+    console.log("Using SMTP_PASS:", process.env.SMTP_PASS); 
+    
     const mockData = {
         _id: "test-id",
         firstName: "John",
         lastName: "Doe",
-        email: "mahbus.dev@gmail.com", // Replace with your test email if needed
+        email: "subhamchhetri@dhi.bt", // Replace with your test email if needed
         phone: "+975-1234567",
         destination: "Thimphu & Paro",
         travelDate: "2025-05-20",

@@ -3,8 +3,8 @@ import nodemailer from "nodemailer";
 const transOptions: any = {
     service: "gmail",
     auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: "2107.subham@gmail.com",
+        pass: "gjps wmvo qvyw weyz",
     },
 };
 
@@ -18,6 +18,8 @@ export interface MailOptions {
 
 export async function sendMail({ to, subject, html }: MailOptions) {
     try {
+        await transporter.verify();
+
         const info = await transporter.sendMail({
             from: `"Black Tomato Bhutan" <${process.env.SMTP_USER}>`,
             to,
