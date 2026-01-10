@@ -1,87 +1,102 @@
+
 import clientPromise from "../mongodb";
 import { ObjectId } from "mongodb";
-import { z } from "zod";
 
+// MongoDB setup
 const DB = process.env.MONGODB_DB || "bhutan_tourism";
 const COLLECTION = "users";
 
 const formatDoc = (doc: any) => {
     if (!doc) return null;
+    const { passwordHash, ...safeDoc } = doc; // Never return password hash to client
     return {
-        ...doc,
+        ...safeDoc,
+        id: doc._id.toString(),
         _id: doc._id.toString(),
     };
 };
 
-export const userSchema = z.object({
-    email: z.string(),
-    username: z.string(),
-    role: z.enum(["admin", "guest"]),
-    passwordHash: z.string().optional(),
-    createdAt: z.date().optional(),
-});
-export type User = z.infer<typeof userSchema> & { _id: string };
-
-export const getUserById = async (id: string): Promise<User | null> => {
+export async function listUsers(page: number = 1, pageSize: number = 10, search?: string) {
     const client = await clientPromise;
-    const db = client.db(DB);
-    const collection = db.collection(COLLECTION);
+    const collection = client.db(DB).collection(COLLECTION);
 
-    const doc = await collection.findOne({ _id: new ObjectId(id) });
-    return formatDoc(doc);
-};
+    const match: any = {};
+    if (search) {
+        match.$or = [
+            { username: { $regex: search, $options: "i" } },
+            { email: { $regex: search, $options: "i" } },
+        ];
+    }
 
-export const getUserByEmail = async (email: string): Promise<User | null> => {
+    const totalItems = await collection.countDocuments(match);
+    const totalPages = Math.ceil(totalItems / pageSize);
+    const skip = (page - 1) * pageSize;
+
+    const items = await collection
+        .find(match)
+        .sort({ username: 1 })
+        .skip(skip)
+        .limit(pageSize)
+        .toArray();
+
+    return {
+        items: items.map(formatDoc),
+        page,
+        page_size: pageSize,
+        total_pages: totalPages,
+        has_next: page < totalPages,
+        has_prev: page > 1,
+        total_items: totalItems
+    };
+}
+
+export async function getUserById(id: string) {
+    try {
+        const client = await clientPromise;
+        const collection = client.db(DB).collection(COLLECTION);
+        const doc = await collection.findOne({ _id: new ObjectId(id) });
+        return formatDoc(doc);
+    } catch (e) {
+        return null;
+    }
+}
+
+export async function getUserByEmail(email: string) {
     const client = await clientPromise;
-    const db = client.db(DB);
-    const collection = db.collection(COLLECTION);
-
+    const collection = client.db(DB).collection(COLLECTION);
     const doc = await collection.findOne({ email });
-    return formatDoc(doc);
-};
+    return doc; // Return full doc for auth checks (including passwordHash)
+}
 
-export const createUser = async (userData: Omit<User, "_id" | "createdAt">): Promise<User> => {
+export async function createUser(data: any) {
     const client = await clientPromise;
-    const db = client.db(DB);
-    const collection = db.collection(COLLECTION);
+    const doc = {
+        ...data,
+        role: data.role || "admin",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+    };
+    const res = await client.db(DB).collection(COLLECTION).insertOne(doc as any);
+    return res.insertedId;
+}
 
-    const newUser = {
-        ...userData,
-        createdAt: new Date(),
+export async function updateUser(id: string, data: any) {
+    const client = await clientPromise;
+    const { id: _, _id: __, ...updateData } = data;
+
+    // Only update fields provided
+    const setQuery: any = {
+        ...updateData,
+        updatedAt: new Date().toISOString()
     };
 
-    const result = await collection.insertOne(newUser);
-    return formatDoc({ _id: result.insertedId, ...newUser }) as User;
-};
-
-export const updateUser = async (id: string, updateData: Partial<Omit<User, "_id" | "createdAt">>): Promise<User | null> => {
-    const client = await clientPromise;
-    const db = client.db(DB);
-    const collection = db.collection(COLLECTION);
-
-    const result = await collection.findOneAndUpdate(
+    return client.db(DB).collection(COLLECTION).updateOne(
         { _id: new ObjectId(id) },
-        { $set: updateData },
-        { returnDocument: "after" }
+        { $set: setQuery }
     );
+}
 
-    return formatDoc(result?.value || null);
-};
-
-export const deleteUser = async (id: string): Promise<boolean> => {
+export async function deleteUser(id: string) {
     const client = await clientPromise;
-    const db = client.db(DB);
-    const collection = db.collection(COLLECTION);
-
-    const result = await collection.deleteOne({ _id: new ObjectId(id) });
-    return result.deletedCount === 1;
-};
-
-export const listUsers = async (): Promise<User[]> => {
-    const client = await clientPromise;
-    const db = client.db(DB);
-    const collection = db.collection(COLLECTION);
-
-    const docs = await collection.find({}).toArray();
-    return docs.map(formatDoc) as User[];
-};
+    return client.db(DB).collection(COLLECTION).deleteOne({ _id: new ObjectId(id) });
+}

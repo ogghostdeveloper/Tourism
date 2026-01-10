@@ -78,7 +78,7 @@ export function CostForm({ initialData, action, title: pageTitle }: CostFormProp
                         Back
                     </Button>
                 </Link>
-                <h2 className="text-2xl font-semibold tracking-tight text-black serif">
+                <h2 className="text-2xl font-semibold tracking-tight text-black">
                     {pageTitle}
                 </h2>
             </div>

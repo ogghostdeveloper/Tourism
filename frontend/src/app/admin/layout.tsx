@@ -44,6 +44,7 @@ const menuItems = [
     href: "/admin/tour-requests",
   },
   { iconName: "hotel" as const, label: "Hotels", href: "/admin/hotels" },
+  { iconName: "users" as const, label: "Users", href: "/admin/users" },
   { iconName: "info" as const, label: "About Us", href: "/admin/about-us" },
 ];
 

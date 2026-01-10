@@ -40,11 +40,11 @@ export function SettingsDataTableToolbar<TData>({
                 )}
             </div>
             <div className="flex items-center gap-2">
-                <Button className="bg-amber-600 hover:bg-amber-700 text-white" asChild>
-                    <Link href="/admin/settings/create">
+                <Link href="/admin/settings/create">
+                    <Button size="sm" className="h-9 bg-amber-600 hover:bg-amber-700 text-white font-medium">
                         <Plus className="mr-2 h-4 w-4" /> Add Cost
-                    </Link>
-                </Button>
+                    </Button>
+                </Link>
             </div>
         </div>
     );

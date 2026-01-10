@@ -193,7 +193,7 @@ export function TourForm({ initialData, action, title: pageTitle, initialGlobalC
                         Back
                     </Button>
                 </Link>
-                <h2 className="text-2xl font-semibold tracking-tight text-black serif">
+                <h2 className="text-2xl font-semibold tracking-tight text-black">
                     {pageTitle}
                 </h2>
             </div>
