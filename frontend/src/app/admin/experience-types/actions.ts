@@ -8,10 +8,11 @@ import { uploadImage } from "@/lib/upload";
 
 export async function getExperienceTypes(
     page: number = 1,
-    pageSize: number = 10
+    pageSize: number = 10,
+    search?: string
 ): Promise<PaginatedExperienceTypes> {
     try {
-        const data = await db.listExperienceTypes(page, pageSize);
+        const data = await db.listExperienceTypes(page, pageSize, search);
         return data as PaginatedExperienceTypes;
     } catch (error) {
         return {
@@ -163,5 +164,17 @@ export async function deleteExperienceType(id: string) {
             success: false,
             message: "Failed to delete experience type",
         };
+    }
+}
+
+export async function getCategoriesForDropdown() {
+    try {
+        const categories = await db.getAllExperienceTypes();
+        return categories.map((cat: any) => ({
+            label: cat.title,
+            value: cat.title,
+        }));
+    } catch (error) {
+        return [];
     }
 }

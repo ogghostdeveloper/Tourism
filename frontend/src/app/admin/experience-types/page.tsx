@@ -7,7 +7,7 @@ import { columns } from "./components/columns";
 import { ExperienceType } from "./schema";
 
 interface ExperienceTypesPageProps {
-  searchParams: Promise<{ page?: string; page_size?: string }>;
+  searchParams: Promise<{ page?: string; page_size?: string; title?: string }>;
 }
 
 export default function ExperienceTypesPage({ searchParams }: ExperienceTypesPageProps) {
@@ -56,8 +56,9 @@ export default function ExperienceTypesPage({ searchParams }: ExperienceTypesPag
       const params = await searchParams;
       const page = Number(params.page) || 1;
       const pageSize = Number(params.page_size) || 6;
+      const title = params.title || undefined;
 
-      const paginatedData = await getExperienceTypes(page, pageSize);
+      const paginatedData = await getExperienceTypes(page, pageSize, title);
 
       setExperienceTypes(paginatedData.items);
       setPageData({

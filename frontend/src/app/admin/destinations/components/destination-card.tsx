@@ -53,9 +53,6 @@ export function DestinationCard({ destination, showActionsOnClick }: Destination
                 <h3 className="text-xl font-semibold text-white truncate">
                   {destination.name}
                 </h3>
-                <span className="text-[10px] text-zinc-300 font-mono tracking-tight lowercase opacity-70">
-                  {destination.slug}
-                </span>
               </div>
 
               <div className="flex flex-col border-t border-white/10 pt-4">

@@ -46,7 +46,7 @@ export function DeleteExperienceTypeDialog({
 
     return (
         <AlertDialog open={open} onOpenChange={onOpenChange}>
-            <AlertDialogContent className="bg-white border-gray-200">
+            <AlertDialogContent className="rounded-none">
                 <AlertDialogHeader>
                     <AlertDialogTitle className="text-black">Are you sure?</AlertDialogTitle>
                     <AlertDialogDescription className="text-gray-500">
@@ -58,7 +58,7 @@ export function DeleteExperienceTypeDialog({
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel className="border-gray-200 text-gray-500 hover:bg-gray-50">
+                    <AlertDialogCancel className="border-gray-200 text-gray-500 hover:bg-gray-50 rounded-none">
                         Cancel
                     </AlertDialogCancel>
                     <AlertDialogAction
@@ -67,7 +67,7 @@ export function DeleteExperienceTypeDialog({
                             onDelete();
                         }}
                         disabled={isPending}
-                        className="bg-red-600 text-white hover:bg-red-700"
+                        className="bg-red-600 text-white hover:bg-red-700 rounded-none"
                     >
                         {isPending ? "Deleting..." : "Delete"}
                     </AlertDialogAction>

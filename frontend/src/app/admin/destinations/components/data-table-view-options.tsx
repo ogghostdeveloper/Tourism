@@ -20,17 +20,17 @@ export function DataTableViewOptions<TData>({
 }) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild className="rounded-none">
         <Button
           variant="outline"
           size="sm"
-          className="ml-auto hidden h-8 lg:flex text-black"
+          className="ml-auto hidden h-9 lg:flex text-black"
         >
           <Settings2 />
           View
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[150px]">
+      <DropdownMenuContent align="end" className="w-[150px] rounded-none">
         <DropdownMenuLabel className="text-black">Toggle columns</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {table
@@ -43,7 +43,7 @@ export function DataTableViewOptions<TData>({
             return (
               <DropdownMenuCheckboxItem
                 key={column.id}
-                className="capitalize text-black"
+                className="capitalize text-black rounded-none"
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >

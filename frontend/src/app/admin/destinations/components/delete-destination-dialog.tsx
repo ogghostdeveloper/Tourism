@@ -48,7 +48,7 @@ export function DeleteDestinationDialog({
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
+      <AlertDialogContent className="rounded-none">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-black">Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
@@ -57,11 +57,11 @@ export function DeleteDestinationDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isDeleting} className="border-gray-200 text-gray-500 hover:bg-gray-50">Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isDeleting} className="rounded-none border-gray-200 text-gray-500 hover:bg-gray-50">Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={isDeleting}
-            className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
+            className="rounded-none bg-red-600 hover:bg-red-700 focus:ring-red-600"
           >
             {isDeleting ? (
               <>

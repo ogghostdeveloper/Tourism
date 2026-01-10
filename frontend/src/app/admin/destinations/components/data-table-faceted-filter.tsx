@@ -43,7 +43,7 @@ export function DataTableFacetedFilter<TData, TValue>({
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button variant="outline" size="sm" className="h-8 border-dashed text-black">
+                <Button variant="outline" size="sm" className="h-9 rounded-none border-dashed text-black">
                     <PlusCircle className="mr-2 h-4 w-4" />
                     {title}
                     {selectedValues?.size > 0 && (
@@ -59,7 +59,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                                 {selectedValues.size > 2 ? (
                                     <Badge
                                         variant="secondary"
-                                        className="rounded-sm px-1 font-normal text-black"
+                                        className="rounded-none px-1 font-normal text-black"
                                     >
                                         {selectedValues.size} selected
                                     </Badge>
@@ -70,7 +70,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                                             <Badge
                                                 variant="secondary"
                                                 key={option.value}
-                                                className="rounded-sm px-1 font-normal text-black"
+                                                className="rounded-none px-1 font-normal text-black"
                                             >
                                                 {option.label}
                                             </Badge>
@@ -81,7 +81,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                     )}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0" align="start">
+            <PopoverContent className="w-[200px] rounded-none p-0" align="start">
                 <Command className="text-black">
                     <CommandInput placeholder={title} className="text-black" />
                     <CommandList>
@@ -103,11 +103,11 @@ export function DataTableFacetedFilter<TData, TValue>({
                                                 filterValues.length ? filterValues : undefined
                                             );
                                         }}
-                                        className="text-black"
+                                        className="text-black rounded-none"
                                     >
                                         <div
                                             className={cn(
-                                                "flex size-4 items-center justify-center rounded-[4px] border",
+                                                "flex size-4 items-center justify-center rounded-none border",
                                                 isSelected
                                                     ? "bg-primary border-primary text-primary-foreground"
                                                     : "border-input [&_svg]:invisible"
@@ -134,7 +134,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                                 <CommandGroup>
                                     <CommandItem
                                         onSelect={() => column?.setFilterValue(undefined)}
-                                        className="justify-center text-center text-black font-medium"
+                                        className="rounded-none justify-center text-center text-black font-medium"
                                     >
                                         Clear filters
                                     </CommandItem>
