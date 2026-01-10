@@ -15,6 +15,8 @@ export const experienceSchema = z.object({
   gallery: z.array(z.string()).optional(),
   startDate: z.string().nullable().optional(),
   endDate: z.string().nullable().optional(),
+  priority: z.number().optional(),
+  price: z.number().optional(),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
 });

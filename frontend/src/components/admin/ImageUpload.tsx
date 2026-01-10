@@ -97,8 +97,8 @@ export function ImageUpload({
             <div
                 className={`relative flex flex-col items-center justify-center border-2 border-dashed transition-colors ${dragActive
                     ? "border-primary bg-primary/10"
-                    : "border-muted-foreground/25"
-                    } ${previewUrl ? "aspect-video p-1 overflow-hidden" : "h-32"}`}
+                    : "border-gray-200"
+                    } ${previewUrl ? "aspect-video p-1 overflow-hidden rounded-md" : ""}`}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
                 onDragOver={handleDrag}
@@ -128,18 +128,18 @@ export function ImageUpload({
                 ) : (
                     <label
                         htmlFor={readOnly ? undefined : name}
-                        className={`flex h-full w-full ${readOnly ? 'cursor-default' : 'cursor-pointer'} flex-col items-center justify-center gap-2 text-center`}
+                        className={`flex h-full w-full ${readOnly ? 'cursor-default' : 'cursor-pointer'} flex-col items-center justify-center p-12 text-center space-y-3 bg-gray-50/50`}
                     >
-                        <div className="bg-secondary p-2 rounded-full group-hover:bg-secondary/80">
-                            <Upload className="h-4 w-4 text-muted-foreground" />
+                        <div className="p-3 bg-white rounded-full shadow-sm">
+                            <Upload className="h-6 w-6 text-gray-400" />
                         </div>
-                        <div>
-                            <p className="text-sm font-medium text-black">
-                                {readOnly ? 'No image uploaded' : 'Click to upload or drag and drop'}
-                            </p>
+                        <div className="space-y-1">
+                            <h4 className="text-sm font-semibold text-gray-900">
+                                {readOnly ? 'No image' : 'Click to upload'}
+                            </h4>
                             {!readOnly && (
-                                <p className="text-xs text-muted-foreground">
-                                    PNG, JPG, JPEG up to 5MB
+                                <p className="text-sm text-gray-500 max-w-sm mx-auto">
+                                    Drag and drop or click to select a file (PNG, JPG, up to 5MB)
                                 </p>
                             )}
                         </div>

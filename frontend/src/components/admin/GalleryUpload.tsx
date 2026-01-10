@@ -82,17 +82,19 @@ export function GalleryUpload({
         <div className={`space-y-4 ${className}`}>
             <Label className="text-black font-semibold">{label}</Label>
             <div
-                className={`border-2 border-dashed rounded-lg p-4 bg-white transition-colors ${dragActive ? "border-amber-600 bg-amber-50/50" : "border-gray-200"
-                    }`}
+                className={`relative border-2 border-dashed rounded-none transition-colors ${dragActive
+                    ? "border-amber-600 bg-amber-50/50"
+                    : "border-gray-200"
+                    } ${previews.length === 0 ? "bg-gray-50/50" : "bg-white p-4"}`}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
                 onDragOver={handleDrag}
                 onDrop={handleDrop}
             >
                 {previews.length > 0 && (
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                         {previews.map((preview, index) => (
-                            <div key={index} className="relative group aspect-square rounded-lg overflow-hidden border border-gray-100 shadow-sm">
+                            <div key={index} className="relative group aspect-square rounded-none overflow-hidden border border-gray-100 shadow-sm bg-gray-50">
                                 <img
                                     src={preview}
                                     alt={`Gallery ${index + 1}`}
@@ -113,7 +115,7 @@ export function GalleryUpload({
                             <button
                                 type="button"
                                 onClick={() => fileInputRef.current?.click()}
-                                className="aspect-square border-2 border-dashed border-gray-200 rounded-lg flex flex-col items-center justify-center gap-1 text-gray-400 hover:border-amber-600 hover:text-amber-600 transition-colors"
+                                className="aspect-square border-2 border-dashed border-gray-200 rounded-none flex flex-col items-center justify-center gap-2 text-gray-400 hover:border-amber-600 hover:text-amber-600 transition-colors bg-white hover:bg-amber-50/50"
                             >
                                 <Plus className="w-6 h-6" />
                                 <span className="text-xs font-medium">Add Image</span>
@@ -124,20 +126,22 @@ export function GalleryUpload({
 
                 {previews.length === 0 && (
                     <div
-                        className="flex flex-col items-center justify-center py-8 cursor-pointer"
+                        className="flex flex-col items-center justify-center p-12 text-center space-y-3 cursor-pointer"
                         onClick={() => !readOnly && fileInputRef.current?.click()}
                     >
-                        <div className="bg-gray-50 p-3 rounded-full mb-3">
-                            <Upload className="w-6 h-6 text-gray-400" />
+                        <div className="p-3 bg-white rounded-full shadow-sm">
+                            <Upload className="h-6 w-6 text-gray-400" />
                         </div>
-                        <p className="text-sm font-medium text-black">
-                            {readOnly ? "No gallery images" : "Click to upload or drag and drop images"}
-                        </p>
-                        {!readOnly && (
-                            <p className="text-xs text-gray-500 mt-1">
-                                Multiple photos allowed
-                            </p>
-                        )}
+                        <div className="space-y-1">
+                            <h4 className="text-sm font-semibold text-gray-900">
+                                {readOnly ? 'No gallery images' : 'Click to upload multiple images'}
+                            </h4>
+                            {!readOnly && (
+                                <p className="text-sm text-gray-500 max-w-sm mx-auto">
+                                    Drag and drop or click to select files (PNG, JPG)
+                                </p>
+                            )}
+                        </div>
                     </div>
                 )}
 

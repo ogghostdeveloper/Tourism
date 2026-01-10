@@ -24,17 +24,18 @@ interface TourFormProps {
     initialData?: Tour;
     action: (formData: FormData) => Promise<{ success: boolean; message: string }>;
     title: string;
+    initialGlobalCost?: number;
 }
 
-export function TourForm({ initialData, action, title: pageTitle }: TourFormProps) {
+export function TourForm({ initialData, action, title: pageTitle, initialGlobalCost = 0 }: TourFormProps) {
     const router = useRouter();
     const [isPending, startTransition] = React.useTransition();
     const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
     const [dayFiles, setDayFiles] = React.useState<{ [key: number]: File }>({});
 
     const [categoryOptions, setCategoryOptions] = React.useState<{ value: string; label: string }[]>([]);
-    const [experienceOptions, setExperienceOptions] = React.useState<{ value: string; label: string }[]>([]);
-    const [hotelOptions, setHotelOptions] = React.useState<{ value: string; label: string }[]>([]);
+    const [experienceOptions, setExperienceOptions] = React.useState<{ value: string; label: string; price?: number }[]>([]);
+    const [hotelOptions, setHotelOptions] = React.useState<{ value: string; label: string; price?: number }[]>([]);
     const [destinationOptions, setDestinationOptions] = React.useState<{ value: string; label: string }[]>([]);
     const [isLoadingOptions, setIsLoadingOptions] = React.useState(true);
     const iconRef = React.useRef<AnimatedArrowLeftHandle>(null);
@@ -61,7 +62,7 @@ export function TourForm({ initialData, action, title: pageTitle }: TourFormProp
             description: "",
             image: "",
             duration: "",
-            price: 0,
+            price: initialGlobalCost || 0,
             priority: 0,
             category: "",
             highlights: [],
@@ -82,6 +83,41 @@ export function TourForm({ initialData, action, title: pageTitle }: TourFormProp
         control,
         name: "days",
     });
+
+    const calculateTotal = React.useCallback(() => {
+        const currentDays = watch("days");
+        let total = initialGlobalCost; // Start with global cost base
+        // If editing existing tour, we might want to be careful about not doubling up if the price already includes it.
+        // But the requirement is "users can edit... but add together".
+        // The default "price" field is editable.
+        // "Auto Calculate" sums the parts.
+
+        currentDays?.forEach(day => {
+            if (day.hotelId) {
+                const hotel = hotelOptions.find(h => h.value === day.hotelId);
+                // Ensure number to avoid string concatenation or NaN
+                if (hotel?.price != null) total += Number(hotel.price) || 0;
+            }
+            day.items?.forEach(item => {
+                if (item.type === 'experience' && item.experienceId) {
+                    const exp = experienceOptions.find(e => e.value === item.experienceId);
+                    if (exp?.price != null) total += Number(exp.price) || 0;
+                }
+            });
+        });
+        return total;
+    }, [watch, hotelOptions, experienceOptions, initialGlobalCost]);
+
+    // Watch for changes in days to auto-calculate price
+    React.useEffect(() => {
+        const subscription = watch((value, { name, type }) => {
+            if (name?.includes('days')) {
+                const newTotal = calculateTotal();
+                setValue("price", newTotal);
+            }
+        });
+        return () => subscription.unsubscribe();
+    }, [watch, calculateTotal, setValue]);
 
     React.useEffect(() => {
         const fetchOptions = async () => {
@@ -204,14 +240,31 @@ export function TourForm({ initialData, action, title: pageTitle }: TourFormProp
                         />
                     </div>
 
+
+
                     <div className="space-y-2">
                         <Label className="text-black font-medium">Price (USD)</Label>
-                        <Input
-                            type="number"
-                            {...register("price", { valueAsNumber: true })}
-                            placeholder="8500"
-                            className="bg-white border-gray-200 text-black"
-                        />
+                        <div className="flex gap-2">
+                            <Input
+                                type="number"
+                                {...register("price", { valueAsNumber: true })}
+                                placeholder="0.00"
+                                className="bg-white border-gray-200 text-black font-medium"
+                            />
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => setValue("price", calculateTotal())}
+                                className="whitespace-nowrap bg-white text-black border-gray-200"
+                            >
+                                Auto Calculate
+                            </Button>
+                        </div>
+                        {initialGlobalCost > 0 && (
+                            <p className="text-xs text-amber-600 font-medium">
+                                * Includes ${initialGlobalCost} in global fees (SDF, Visa, etc.)
+                            </p>
+                        )}
                         {errors.price && <p className="text-xs text-red-500">{errors.price.message}</p>}
                     </div>
 
@@ -267,25 +320,39 @@ export function TourForm({ initialData, action, title: pageTitle }: TourFormProp
                     </div>
 
                     <div className="space-y-10">
-                        {dayFields.map((field, index) => (
-                            <DaySection
-                                key={field.id}
-                                index={index}
-                                field={field}
-                                control={control}
-                                register={register}
-                                setValue={setValue}
-                                watch={watch}
-                                moveDay={moveDay}
-                                removeDay={removeDay}
-                                totalDays={dayFields.length}
-                                experienceOptions={experienceOptions}
-                                hotelOptions={hotelOptions}
-                                destinationOptions={destinationOptions}
-                                defaultImage={initialData?.days?.[index]?.image}
-                                onFileSelect={(file) => setDayFiles(prev => ({ ...prev, [index]: file }))}
-                            />
-                        ))}
+                        {dayFields.length === 0 ? (
+                            <div className="border-2 border-dashed border-gray-200 rounded-none p-12 flex flex-col items-center justify-center text-center space-y-3 bg-gray-50/50">
+                                <div className="p-3 bg-white rounded-full shadow-sm">
+                                    <Plus className="h-6 w-6 text-gray-400" />
+                                </div>
+                                <div className="space-y-1">
+                                    <h4 className="text-sm font-semibold text-gray-900">No days added yet</h4>
+                                    <p className="text-sm text-gray-500 max-w-sm mx-auto">
+                                        Start building the itinerary by adding the first day. You can add experiences, hotels, and travel details for each day.
+                                    </p>
+                                </div>
+                            </div>
+                        ) : (
+                            dayFields.map((field, index) => (
+                                <DaySection
+                                    key={field.id}
+                                    index={index}
+                                    field={field}
+                                    control={control}
+                                    register={register}
+                                    setValue={setValue}
+                                    watch={watch}
+                                    moveDay={moveDay}
+                                    removeDay={removeDay}
+                                    totalDays={dayFields.length}
+                                    experienceOptions={experienceOptions}
+                                    hotelOptions={hotelOptions}
+                                    destinationOptions={destinationOptions}
+                                    defaultImage={initialData?.days?.[index]?.image}
+                                    onFileSelect={(file) => setDayFiles(prev => ({ ...prev, [index]: file }))}
+                                />
+                            ))
+                        )}
                     </div>
                     <div className="flex items-center justify-end">
                         <Button
@@ -303,6 +370,37 @@ export function TourForm({ initialData, action, title: pageTitle }: TourFormProp
                         >
                             <Plus className="mr-2 h-4 w-4" /> Add Day
                         </Button>
+                    </div>
+                </div>
+
+                <div className="flex justify-end pt-4 border-t border-gray-100">
+                    <div className="w-full max-w-sm space-y-2">
+                        <div className="flex items-center justify-between">
+                            <Label className="text-black font-medium">Total Price (USD)</Label>
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 text-xs text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+                                onClick={() => {
+                                    const total = calculateTotal();
+                                    setValue("price", total);
+                                    toast.success(`Calculated price based on selected items: $${total}`);
+                                }}
+                            >
+                                Auto Calculate (Sync)
+                            </Button>
+                        </div>
+                        <Input
+                            type="number"
+                            {...register("price", { valueAsNumber: true })}
+                            placeholder="0.00"
+                            className="bg-white border-gray-200 text-black text-lg font-semibold"
+                        />
+                        <p className="text-xs text-gray-500">
+                            Based on sum of hotels and experiences (if prices are set).
+                        </p>
+                        {errors.price && <p className="text-xs text-red-500">{errors.price.message}</p>}
                     </div>
                 </div>
 

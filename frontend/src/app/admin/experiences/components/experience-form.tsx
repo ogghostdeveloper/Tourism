@@ -418,6 +418,40 @@ export function ExperienceForm({ initialData, action, slug = null, title: pageTi
                     </div>
                 </div>
 
+                <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="priority" className="text-black">Priority <span className="text-xs text-gray-500 font-normal">(Sorting)</span></Label>
+                        <Input
+                            id="priority"
+                            name="priority"
+                            type="number"
+                            min="0"
+                            placeholder="e.g. 10"
+                            defaultValue={initialData?.priority}
+                            readOnly={isReadOnly}
+                            className="bg-white border-gray-200 text-black"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="price" className="text-black">Cost Price <span className="text-xs text-gray-500 font-normal">(Internal Reference)</span></Label>
+                        <div className="relative">
+                            <span className="absolute left-3 top-2.5 text-gray-500">$</span>
+                            <Input
+                                id="price"
+                                name="price"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                placeholder="0.00"
+                                defaultValue={initialData?.price}
+                                readOnly={isReadOnly}
+                                className="bg-white border-gray-200 text-black pl-7"
+                            />
+                        </div>
+                    </div>
+                </div>
+
                 <div className="space-y-2">
                     <Label htmlFor="description" className="text-black">Description *</Label>
                     <Textarea

@@ -19,6 +19,8 @@ export const hotelSchema = z.object({
   rooms: z.number().optional(),
   coordinates: z.tuple([z.number(), z.number()]).optional(),
   gallery: z.array(z.string()).optional(),
+  priority: z.number().optional(),
+  price: z.number().optional(),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
 });

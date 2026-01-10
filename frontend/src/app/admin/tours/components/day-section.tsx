@@ -22,8 +22,8 @@ interface DaySectionProps {
     moveDay: (from: number, to: number) => void;
     removeDay: (index: number) => void;
     totalDays: number;
-    experienceOptions: { value: string; label: string }[];
-    hotelOptions: { value: string; label: string }[];
+    experienceOptions: { value: string; label: string; price?: number }[];
+    hotelOptions: { value: string; label: string; price?: number }[];
     destinationOptions: { value: string; label: string }[];
     defaultImage?: string;
     onFileSelect: (file: File) => void;
@@ -184,12 +184,18 @@ export function DaySection({
                 <div className="border-t border-gray-100 space-y-4">
                     <Label className="text-black">Overnight Stay</Label>
                     <div >
-                        <Combobox
-                            options={hotelOptions}
-                            value={watch(`days.${index}.hotelId`) || ""}
-                            onChange={(val) => setValue(`days.${index}.hotelId` as any, val)}
-                            placeholder="Select Hotel"
-                        />
+                        <div className="flex items-center gap-2">
+                            <Combobox
+                                options={hotelOptions}
+                                value={watch(`days.${index}.hotelId`) || ""}
+                                onChange={(val) => setValue(`days.${index}.hotelId` as any, val)}
+                                placeholder="Select Hotel"
+                            />
+                            {(() => {
+                                const h = hotelOptions.find(o => o.value === watch(`days.${index}.hotelId`));
+                                return h?.price ? <span className="text-xs text-green-600 font-medium">+${h.price}</span> : null;
+                            })()}
+                        </div>
                     </div>
                 </div>
             </div>

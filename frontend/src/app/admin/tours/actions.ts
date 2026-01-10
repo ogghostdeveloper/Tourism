@@ -201,24 +201,26 @@ export async function getCategoriesForDropdown(): Promise<{ value: string; label
     }
 }
 
-export async function getExperiencesForDropdown(): Promise<{ value: string; label: string }[]> {
+export async function getExperiencesForDropdown(): Promise<{ value: string; label: string; price?: number }[]> {
     try {
         const experiences = await experienceDb.getAllExperiences();
         return experiences.map((exp: any) => ({
             value: exp._id,
             label: exp.title,
+            price: exp.price != null ? Number(exp.price) : 0,
         }));
     } catch (error) {
         return [];
     }
 }
 
-export async function getHotelsForDropdown(): Promise<{ value: string; label: string }[]> {
+export async function getHotelsForDropdown(): Promise<{ value: string; label: string; price?: number }[]> {
     try {
         const hotels = await hotelDb.getAllHotels();
         return hotels.map((hotel: any) => ({
             value: hotel._id,
             label: hotel.name,
+            price: hotel.price != null ? Number(hotel.price) : 0,
         }));
     } catch (error) {
         return [];

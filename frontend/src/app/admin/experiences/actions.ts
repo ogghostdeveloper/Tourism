@@ -83,6 +83,8 @@ export async function createExperience(prevState: any, formData: FormData) {
     const difficulty = formData.get("difficulty") as string;
     const startDate = formData.get("startDate") as string;
     const endDate = formData.get("endDate") as string;
+    const priorityStr = formData.get("priority") as string;
+    const priceStr = formData.get("price") as string;
 
     const latStr = formData.get("latitude") as string;
     const lngStr = formData.get("longitude") as string;
@@ -127,6 +129,8 @@ export async function createExperience(prevState: any, formData: FormData) {
       image: imageUrl,
       startDate,
       endDate,
+      priority: priorityStr ? Number(priorityStr) : undefined,
+      price: priceStr ? Number(priceStr) : undefined,
     };
 
     if (galleryUrls.length > 0) {
@@ -172,6 +176,8 @@ export async function updateExperience(
     const difficulty = formData.get("difficulty") as string;
     const startDate = formData.get("startDate") as string;
     const endDate = formData.get("endDate") as string;
+    const priorityStr = formData.get("priority") as string;
+    const priceStr = formData.get("price") as string;
 
     const latStr = formData.get("latitude") as string;
     const lngStr = formData.get("longitude") as string;
@@ -248,6 +254,8 @@ export async function updateExperience(
       image: imageUrl,
       startDate,
       endDate,
+      priority: priorityStr ? Number(priorityStr) : undefined,
+      price: priceStr ? Number(priceStr) : undefined,
     };
 
     if (galleryUrls.length > 0) {

@@ -60,6 +60,9 @@ export async function createHotel(prevState: any, formData: FormData) {
   try {
     const getValue = (key: string) => formData.get(key) as string;
 
+    const priorityStr = getValue("priority");
+    const priceStr = getValue("price");
+
     const latStr = getValue("latitude");
     const lngStr = getValue("longitude");
     const latitude = latStr ? parseFloat(latStr) : undefined;
@@ -99,6 +102,8 @@ export async function createHotel(prevState: any, formData: FormData) {
       amenities: (getValue("amenities") || "").split("\n").filter(a => a.trim()),
       image: imageUrl,
       gallery: gallery,
+      priority: priorityStr ? Number(priorityStr) : undefined,
+      price: priceStr ? Number(priceStr) : undefined,
     };
 
     if (latitude !== undefined && longitude !== undefined && !isNaN(latitude) && !isNaN(longitude)) {
@@ -120,6 +125,9 @@ export async function updateHotel(id: string, prevState: any, formData: FormData
 
   try {
     const getValue = (key: string) => formData.get(key) as string;
+
+    const priorityStr = getValue("priority");
+    const priceStr = getValue("price");
 
     const latStr = getValue("latitude");
     const lngStr = getValue("longitude");
@@ -161,6 +169,8 @@ export async function updateHotel(id: string, prevState: any, formData: FormData
       amenities: (getValue("amenities") || "").split("\n").filter(a => a.trim()),
       image: imageUrl,
       gallery: gallery,
+      priority: priorityStr ? Number(priorityStr) : undefined,
+      price: priceStr ? Number(priceStr) : undefined,
     };
 
     if (latitude !== undefined && longitude !== undefined && !isNaN(latitude) && !isNaN(longitude)) {

@@ -86,6 +86,34 @@ export const columns: ColumnDef<Experience>[] = [
     },
   },
   {
+    accessorKey: "priority",
+    header: "Priority",
+    cell: ({ row }) => {
+      const priority = row.getValue("priority") as number | undefined;
+      return (
+        <div className="flex flex-col">
+          <span className="text-xs font-bold text-zinc-700">{priority ?? "-"}</span>
+          <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Rank</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "price",
+    header: "Price",
+    cell: ({ row }) => {
+      const price = row.getValue("price");
+      return (
+        <div className="flex flex-col">
+          <span className="text-xs font-bold text-zinc-700">
+            {price ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(price)) : "-"}
+          </span>
+          <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Cost Ref</span>
+        </div>
+      );
+    },
+  },
+  {
     accessorKey: "createdAt",
     header: "Created",
     cell: ({ row }) => {

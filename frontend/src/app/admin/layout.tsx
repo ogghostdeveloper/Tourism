@@ -15,7 +15,7 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { LogOut } from "lucide-react";
+import { LogOut, Settings } from "lucide-react";
 import Link from "next/link";
 import { AdminNavItem } from "@/components/admin/AdminNavItem";
 import { Button } from "@/components/ui/button";
@@ -108,6 +108,12 @@ export default async function AdminLayout({
             <AdminBreadcrumbs />
           </div>
           <div className="flex items-center gap-4">
+            <Link href="/admin/settings">
+              <Button variant="ghost" size="icon" className="hover:bg-gray-100 rounded-full">
+                <span className="sr-only">Settings</span>
+                <Settings className="w-5 h-5 text-gray-500" />
+              </Button>
+            </Link>
             <form
               action={async () => {
                 "use server";

@@ -269,7 +269,42 @@ export function HotelForm({ initialData, action, title, isReadOnly = false }: Ho
                     </div>
 
                     <div className="space-y-2">
-                        <Label className="text-black font-semibold">Price Range *</Label>
+                        <Label htmlFor="priority" className="text-black">Priority</Label>
+                        <Input
+                            id="priority"
+                            name="priority"
+                            type="number"
+                            min="0"
+                            placeholder="e.g. 10"
+                            defaultValue={initialData?.priority}
+                            readOnly={isReadOnly}
+                            className="bg-white border-gray-200 text-black"
+                        />
+                    </div>
+
+                </div>
+
+                {/* Priority & Cost Price */}
+                <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="price" className="text-black">Price</Label>
+                        <div className="relative">
+                            <Input
+                                id="price"
+                                name="price"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                placeholder="0.00"
+                                defaultValue={initialData?.price}
+                                readOnly={isReadOnly}
+                                className="bg-white border-gray-200 text-black"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label className="text-black font-semibold">Price Category *</Label>
                         <Popover open={pricePopoverOpen} onOpenChange={setPricePopoverOpen}>
                             <PopoverTrigger className="rounded-none" asChild disabled={isReadOnly}>
                                 <Button
