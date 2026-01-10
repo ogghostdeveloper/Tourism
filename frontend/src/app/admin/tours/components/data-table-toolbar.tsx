@@ -53,28 +53,20 @@ export function DataTableToolbar<TData>({
                     </Button>
                 </Link>
                 {view && onViewChange && (
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 border border-gray-100 rounded-none p-1 bg-white shadow-xs">
                         <Button
-                            variant={view === "list" ? "default" : "outline"}
+                            variant={view === "list" ? "default" : "ghost"}
                             size="sm"
                             onClick={() => onViewChange("list")}
-                            className={
-                                view === "list"
-                                    ? "bg-black text-white"
-                                    : "text-black hover:text-black hover:bg-gray-100"
-                            }
+                            className={`h-7 w-7 p-0 rounded-none transition-all ${view === "list" ? "bg-black text-white" : "text-gray-400 hover:text-black hover:bg-gray-50"}`}
                         >
                             <List className="w-4 h-4" />
                         </Button>
                         <Button
-                            variant={view === "grid" ? "default" : "outline"}
+                            variant={view === "grid" ? "default" : "ghost"}
                             size="sm"
                             onClick={() => onViewChange("grid")}
-                            className={
-                                view === "grid"
-                                    ? "bg-black text-white"
-                                    : "text-black hover:text-black hover:bg-gray-100"
-                            }
+                            className={`h-7 w-7 p-0 rounded-none transition-all ${view === "grid" ? "bg-black text-white" : "text-gray-400 hover:text-black hover:bg-gray-50"}`}
                         >
                             <LayoutGrid className="w-4 h-4" />
                         </Button>

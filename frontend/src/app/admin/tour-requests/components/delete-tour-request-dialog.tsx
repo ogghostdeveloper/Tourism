@@ -47,8 +47,8 @@ export function DeleteTourRequestDialog({
     };
 
     return (
-        <AlertDialog open={open} onOpenChange={onOpenChange}>
-            <AlertDialogContent>
+        <AlertDialog open={open} onOpenChange={onOpenChange} >
+            <AlertDialogContent className="rounded-none">
                 <AlertDialogHeader>
                     <AlertDialogTitle className="text-black">Are you sure?</AlertDialogTitle>
                     <AlertDialogDescription>
