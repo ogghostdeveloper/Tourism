@@ -10,9 +10,9 @@ import * as hotelDb from "@/lib/data/hotels";
 import * as destinationDb from "@/lib/data/destinations";
 import * as experienceTypeDb from "@/lib/data/experience-types";
 
-export async function getTours(page: number = 1, pageSize: number = 10): Promise<PaginatedTours> {
+export async function getTours(page: number = 1, pageSize: number = 10, category?: string | string[], search?: string): Promise<PaginatedTours> {
     try {
-        const data = await tourDb.listTours(page, pageSize);
+        const data = await tourDb.listTours(page, pageSize, category, search);
         return data as PaginatedTours;
     } catch (error) {
         return {

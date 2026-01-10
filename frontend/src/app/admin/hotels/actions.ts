@@ -8,10 +8,11 @@ import { uploadImage } from "@/lib/upload";
 
 export async function getHotels(
   page: number = 1,
-  pageSize: number = 10
+  pageSize: number = 10,
+  search?: string
 ): Promise<PaginatedHotels> {
   try {
-    const data = await db.listHotels(page, pageSize);
+    const data = await db.listHotels(page, pageSize, search);
     return data as PaginatedHotels;
   } catch (error) {
     return {

@@ -7,6 +7,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataTableViewOptions } from "./data-table-view-options";
+import { DataTableFacetedFilter } from "./data-table-faceted-filter";
+import { useState, useEffect } from "react";
+import { getExperienceTypes } from "@/app/admin/experience-types/actions";
 
 interface DataTableToolbarProps<TData> {
     table: Table<TData>;
@@ -20,6 +23,22 @@ export function DataTableToolbar<TData>({
     onViewChange,
 }: DataTableToolbarProps<TData>) {
     const isFiltered = table.getState().columnFilters.length > 0;
+    const [categories, setCategories] = useState<{ label: string; value: string }[]>([]);
+
+    useEffect(() => {
+        async function fetchCategories() {
+            try {
+                const data = await getExperienceTypes(1, 100);
+                setCategories(data.items.map(cat => ({
+                    label: cat.title,
+                    value: cat._id || cat.id || "",
+                })));
+            } catch (error) {
+                console.error("Failed to fetch categories:", error);
+            }
+        }
+        fetchCategories();
+    }, []);
 
     return (
         <div className="flex items-center justify-between">
@@ -30,14 +49,21 @@ export function DataTableToolbar<TData>({
                     onChange={(event) =>
                         table.getColumn("title")?.setFilterValue(event.target.value)
                     }
-                    className="h-8 w-[150px] lg:w-[250px] text-black"
+                    className="h-9 w-[150px] lg:w-[350px] text-black"
                 />
+                {table.getColumn("category") && categories.length > 0 && (
+                    <DataTableFacetedFilter
+                        column={table.getColumn("category")}
+                        title="Category"
+                        options={categories}
+                    />
+                )}
                 {isFiltered && (
                     <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => table.resetColumnFilters()}
-                        className="text-black"
+                        className="h-9 text-black"
                     >
                         Reset
                         <X className="ml-2 h-4 w-4" />
@@ -47,13 +73,13 @@ export function DataTableToolbar<TData>({
             <div className="flex items-center gap-2">
                 <DataTableViewOptions table={table} />
                 <Link href="/admin/tours/create">
-                    <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white">
+                    <Button size="sm" className="h-9 bg-amber-600 hover:bg-amber-700 text-white">
                         <Plus className="mr-2 h-4 w-4" />
                         Add New
                     </Button>
                 </Link>
                 {view && onViewChange && (
-                    <div className="flex items-center gap-1 border border-gray-100 rounded-none p-1 bg-white shadow-xs">
+                    <div className="flex items-center gap-1 border rounded-none p-1 bg-white shadow-xs">
                         <Button
                             variant={view === "list" ? "default" : "ghost"}
                             size="sm"

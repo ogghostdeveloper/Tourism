@@ -8,7 +8,12 @@ import { getTours } from "./actions";
 import { Tour } from "./schema";
 
 interface ToursPageProps {
-    searchParams: Promise<{ page?: string; page_size?: string }>;
+    searchParams: Promise<{
+        page?: string;
+        page_size?: string;
+        category?: string;
+        title?: string;
+    }>;
 }
 
 export default function ToursPage({
@@ -24,27 +29,35 @@ export default function ToursPage({
     });
     const [isLoading, setIsLoading] = useState(true);
 
-    // Set view after mount to avoid hydration mismatch
+    // Load initial view from localStorage and set up resize listener
     useEffect(() => {
-        const setInitialView = () => {
-            if (window.innerWidth < 768) {
-                setView("grid");
-            } else {
-                const stored = window.localStorage.getItem("tours_view");
-                setView(stored === "list" || stored === "grid" ? stored : "list");
+        const stored = localStorage.getItem("tours_view_preference");
+        if (stored === "list" || stored === "grid") {
+            setView(stored);
+        } else if (window.innerWidth < 768) {
+            setView("grid");
+        }
+
+        const handleResize = () => {
+            // Only auto-switch if no manual preference is stored
+            if (!localStorage.getItem("tours_view_preference")) {
+                if (window.innerWidth < 768) {
+                    setView("grid");
+                } else {
+                    setView("list");
+                }
             }
         };
-        setInitialView();
-        window.addEventListener("resize", setInitialView);
-        return () => window.removeEventListener("resize", setInitialView);
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    // Persist view changes
-    useEffect(() => {
-        if (typeof window !== "undefined") {
-            window.localStorage.setItem("tours_view", view);
-        }
-    }, [view]);
+    // Save view preference when user manually changes it
+    const handleViewChange = (newView: "list" | "grid") => {
+        setView(newView);
+        localStorage.setItem("tours_view_preference", newView);
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -52,8 +65,10 @@ export default function ToursPage({
             const params = await searchParams;
             const page = Number(params.page) || 1;
             const pageSize = Number(params.page_size) || 10;
+            const category = params.category ? params.category.split(",") : undefined;
+            const title = params.title || undefined;
 
-            const paginatedData = await getTours(page, pageSize);
+            const paginatedData = await getTours(page, pageSize, category, title);
 
             setTours(paginatedData.items);
             setPageData({
@@ -88,7 +103,7 @@ export default function ToursPage({
                     pageSize: pageData.pageSize,
                 }}
                 view={view}
-                onViewChange={setView}
+                onViewChange={handleViewChange}
             />
         </div>
     );

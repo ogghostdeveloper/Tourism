@@ -14,7 +14,7 @@ function ImageCell({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
         return <div className="h-10 w-16 rounded bg-muted" />;
     }
     return (
-        <div className="h-10 w-16 overflow-hidden rounded bg-muted border border-gray-100 shadow-sm">
+        <div className="h-10 w-16 overflow-hidden rounded-none bg-muted border border-gray-100 shadow-sm">
             <img
                 src={imageUrl}
                 alt={alt}
@@ -51,7 +51,10 @@ function CategoryCell({ categoryId }: { categoryId?: string }) {
     if (!categoryName || categoryName === "-") return <span className="text-gray-400">-</span>;
 
     return (
-        <Badge variant="outline" className="font-normal border-gray-200 text-black bg-gray-50/50">
+        <Badge
+            variant="outline"
+            className="rounded-none uppercase text-[10px] font-bold tracking-widest bg-amber-50 text-amber-700 border-amber-200"
+        >
             {categoryName}
         </Badge>
     );
@@ -67,77 +70,77 @@ export const columns: ColumnDef<Tour>[] = [
     },
     {
         accessorKey: "title",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Title" />
-        ),
+        header: "Expedition / Tour",
         cell: ({ row }) => {
             return (
-                <div className="max-w-[300px] truncate font-medium text-black">
-                    {row.getValue("title")}
-                </div>
-            );
-        },
-    },
-    {
-        accessorKey: "slug",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Slug" />
-        ),
-        cell: ({ row }) => {
-            return (
-                <div className="max-w-[200px] truncate font-mono text-xs text-gray-500">
-                    {row.getValue("slug")}
+                <div className="flex flex-col">
+                    <span className="font-semibold text-zinc-900 truncate max-w-[250px]" title={row.getValue("title")}>
+                        {row.getValue("title")}
+                    </span>
+                    <span className="text-[10px] text-zinc-400 font-mono tracking-tight lowercase">
+                        {row.original.slug}
+                    </span>
                 </div>
             );
         },
     },
     {
         accessorKey: "category",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Category" />
-        ),
+        header: "Category",
         cell: ({ row }) => {
             const category = row.getValue("category") as string;
-            return <CategoryCell categoryId={category} />;
+            return (
+                <div className="flex flex-col">
+                    <CategoryCell categoryId={category} />
+                </div>
+            );
+        },
+        filterFn: (row, id, value) => {
+            return value.includes(row.getValue(id));
         },
     },
     {
         accessorKey: "price",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Price" />
-        ),
+        header: "Price",
         cell: ({ row }) => {
             const amount = parseFloat(row.getValue("price") as string);
             const formatted = new Intl.NumberFormat("en-US", {
                 style: "currency",
                 currency: "USD",
             }).format(isNaN(amount) ? 0 : amount);
-            return <div className="text-sm text-gray-600">{formatted}</div>;
+            return (
+                <div className="flex flex-col">
+                    <span className="text-xs font-bold text-zinc-700">{formatted}</span>
+                    <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Starting From</span>
+                </div>
+            );
         },
     },
     {
         accessorKey: "priority",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Priority" />
-        ),
+        header: "Priority",
         cell: ({ row }) => {
             const priority = row.getValue("priority") as number;
             return (
-                <div className="font-mono text-xs text-center">{priority ?? 0}</div>
+                <div className="flex flex-col">
+                    <span className="text-xs font-bold text-zinc-700">{priority ?? 0}</span>
+                    <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Order</span>
+                </div>
             );
         },
     },
     {
         accessorKey: "createdAt",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Created" />
-        ),
+        header: "Created",
         cell: ({ row }) => {
             const date = row.getValue("createdAt");
             if (!date) return "-";
             return (
-                <div className="text-xs text-gray-500">
-                    {format(new Date(date as string), "PP")}
+                <div className="flex flex-col">
+                    <span className="text-xs font-bold text-zinc-700">
+                        {format(new Date(date as string), "MMM d, yyyy")}
+                    </span>
+                    <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Listing Date</span>
                 </div>
             );
         },

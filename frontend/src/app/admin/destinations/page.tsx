@@ -7,7 +7,11 @@ import { DataTable } from "./components/data-table";
 import { getDestinations } from "./actions";
 import { Destination } from "./schema";
 interface DestinationsPageProps {
-  searchParams: Promise<{ page?: string; page_size?: string }>;
+  searchParams: Promise<{
+    page?: string;
+    page_size?: string;
+    name?: string;
+  }>;
 }
 
 export default function DestinationsPage({ searchParams }: DestinationsPageProps) {
@@ -49,8 +53,9 @@ export default function DestinationsPage({ searchParams }: DestinationsPageProps
       const params = await searchParams;
       const page = Number(params.page) || 1;
       const pageSize = Number(params.page_size) || 6;
+      const name = params.name || undefined;
 
-      const paginatedData = await getDestinations(page, pageSize);
+      const paginatedData = await getDestinations(page, pageSize, name);
 
       setDestinations(paginatedData.items);
       setPageData({

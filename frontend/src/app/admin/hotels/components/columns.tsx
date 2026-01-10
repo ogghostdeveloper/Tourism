@@ -65,55 +65,47 @@ export const columns: ColumnDef<Hotel>[] = [
   },
   {
     accessorKey: "name",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
-    ),
+    header: "Hotel / Estate",
     cell: ({ row }) => {
       return (
-        <div
-          className="max-w-[300px] truncate font-semibold text-zinc-900"
-          title={row.getValue("name")}
-        >
-          {row.getValue("name")}
+        <div className="flex flex-col">
+          <span className="font-semibold text-zinc-900 truncate max-w-[250px]" title={row.getValue("name")}>
+            {row.getValue("name")}
+          </span>
+          <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">
+            {row.original.location || "Undisclosed Location"}
+          </span>
         </div>
       );
     },
   },
   {
     accessorKey: "destination",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Destination" />
-    ),
+    header: "Destination",
     cell: ({ row }) => {
-      // Try to get destination ID from multiple possible fields
       const destinationId = row.original.destination || row.original.destinationId || row.original.destinationSlug;
-      return <DestinationCell destinationId={destinationId} />;
-    },
-  },
-  {
-    accessorKey: "location",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Location" />
-    ),
-    cell: ({ row }) => {
       return (
-        <div className="max-w-[200px] truncate font-mono text-xs text-zinc-500">
-          {row.getValue("location") || "-"}
+        <div className="flex flex-col">
+          <span className="text-xs font-bold text-zinc-700">
+            <DestinationCell destinationId={destinationId} />
+          </span>
+          <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Market Location</span>
         </div>
       );
     },
   },
   {
     accessorKey: "rating",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Rating" />
-    ),
+    header: "Rating",
     cell: ({ row }) => {
       const rating = row.getValue("rating") as number;
       return (
-        <div className="flex items-center gap-1">
-          <span className="text-yellow-500">★</span>
-          <span className="text-sm font-medium text-black">{rating}</span>
+        <div className="flex flex-col">
+          <div className="flex items-center gap-1">
+            <span className="text-amber-500 text-xs">★</span>
+            <span className="text-xs font-bold text-zinc-700">{rating}</span>
+          </div>
+          <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Star Rating</span>
         </div>
       );
     },
@@ -123,24 +115,26 @@ export const columns: ColumnDef<Hotel>[] = [
     header: "Price Range",
     cell: ({ row }) => {
       return (
-        <div className="text-sm font-medium text-black">
-          {row.getValue("priceRange")}
+        <div className="flex flex-col">
+          <span className="text-xs font-bold text-zinc-700 uppercase">{row.getValue("priceRange")}</span>
+          <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Price Tier</span>
         </div>
       );
     },
   },
   {
     accessorKey: "updatedAt",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Last Updated" />
-    ),
+    header: "Updated",
     cell: ({ row }) => {
       const date = row.getValue("updatedAt") as string;
       if (!date) return null;
       try {
         return (
-          <div className="text-xs text-zinc-500">
-            {format(new Date(date), "MMM dd, yyyy")}
+          <div className="flex flex-col">
+            <span className="text-xs font-bold text-zinc-700">
+              {format(new Date(date), "MMM d, yyyy")}
+            </span>
+            <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Last Update</span>
           </div>
         );
       } catch {

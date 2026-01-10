@@ -14,14 +14,22 @@ function formatDoc(doc: any): TourRequest {
 }
 
 export const tourRequestDb = {
-    async getAllTourRequests(page = 1, limit = 10, status?: RequestStatus) {
+    async getAllTourRequests(page = 1, limit = 10, status?: RequestStatus | RequestStatus[], search?: string) {
         const client = await clientPromise;
         const db = client.db(DB);
         const skip = (page - 1) * limit;
 
         const query: any = {};
         if (status) {
-            query.status = status;
+            if (Array.isArray(status)) {
+                query.status = { $in: status };
+            } else {
+                query.status = status;
+            }
+        }
+
+        if (search) {
+            query.email = { $regex: search, $options: "i" };
         }
 
         const [items, total] = await Promise.all([

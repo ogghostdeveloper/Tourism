@@ -10,7 +10,7 @@ function ImageCell({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
     return <div className="h-10 w-16 rounded bg-muted" />;
   }
   return (
-    <div className="h-10 w-16 overflow-hidden rounded bg-muted">
+    <div className="h-10 w-16 overflow-hidden rounded-none bg-muted border border-gray-100">
       <img
         src={imageUrl}
         alt={alt}
@@ -33,55 +33,40 @@ export const columns: ColumnDef<Destination>[] = [
   },
   {
     accessorKey: "name",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
-    ),
+    header: "National Zone / City",
     cell: ({ row }) => {
       return (
-        <div
-          className="max-w-[300px] truncate font-medium text-black"
-          title={row.getValue("name")}
-        >
-          {row.getValue("name")}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "slug",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Slug" />
-    ),
-    cell: ({ row }) => {
-      return (
-        <div className="max-w-[200px] truncate font-mono text-xs text-gray-500">
-          {row.getValue("slug")}
+        <div className="flex flex-col">
+          <span className="font-semibold text-zinc-900 truncate max-w-[250px]" title={row.getValue("name")}>
+            {row.getValue("name")}
+          </span>
+          <span className="text-[10px] text-zinc-400 font-mono tracking-tight lowercase">
+            {row.original.slug}
+          </span>
         </div>
       );
     },
   },
   {
     accessorKey: "region",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Region" />
-    ),
+    header: "Region",
     cell: ({ row }) => {
       return (
-        <div className="max-w-[200px] truncate text-black">
-          {row.getValue("region")}
+        <div className="flex flex-col">
+          <span className="text-xs font-bold text-zinc-700 uppercase tracking-tight">{row.getValue("region")}</span>
+          <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Regional Area</span>
         </div>
       );
     },
   },
   {
     accessorKey: "priority",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Priority" />
-    ),
+    header: "Priority",
     cell: ({ row }) => {
       return (
-        <div className="font-mono text-black">
-          {row.getValue("priority")}
+        <div className="flex flex-col">
+          <span className="text-xs font-bold text-zinc-700">{row.getValue("priority")}</span>
+          <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Order</span>
         </div>
       );
     },
@@ -89,16 +74,17 @@ export const columns: ColumnDef<Destination>[] = [
 
   {
     accessorKey: "updatedAt",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Last Updated" />
-    ),
+    header: "Updated",
     cell: ({ row }) => {
       const date = row.getValue("updatedAt") as string;
       if (!date) return null;
       try {
         return (
-          <div className="text-sm text-black">
-            {format(new Date(date), "MMM dd, yyyy")}
+          <div className="flex flex-col">
+            <span className="text-xs font-bold text-zinc-700">
+              {format(new Date(date), "MMM d, yyyy")}
+            </span>
+            <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Last Update</span>
           </div>
         );
       } catch {

@@ -8,10 +8,11 @@ import { uploadImage } from "@/lib/upload";
 
 export async function getDestinations(
   page: number = 1,
-  pageSize: number = 10
+  pageSize: number = 10,
+  search?: string
 ): Promise<PaginatedDestinations> {
   try {
-    const data = await db.listDestinations(page, pageSize);
+    const data = await db.listDestinations(page, pageSize, search);
     return data as PaginatedDestinations;
   } catch (error) {
     return {

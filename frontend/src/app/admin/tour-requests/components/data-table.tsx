@@ -59,10 +59,36 @@ export function DataTable<TData, TValue>({
     const [rowSelection, setRowSelection] = React.useState({});
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({});
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-        []
-    );
+
+    // Initialize column filters from searchParams
+    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(() => {
+        const filters: ColumnFiltersState = [];
+        const status = searchParams.get("status");
+        if (status) {
+            filters.push({ id: "status", value: status.split(",") });
+        }
+        const email = searchParams.get("email");
+        if (email) {
+            filters.push({ id: "email", value: email });
+        }
+        return filters;
+    });
+
     const [sorting, setSorting] = React.useState<SortingState>([]);
+
+    // Sync column filters when searchParams change (e.g. back navigation)
+    React.useEffect(() => {
+        const filters: ColumnFiltersState = [];
+        const status = searchParams.get("status");
+        if (status) {
+            filters.push({ id: "status", value: status.split(",") });
+        }
+        const email = searchParams.get("email");
+        if (email) {
+            filters.push({ id: "email", value: email });
+        }
+        setColumnFilters(filters);
+    }, [searchParams]);
 
     // Determine if mobile (show actions on click/tap)
     const [isMobile, setIsMobile] = React.useState(false);
@@ -102,6 +128,40 @@ export function DataTable<TData, TValue>({
         [paginationState, pathname, searchParams, router]
     );
 
+    // Handle filter changes
+    const onColumnFiltersChange: OnChangeFn<ColumnFiltersState> = React.useCallback(
+        (updaterOrValue) => {
+            const newFilters =
+                typeof updaterOrValue === "function"
+                    ? updaterOrValue(columnFilters)
+                    : updaterOrValue;
+
+            setColumnFilters(newFilters);
+
+            const params = new URLSearchParams(searchParams.toString());
+
+            // Clear existing status filters from params first
+            params.delete("status");
+            params.delete("email");
+
+            newFilters.forEach(filter => {
+                if (filter.id === "status" || filter.id === "email") {
+                    if (Array.isArray(filter.value)) {
+                        params.set(filter.id, filter.value.join(","));
+                    } else if (filter.value) {
+                        params.set(filter.id, filter.value as string);
+                    }
+                }
+            });
+
+            // Reset to page 1 when filtering
+            params.set("page", "1");
+
+            router.push(`${pathname}?${params.toString()}`);
+        },
+        [columnFilters, pathname, searchParams, router]
+    );
+
     const table = useReactTable({
         data,
         columns,
@@ -114,11 +174,12 @@ export function DataTable<TData, TValue>({
             pagination: paginationState,
         },
         manualPagination: true,
+        manualFiltering: true, // Tell table we handle filtering on server
         onPaginationChange: onPaginationChange,
         enableRowSelection: true,
         onRowSelectionChange: setRowSelection,
         onSortingChange: setSorting,
-        onColumnFiltersChange: setColumnFilters,
+        onColumnFiltersChange: onColumnFiltersChange,
         onColumnVisibilityChange: setColumnVisibility,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),

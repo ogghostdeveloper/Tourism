@@ -14,16 +14,29 @@ const formatDoc = (doc: any) => {
     };
 };
 
-export async function listTours(page: number = 1, pageSize: number = 10) {
+export async function listTours(page: number = 1, pageSize: number = 10, category?: string | string[], search?: string) {
     const client = await clientPromise;
     const collection = client.db(DB).collection<Tour>(COLLECTION);
 
-    const totalItems = await collection.countDocuments();
+    const query: any = {};
+    if (category) {
+        if (Array.isArray(category)) {
+            query.category = { $in: category };
+        } else {
+            query.category = category;
+        }
+    }
+
+    if (search) {
+        query.title = { $regex: search, $options: "i" };
+    }
+
+    const totalItems = await collection.countDocuments(query);
     const totalPages = Math.ceil(totalItems / pageSize);
     const skip = (page - 1) * pageSize;
 
     const items = await collection
-        .find({})
+        .find(query)
         .sort({ title: 1 })
         .skip(skip)
         .limit(pageSize)

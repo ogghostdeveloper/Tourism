@@ -68,16 +68,21 @@ const getHotelLookupPipeline = (match: any = {}) => [
     }
 ];
 
-export async function listHotels(page: number = 1, pageSize: number = 10) {
+export async function listHotels(page: number = 1, pageSize: number = 10, search?: string) {
     const client = await clientPromise;
     const collection = client.db(DB).collection(COLLECTION);
 
-    const totalItems = await collection.countDocuments();
+    const match: any = {};
+    if (search) {
+        match.name = { $regex: search, $options: "i" };
+    }
+
+    const totalItems = await collection.countDocuments(match);
     const totalPages = Math.ceil(totalItems / pageSize);
     const skip = (page - 1) * pageSize;
 
     const pipeline = [
-        ...getHotelLookupPipeline(),
+        ...getHotelLookupPipeline(match),
         { $sort: { name: 1 } as const },
         { $skip: skip },
         { $limit: pageSize }

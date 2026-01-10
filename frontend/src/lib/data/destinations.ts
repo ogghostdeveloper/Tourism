@@ -13,16 +13,21 @@ const formatDoc = (doc: any) => {
     };
 };
 
-export async function listDestinations(page: number = 1, pageSize: number = 10) {
+export async function listDestinations(page: number = 1, pageSize: number = 10, search?: string) {
     const client = await clientPromise;
     const collection = client.db(DB).collection<Destination>(COLLECTION);
 
-    const totalItems = await collection.countDocuments();
+    const query: any = {};
+    if (search) {
+        query.name = { $regex: search, $options: "i" };
+    }
+
+    const totalItems = await collection.countDocuments(query);
     const totalPages = Math.ceil(totalItems / pageSize);
     const skip = (page - 1) * pageSize;
 
     const items = await collection
-        .find({})
+        .find(query)
         .sort({ priority: 1, name: 1 })
         .skip(skip)
         .limit(pageSize)

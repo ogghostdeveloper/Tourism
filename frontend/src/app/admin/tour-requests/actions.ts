@@ -4,8 +4,8 @@ import { tourRequestDb } from "@/lib/data/tour-requests";
 import { RequestStatus } from "./types";
 import { revalidatePath } from "next/cache";
 
-export async function getTourRequests(page = 1, pageSize = 10) {
-    const result = await tourRequestDb.getAllTourRequests(page, pageSize);
+export async function getTourRequests(page = 1, pageSize = 10, status?: RequestStatus | RequestStatus[], search?: string) {
+    const result = await tourRequestDb.getAllTourRequests(page, pageSize, status, search);
     return {
         items: result.items,
         page: result.page,

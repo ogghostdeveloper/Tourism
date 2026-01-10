@@ -10,7 +10,7 @@ import { Hotel } from "./schema";
 export default function HotelsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string; page_size?: string }>;
+  searchParams: Promise<{ page?: string; page_size?: string; name?: string }>;
 }) {
   const [view, setView] = useState<"list" | "grid">("list");
   const [hotels, setHotels] = useState<Hotel[]>([]);
@@ -57,8 +57,9 @@ export default function HotelsPage({
       const params = await searchParams;
       const page = Number(params.page) || 1;
       const pageSize = Number(params.page_size) || 6;
+      const name = params.name || undefined;
 
-      const paginatedData = await getHotels(page, pageSize);
+      const paginatedData = await getHotels(page, pageSize, name);
 
       setHotels(paginatedData.items);
       setPageData({
