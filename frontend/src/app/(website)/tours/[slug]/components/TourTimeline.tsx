@@ -42,11 +42,11 @@ export function TourTimeline({ days, slug }: TourTimelineProps) {
                   </span>
                 </div>
 
-                <h3 className="text-4xl font-light mb-6 group-hover:italic transition-all duration-500 uppercase tracking-tight">
+                <h3 className="text-4xl font-light mb-6 group-hover:italic transition-all duration-500 uppercase tracking-tight group-hover:translate-x-3 origin-left">
                   {day.title}
                 </h3>
 
-                <p className="text-gray-600 leading-relaxed font-light italic text-lg mb-8 line-clamp-4">
+                <p className="text-gray-600 leading-relaxed font-light italic text-base md:text-lg mb-8 line-clamp-4">
                   "{day.description}"
                 </p>
 
@@ -62,7 +62,9 @@ export function TourTimeline({ days, slug }: TourTimelineProps) {
                     alt={day.title}
                     className="w-full h-full object-cover saturate-[0.6] brightness-[1.05] contrast-[0.95] transition-all duration-1000 group-hover:saturate-[1.1] group-hover:brightness-100 group-hover:contrast-100 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-white/30 group-hover:bg-transparent transition-colors duration-700" />
+                  {/* Vibrant Overlays - Removing desaturating overlays */}
+                  <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-700" />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity duration-700" />
 
                   <div className="absolute bottom-4 left-4">
                     <span className="font-mono text-[10px] text-white tracking-widest uppercase bg-black/40 backdrop-blur-md px-3 py-1.5 font-bold">

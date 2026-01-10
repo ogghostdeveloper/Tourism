@@ -126,9 +126,9 @@ export default async function AdminLayout({
       </Sidebar>
 
       <SidebarInset>
-        <header className="h-16 bg-white border-b border-gray-200 sticky top-0 z-30 px-8 flex items-center justify-between shadow-sm">
+        <header className="h-16 bg-white border-b border-gray-200 sticky top-0 z-30 px-8 flex items-center justify-between ">
           <div className="flex items-center gap-4">
-            <SidebarTrigger className="hover:bg-gray-100 border border-gray-300 text-gray-700" />
+            <SidebarTrigger className="hover:bg-gray-100 border border-gray-300 text-gray-700 rounded-none" />
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <span className="font-bold text-black uppercase tracking-wider">
                 Admin

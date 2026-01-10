@@ -131,7 +131,7 @@ export function DataTable<TData, TValue>({
         <div className="space-y-4">
             <DataTableToolbar table={table} view={view} onViewChange={onViewChange} />
             {view === "list" ? (
-                <div className="rounded-md border bg-card">
+                <div className="rounded-none border bg-card">
                     <Table>
                         <TableHeader className="bg-gray-100">
                             {table.getHeaderGroups().map((headerGroup) => (
@@ -144,7 +144,7 @@ export function DataTable<TData, TValue>({
                                             <TableHead
                                                 key={header.id}
                                                 colSpan={header.colSpan}
-                                                className="px-4"
+                                                className="px-4 text-black font-semibold"
                                             >
                                                 {header.isPlaceholder
                                                     ? null

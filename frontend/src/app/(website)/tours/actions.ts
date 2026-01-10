@@ -36,6 +36,16 @@ export async function getTourBySlug(slug: string): Promise<Tour | null> {
   }
 }
 
+export async function getTourById(id: string): Promise<Tour | null> {
+  try {
+    const tour = await tourDb.getTourById(id);
+    return tour as Tour | null;
+  } catch (error) {
+    console.error(`Error fetching tour with id ${id}:`, error);
+    throw new Error("Failed to fetch tour by id");
+  }
+}
+
 export async function getTourDay(
   slug: string,
   dayNumber: number

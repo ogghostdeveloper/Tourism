@@ -4,6 +4,9 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, Calendar, DollarSign, Check } from "lucide-react";
 import { Tour } from "@/app/(website)/tours/schema";
+import { useState, useEffect } from "react";
+import { getExperienceTypeById } from "@/app/admin/experience-types/actions";
+
 interface TourCardProps {
     tour: Tour;
     index: number;
@@ -12,6 +15,23 @@ interface TourCardProps {
 }
 
 export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
+    const [categoryTitle, setCategoryTitle] = useState(tour.category || "Expedition");
+
+    useEffect(() => {
+        async function fetchCategory() {
+            if (tour.category && tour.category.length === 24) {
+                try {
+                    const type = await getExperienceTypeById(tour.category);
+                    if (type) {
+                        setCategoryTitle(type.title);
+                    }
+                } catch (error) {
+                    console.error("Error fetching experience type:", error);
+                }
+            }
+        }
+        fetchCategory();
+    }, [tour.category]);
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
@@ -62,7 +82,7 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
                 <div className="flex-1">
                     <div className="flex items-center gap-6 mb-4">
                         <span className="font-mono text-[11px] text-amber-600 uppercase tracking-[0.3em] font-bold">
-                            {tour.category || "Expedition"}
+                            {categoryTitle}
                         </span>
                         <span className="w-1 h-1 bg-black/20 rounded-full" />
                         <div className="flex flex-wrap items-center gap-6 text-[11px] font-mono text-gray-500 uppercase tracking-widest font-medium">
@@ -77,7 +97,7 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
                         </div>
                     </div>
 
-                    <h3 className="text-5xl md:text-6xl font-light tracking-tighter text-black group-hover:italic transition-all duration-500 line-clamp-1 uppercase">
+                    <h3 className="text-5xl md:text-6xl font-light tracking-tighter text-black group-hover:italic transition-all duration-500 line-clamp-1 uppercase group-hover:translate-x-3 origin-left">
                         {tour.title}
                     </h3>
                 </div>
@@ -86,7 +106,7 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
                     {isSelected ? (
                         <Check className="w-6 h-6" />
                     ) : (
-                        <ArrowUpRight className="w-6 h-6 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                        <ArrowUpRight className="w-6 h-6 text-amber-600 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
                     )}
                 </div>
             </div>

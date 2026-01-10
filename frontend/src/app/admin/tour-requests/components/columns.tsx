@@ -7,34 +7,62 @@ import { format } from "date-fns";
 import { RequestStatus, TourRequest } from "../types";
 import { DataTableRowActions } from "./data-table-row-actions";
 
+const formatDateSafe = (dateStr: string | any, formatStr: string) => {
+    if (!dateStr) return "N/A";
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return "N/A";
+    return format(date, formatStr);
+};
+
 export const columns: ColumnDef<TourRequest>[] = [
     {
         accessorKey: "firstName",
-        header: "Name",
+        header: "Client",
         cell: ({ row }) => (
-            <div>
-                <div className="font-medium text-black">{row.original.firstName} {row.original.lastName}</div>
-                <div className="text-xs text-gray-500">{row.original.email}</div>
+            <div className="flex flex-col">
+                <span className="font-semibold text-zinc-900">{row.original.firstName} {row.original.lastName}</span>
             </div>
         ),
     },
     {
         accessorKey: "email",
         header: "Email",
-        cell: ({ row }) => (
-            <div className="text-xs text-gray-500">{row.original.email}</div>
-        ),
+        enableHiding: true,
+        cell: ({ row }) => <span className="text-xs text-zinc-500">{row.original.email}</span>,
     },
     {
         accessorKey: "tourId",
-        header: "Package",
+        header: "Package / Interest",
         cell: ({ row }) => (
-            <div className="text-sm text-gray-700">
-                {row.original.tourId ? (
-                    <span className="font-medium text-black">Selected: {row.original.tourId}</span>
-                ) : (
-                    <span className="italic text-gray-400">Custom Inquiry</span>
-                )}
+            <div className="max-w-[200px]">
+                <div className="text-[10px] font-bold uppercase tracking-widest text-amber-600 mb-0.5">
+                    {row.original.tourId ? "Package" : "Interest"}
+                </div>
+                <div className="text-xs font-semibold text-zinc-800 truncate uppercase tracking-tight">
+                    {row.original.tourName || row.original.destination || "Custom Luxe Experience"}
+                </div>
+            </div>
+        )
+    },
+    {
+        accessorKey: "travelDate",
+        header: "Travel Date",
+        cell: ({ row }) => (
+            <div className="flex flex-col">
+                <span className="text-xs font-bold text-zinc-700">
+                    {formatDateSafe(row.original.travelDate, "MMM d, yyyy")}
+                </span>
+                <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Proposed Date</span>
+            </div>
+        )
+    },
+    {
+        accessorKey: "travelers",
+        header: "Travelers",
+        cell: ({ row }) => (
+            <div className="flex flex-col">
+                <span className="text-xs font-bold text-zinc-700">{row.original.travelers} Persons</span>
+                <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Group Size</span>
             </div>
         )
     },
@@ -46,26 +74,30 @@ export const columns: ColumnDef<TourRequest>[] = [
             return (
                 <Badge
                     className={`
-            ${status === RequestStatus.APPROVED ? "bg-green-100 text-green-700 border-green-200" : ""}
+            ${status === RequestStatus.APPROVED ? "bg-emerald-100 text-emerald-700 border-emerald-200" : ""}
             ${status === RequestStatus.PENDING ? "bg-amber-100 text-amber-700 border-amber-200" : ""}
-            ${status === RequestStatus.REJECTED ? "bg-red-100 text-red-700 border-red-200" : ""}
+            ${status === RequestStatus.REJECTED ? "bg-rose-100 text-rose-700 border-rose-200" : ""}
             ${status === RequestStatus.ARCHIVED ? "bg-gray-100 text-gray-700 border-gray-200" : ""}
+            rounded-none uppercase text-[10px] font-bold tracking-widest
           `}
                     variant="outline"
                 >
-                    {status.toUpperCase()}
+                    {status}
                 </Badge>
             );
         },
     },
     {
         accessorKey: "createdAt",
-        header: "Date",
+        header: "Received",
         cell: ({ row }) => {
             return (
-                <span className="text-xs text-gray-500">
-                    {row.original.createdAt ? new Date(row.original.createdAt).toLocaleDateString() : "N/A"}
-                </span>
+                <div className="flex flex-col">
+                    <span className="text-xs font-bold text-zinc-700">
+                        {formatDateSafe(row.original.createdAt, "PP")}
+                    </span>
+                    <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Request Date</span>
+                </div>
             )
         }
     },

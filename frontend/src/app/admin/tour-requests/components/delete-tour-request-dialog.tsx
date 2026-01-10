@@ -57,7 +57,7 @@ export function DeleteTourRequestDialog({
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel disabled={isDeleting} className="border-gray-200 text-gray-500 hover:bg-gray-50">
+                    <AlertDialogCancel disabled={isDeleting} className="border-gray-200 text-gray-500 hover:bg-gray-50 rounded-none">
                         Cancel
                     </AlertDialogCancel>
                     <AlertDialogAction
@@ -66,7 +66,7 @@ export function DeleteTourRequestDialog({
                             handleDelete();
                         }}
                         disabled={isDeleting}
-                        className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
+                        className="bg-red-600 hover:bg-red-700 focus:ring-red-600 rounded-none"
                     >
                         {isDeleting ? (
                             <>

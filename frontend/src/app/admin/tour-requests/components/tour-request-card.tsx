@@ -71,7 +71,7 @@ export function TourRequestCard({ request, isMobile }: TourRequestCardProps) {
             >
                 <div className="p-8 space-y-6 flex-1">
                     {/* Header: Name and Status */}
-                    <div className="flex justify-between items-start">
+                    <div className="flex flex-col gap-2">
                         <div className="space-y-1.5">
                             <h3 className="text-xl font-semibold text-black tracking-tight leading-tight">
                                 {fullName}
@@ -81,14 +81,23 @@ export function TourRequestCard({ request, isMobile }: TourRequestCardProps) {
                                 <span className="truncate max-w-[180px]">{request.email}</span>
                             </div>
                         </div>
+                        <div className="flex items-center justify-between py-1">
+                            {statusConfig[request.status].icon}
+                        </div>
                     </div>
 
-                    <div className="flex items-center justify-between py-1">
-                        {statusConfig[request.status].icon}
+                    {/* Destination / Tour Name */}
+                    <div className="pt-2">
+                        <div className="text-[10px] font-bold uppercase tracking-widest text-amber-600 mb-1.5">
+                            Interest
+                        </div>
+                        <p className="text-sm font-medium text-black uppercase tracking-tight line-clamp-2 leading-snug">
+                            {request.tourName || request.destination || "Custom Luxe Experience"}
+                        </p>
                     </div>
 
                     {/* Details Grid */}
-                    <div className="grid grid-cols-2 gap-6 pt-6 border-t border-gray-100">
+                    <div className="grid grid-cols-2 gap-6 pt-6">
                         <div className="space-y-1.5">
                             <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">Travel Date</div>
                             <div className="flex items-center gap-2 text-xs font-medium text-slate-700">
@@ -105,18 +114,10 @@ export function TourRequestCard({ request, isMobile }: TourRequestCardProps) {
                         </div>
                     </div>
 
-                    {/* Destination / Tour Name */}
-                    <div className="pt-2">
-                        <div className="text-[10px] font-bold uppercase tracking-widest text-amber-600 mb-1.5">
-                            Interest
-                        </div>
-                        <p className="text-sm font-medium text-black uppercase tracking-tight line-clamp-2 leading-snug">
-                            {request.tourName || request.destination || "Custom Luxe Experience"}
-                        </p>
-                    </div>
+
 
                     {/* Date Created */}
-                    <div className="text-[10px] text-zinc-500 pt-5 flex justify-between items-center bg-zinc-50 -mx-8 -mb-8 px-8 py-5 border-t border-gray-100 mt-auto">
+                    <div className="text-[10px] text-zinc-500 pt-5 flex justify-between items-center -mx-8 -mb-8 px-8 py-5 border-t border-gray-100 mt-auto">
                         <span className="uppercase tracking-widest font-bold text-zinc-500">Received</span>
                         <span className="font-bold text-zinc-800">{formatDate(request.createdAt, "PP")}</span>
                     </div>
