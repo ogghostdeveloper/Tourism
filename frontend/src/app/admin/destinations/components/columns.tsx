@@ -3,14 +3,14 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { Destination } from "../schema";
-import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
+
 function ImageCell({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
   if (!imageUrl) {
     return <div className="h-10 w-16 rounded bg-muted" />;
   }
   return (
-    <div className="h-10 w-16 overflow-hidden rounded-none bg-muted border border-gray-100">
+    <div className="h-10 w-16 overflow-hidden rounded-none bg-muted">
       <img
         src={imageUrl}
         alt={alt}
@@ -33,7 +33,7 @@ export const columns: ColumnDef<Destination>[] = [
   },
   {
     accessorKey: "name",
-    header: "National Zone / City",
+    header: "Destination",
     cell: ({ row }) => {
       return (
         <div className="flex flex-col">
@@ -71,7 +71,6 @@ export const columns: ColumnDef<Destination>[] = [
       );
     },
   },
-
   {
     accessorKey: "updatedAt",
     header: "Updated",

@@ -3,16 +3,14 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { Experience } from "../schema";
-import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
-import { Badge } from "@/components/ui/badge";
 
 function ImageCell({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
   if (!imageUrl) {
     return <div className="h-10 w-16 rounded bg-muted" />;
   }
   return (
-    <div className="h-10 w-16 overflow-hidden rounded bg-muted border border-gray-100 shadow-sm">
+    <div className="h-10 w-16 overflow-hidden rounded-none bg-muted">
       <img
         src={imageUrl}
         alt={alt}
@@ -35,41 +33,30 @@ export const columns: ColumnDef<Experience>[] = [
   },
   {
     accessorKey: "title",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Title" />
-    ),
+    header: "Experience",
     cell: ({ row }) => {
       return (
-        <div className="max-w-[300px] truncate font-medium text-black">
-          {row.getValue("title")}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "slug",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Slug" />
-    ),
-    cell: ({ row }) => {
-      return (
-        <div className="max-w-[200px] truncate font-mono text-xs text-gray-500">
-          {row.getValue("slug")}
+        <div className="flex flex-col">
+          <span className="font-semibold text-zinc-900 truncate max-w-[250px]" title={row.getValue("title")}>
+            {row.getValue("title")}
+          </span>
+          <span className="text-[10px] text-zinc-400 font-mono tracking-tight lowercase">
+            {row.original.slug}
+          </span>
         </div>
       );
     },
   },
   {
     accessorKey: "category",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Category" />
-    ),
+    header: "Category",
     cell: ({ row }) => {
       const category = row.getValue("category") as string;
       return (
-        <Badge variant="outline" className="font-normal border-gray-200">
-          {category}
-        </Badge>
+        <div className="flex flex-col">
+          <span className="text-xs font-bold text-zinc-700">{category}</span>
+          <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Experience Category</span>
+        </div>
       );
     },
     filterFn: (row, id, value) => {
@@ -78,9 +65,7 @@ export const columns: ColumnDef<Experience>[] = [
   },
   {
     accessorKey: "difficulty",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Difficulty" />
-    ),
+    header: "Difficulty",
     cell: ({ row }) => {
       const difficulty = row.getValue("difficulty") as string;
       if (!difficulty) return "-";
@@ -92,23 +77,26 @@ export const columns: ColumnDef<Experience>[] = [
       };
 
       return (
-        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium border ${colors[difficulty] || "bg-gray-100 text-gray-800"}`}>
-          {difficulty}
-        </span>
+        <div className="flex flex-col gap-1">
+          <span className={`w-fit inline-flex items-center rounded-none px-2 py-0.5 text-[9px] font-bold border uppercase tracking-wider ${colors[difficulty] || "bg-gray-100 text-gray-800"}`}>
+            {difficulty}
+          </span>
+        </div>
       );
     },
   },
   {
     accessorKey: "createdAt",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Created" />
-    ),
+    header: "Created",
     cell: ({ row }) => {
       const date = row.getValue("createdAt");
       if (!date) return "-";
       return (
-        <div className="text-xs text-gray-500">
-          {format(new Date(date as string), "PP")}
+        <div className="flex flex-col">
+          <span className="text-xs font-bold text-zinc-700">
+            {format(new Date(date as string), "MMM d, yyyy")}
+          </span>
+          <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Listing Date</span>
         </div>
       );
     },

@@ -9,10 +9,11 @@ import { uploadImage } from "@/lib/upload";
 export async function getDestinations(
   page: number = 1,
   pageSize: number = 10,
-  search?: string
+  search?: string,
+  region?: string
 ): Promise<PaginatedDestinations> {
   try {
-    const data = await db.listDestinations(page, pageSize, search);
+    const data = await db.listDestinations(page, pageSize, search, region);
     return data as PaginatedDestinations;
   } catch (error) {
     return {
@@ -193,4 +194,8 @@ export async function deleteDestination(id: string) {
       message: "Failed to delete destination",
     };
   }
+}
+
+export async function getRegionsForDropdown() {
+  return db.getRegionsForDropdown();
 }

@@ -13,13 +13,16 @@ const formatDoc = (doc: any) => {
     };
 };
 
-export async function listDestinations(page: number = 1, pageSize: number = 10, search?: string) {
+export async function listDestinations(page: number = 1, pageSize: number = 10, search?: string, region?: string) {
     const client = await clientPromise;
     const collection = client.db(DB).collection<Destination>(COLLECTION);
 
     const query: any = {};
     if (search) {
         query.name = { $regex: search, $options: "i" };
+    }
+    if (region) {
+        query.region = { $in: region.split(",") };
     }
 
     const totalItems = await collection.countDocuments(query);
@@ -96,4 +99,9 @@ export async function updateDestination(id: string, data: Partial<Destination>) 
 export async function deleteDestination(id: string) {
     const client = await clientPromise;
     return client.db(DB).collection(COLLECTION).deleteOne({ _id: new ObjectId(id) });
+}
+export async function getRegionsForDropdown() {
+    const client = await clientPromise;
+    const regions = await client.db(DB).collection(COLLECTION).distinct("region");
+    return regions.map(region => ({ title: region, value: region }));
 }

@@ -11,11 +11,11 @@ interface DestinationsPageProps {
     page?: string;
     page_size?: string;
     name?: string;
+    region?: string;
   }>;
 }
 
 export default function DestinationsPage({ searchParams }: DestinationsPageProps) {
-  // Always default to 'list' on the server to avoid hydration mismatch
   const [view, setView] = useState<"list" | "grid">("list");
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [pageData, setPageData] = useState({
@@ -25,27 +25,35 @@ export default function DestinationsPage({ searchParams }: DestinationsPageProps
   });
   const [isLoading, setIsLoading] = useState(true);
 
-  // Set view after mount to avoid hydration mismatch
+  // Load initial view from localStorage and set up resize listener
   useEffect(() => {
-    const setInitialView = () => {
-      if (window.innerWidth < 768) {
-        setView("grid");
-      } else {
-        const stored = window.localStorage.getItem("destinations_view");
-        setView(stored === "list" || stored === "grid" ? stored : "list");
+    const stored = localStorage.getItem("destinations_view_preference");
+    if (stored === "list" || stored === "grid") {
+      setView(stored);
+    } else if (window.innerWidth < 768) {
+      setView("grid");
+    }
+
+    const handleResize = () => {
+      // Only auto-switch if no manual preference is stored
+      if (!localStorage.getItem("destinations_view_preference")) {
+        if (window.innerWidth < 768) {
+          setView("grid");
+        } else {
+          setView("list");
+        }
       }
     };
-    setInitialView();
-    window.addEventListener("resize", setInitialView);
-    return () => window.removeEventListener("resize", setInitialView);
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Persist view changes
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem("destinations_view", view);
-    }
-  }, [view]);
+  // Save view preference when user manually changes it
+  const handleViewChange = (newView: "list" | "grid") => {
+    setView(newView);
+    localStorage.setItem("destinations_view_preference", newView);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,8 +62,9 @@ export default function DestinationsPage({ searchParams }: DestinationsPageProps
       const page = Number(params.page) || 1;
       const pageSize = Number(params.page_size) || 6;
       const name = params.name || undefined;
+      const region = params.region || undefined;
 
-      const paginatedData = await getDestinations(page, pageSize, name);
+      const paginatedData = await getDestinations(page, pageSize, name, region);
 
       setDestinations(paginatedData.items);
       setPageData({
@@ -86,7 +95,7 @@ export default function DestinationsPage({ searchParams }: DestinationsPageProps
           pageSize: pageData.pageSize,
         }}
         view={view}
-        onViewChange={setView}
+        onViewChange={handleViewChange}
       />
     </div>
   );

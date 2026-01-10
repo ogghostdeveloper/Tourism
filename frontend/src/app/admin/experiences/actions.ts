@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { PaginatedExperiences, Experience } from "./schema";
 import * as db from "@/lib/data/experiences";
+import * as experienceTypeDb from "@/lib/data/experience-types";
 import { auth } from "@/auth";
 import { uploadImage, updateImage, deleteImage } from "@/lib/upload";
 
@@ -20,10 +21,12 @@ function extractFilenameFromUrl(imageUrl: string): string | null {
 
 export async function getExperiences(
   page: number = 1,
-  pageSize: number = 10
+  pageSize: number = 10,
+  search?: string,
+  category?: string
 ): Promise<PaginatedExperiences> {
   try {
-    const data = await db.listExperiences(page, pageSize);
+    const data = await db.listExperiences(page, pageSize, search, category);
     return data as PaginatedExperiences;
   } catch (error) {
     return {
@@ -326,5 +329,13 @@ export async function deleteExperience(id: string) {
 }
 
 export async function getCategoriesForDropdown() {
-  return db.getCategoriesForDropdown();
+  try {
+    const categories = await experienceTypeDb.getAllExperienceTypes();
+    return categories.map((cat: any) => ({
+      label: cat.title,
+      value: cat._id || cat.id,
+    }));
+  } catch (error) {
+    return [];
+  }
 }

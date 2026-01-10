@@ -3,7 +3,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { ExperienceType } from "../schema";
-import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 
 function ImageCell({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
@@ -11,7 +10,7 @@ function ImageCell({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
         return <div className="h-10 w-16 rounded bg-muted" />;
     }
     return (
-        <div className="h-10 w-16 overflow-hidden rounded bg-muted border border-gray-100 shadow-sm">
+        <div className="h-10 w-16 overflow-hidden rounded-none bg-muted">
             <img
                 src={imageUrl}
                 alt={alt}
@@ -34,54 +33,46 @@ export const columns: ColumnDef<ExperienceType>[] = [
     },
     {
         accessorKey: "title",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Title" />
-        ),
+        header: "Category",
         cell: ({ row }) => {
             return (
-                <div className="max-w-[300px] truncate font-medium text-black">
-                    {row.getValue("title")}
-                </div>
-            );
-        },
-    },
-    {
-        accessorKey: "slug",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Slug" />
-        ),
-        cell: ({ row }) => {
-            return (
-                <div className="max-w-[200px] truncate font-mono text-xs text-gray-500">
-                    {row.getValue("slug")}
+                <div className="flex flex-col">
+                    <span className="font-semibold text-zinc-900 truncate max-w-[250px]" title={row.getValue("title")}>
+                        {row.getValue("title")}
+                    </span>
+                    <span className="text-[10px] text-zinc-400 font-mono tracking-tight lowercase">
+                        {row.original.slug}
+                    </span>
                 </div>
             );
         },
     },
     {
         accessorKey: "displayOrder",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Order" />
-        ),
+        header: "Order",
         cell: ({ row }) => {
             return (
-                <div className="text-gray-500">
-                    {row.getValue("displayOrder")}
+                <div className="flex flex-col">
+                    <span className="text-xs font-bold text-zinc-700">
+                        {row.getValue("displayOrder")}
+                    </span>
+                    <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Sort Order</span>
                 </div>
             );
         },
     },
     {
         accessorKey: "createdAt",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Created" />
-        ),
+        header: "Created",
         cell: ({ row }) => {
             const date = row.getValue("createdAt");
             if (!date) return "-";
             return (
-                <div className="text-xs text-gray-500">
-                    {format(new Date(date as string), "PP")}
+                <div className="flex flex-col">
+                    <span className="text-xs font-bold text-zinc-700">
+                        {format(new Date(date as string), "MMM d, yyyy")}
+                    </span>
+                    <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Listing Date</span>
                 </div>
             );
         },

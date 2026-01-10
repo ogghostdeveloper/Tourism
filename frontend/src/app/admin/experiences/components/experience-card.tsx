@@ -28,7 +28,7 @@ export function ExperienceCard({ experience, showActionsOnClick }: ExperienceCar
                 onOpenChange={setShowDeleteDialog}
             />
             <motion.div
-                className="relative overflow-hidden bg-gray-900 group cursor-pointer rounded-xs"
+                className="relative overflow-hidden bg-gray-900 group cursor-pointer rounded-none"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
                 onClick={() => router.push(`/admin/experiences/${experience._id}`)}
@@ -36,49 +36,48 @@ export function ExperienceCard({ experience, showActionsOnClick }: ExperienceCar
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
             >
-                {/* Image */}
-                <div className="aspect-4/3 overflow-hidden">
+                {/* Image Section */}
+                <div className="aspect-4/3 overflow-hidden relative">
                     <img
                         src={experience.image}
                         alt={experience.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
+
+                    {/* Content Overlay */}
+                    <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent p-6 flex flex-col justify-end">
+                        <div className="space-y-4">
+                            <div className="flex flex-col">
+                                <h3 className="text-xl font-semibold text-white truncate">
+                                    {experience.title}
+                                </h3>
+                                <Badge className="rounded-none uppercase text-[9px] font-bold tracking-widest bg-amber-500 text-white border-none h-4 px-1">
+                                    {experience.category}
+                                </Badge>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4 border-t border-white/10 pt-4">
+                                <div className="flex flex-col">
+                                    <div className="flex items-center gap-1">
+                                        <Clock className="w-3 h-3 text-zinc-300" />
+                                        <span className="text-xs font-bold text-white">{experience.duration}</span>
+                                    </div>
+                                    <span className="text-[10px] text-zinc-400 uppercase font-bold tracking-widest mt-0.5">Time Commitment</span>
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <div className="flex items-center gap-1">
+                                        <BarChart className="w-3 h-3 text-zinc-300" />
+                                        <span className="text-xs font-bold text-white uppercase">{experience.difficulty}</span>
+                                    </div>
+                                    <span className="text-[10px] text-zinc-400 uppercase font-bold tracking-widest mt-0.5">Intensity Level</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                {/* Content Overlay */}
-                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent p-6 flex flex-col justify-end">
-                    <div className="flex justify-between items-end mb-2">
-                        {experience.destinationSlug && (
-                            <span className="text-[10px] font-bold uppercase tracking-widest text-white/70">
-                                {experience.destinationSlug.replace(/-/g, ' ')}
-                            </span>
-                        )}
-                        <Badge className="bg-white/90 text-black hover:bg-white border-none shadow-sm h-5 text-[10px] px-1.5 capitalize">
-                            {experience.category}
-                        </Badge>
-                    </div>
-
-                    <h3 className="text-xl font-light text-white mb-2 line-clamp-1">
-                        {experience.title}
-                    </h3>
-
-                    <div className="flex items-center gap-4 text-xs text-gray-300">
-                        {experience.duration && (
-                            <div className="flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
-                                <span>{experience.duration}</span>
-                            </div>
-                        )}
-                        {experience.difficulty && (
-                            <div className="flex items-center gap-1">
-                                <BarChart className="w-3 h-3" />
-                                <span>{experience.difficulty}</span>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* Hover Actions */}
+                {/* Hover Actions Overlay */}
                 <motion.div
                     className="absolute top-4 right-4 flex gap-2"
                     initial={{ opacity: 0, y: -10 }}
@@ -91,14 +90,14 @@ export function ExperienceCard({ experience, showActionsOnClick }: ExperienceCar
                     >
                         <Button
                             size="icon"
-                            className="bg-amber-600 text-white hover:bg-amber-700 w-9 h-9"
+                            className="bg-amber-600 text-white hover:bg-amber-700 w-9 h-9 rounded-none backdrop-blur-sm"
                         >
                             <Pencil className="w-4 h-4" />
                         </Button>
                     </Link>
                     <Button
                         size="icon"
-                        className="bg-red-500 text-white hover:bg-red-600 w-9 h-9"
+                        className="bg-red-500 text-white hover:bg-red-600 w-9 h-9 rounded-none backdrop-blur-sm"
                         onClick={(e) => {
                             e.stopPropagation();
                             setShowDeleteDialog(true);

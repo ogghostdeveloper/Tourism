@@ -8,6 +8,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataTableViewOptions } from "./data-table-view-options";
 
+import { useEffect, useState } from "react";
+import { DataTableFacetedFilter } from "./data-table-faceted-filter";
+import { getRegionsForDropdown } from "../actions";
+
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
   view?: "list" | "grid";
@@ -20,6 +24,18 @@ export function DataTableToolbar<TData>({
   onViewChange,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
+  const [regions, setRegions] = useState<{ label: string; value: string }[]>([]);
+
+  useEffect(() => {
+    getRegionsForDropdown().then((regs) => {
+      setRegions(
+        regs.map((reg: any) => ({
+          label: reg.title,
+          value: reg.value,
+        }))
+      );
+    });
+  }, []);
 
   return (
     <div className="flex items-center justify-between">
@@ -32,6 +48,13 @@ export function DataTableToolbar<TData>({
           }
           className="h-8 w-[150px] lg:w-[250px] text-black"
         />
+        {table.getColumn("region") && regions.length > 0 && (
+          <DataTableFacetedFilter
+            column={table.getColumn("region")}
+            title="Region"
+            options={regions}
+          />
+        )}
         {isFiltered && (
           <Button
             variant="ghost"
@@ -40,7 +63,7 @@ export function DataTableToolbar<TData>({
             className="text-black"
           >
             Reset
-            <X />
+            <X className="ml-2 h-4 w-4" />
           </Button>
         )}
       </div>

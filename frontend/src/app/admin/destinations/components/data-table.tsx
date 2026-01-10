@@ -63,8 +63,12 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(() => {
     const filters: ColumnFiltersState = [];
     const name = searchParams.get("name");
+    const region = searchParams.get("region");
     if (name) {
       filters.push({ id: "name", value: name });
+    }
+    if (region) {
+      filters.push({ id: "region", value: region.split(",") });
     }
     return filters;
   });
@@ -75,8 +79,12 @@ export function DataTable<TData, TValue>({
   React.useEffect(() => {
     const filters: ColumnFiltersState = [];
     const name = searchParams.get("name");
+    const region = searchParams.get("region");
     if (name) {
       filters.push({ id: "name", value: name });
+    }
+    if (region) {
+      filters.push({ id: "region", value: region.split(",") });
     }
     setColumnFilters(filters);
   }, [searchParams]);
@@ -133,11 +141,16 @@ export function DataTable<TData, TValue>({
 
       // Clear existing filters from params first
       params.delete("name");
+      params.delete("region");
 
       newFilters.forEach(filter => {
         if (filter.id === "name") {
           if (filter.value) {
             params.set(filter.id, filter.value as string);
+          }
+        } else if (filter.id === "region") {
+          if (Array.isArray(filter.value) && filter.value.length > 0) {
+            params.set(filter.id, filter.value.join(","));
           }
         }
       });

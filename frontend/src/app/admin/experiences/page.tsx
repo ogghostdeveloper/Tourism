@@ -7,7 +7,12 @@ import { columns } from "./components/columns";
 import { Experience } from "./schema";
 
 interface ExperiencesPageProps {
-  searchParams: Promise<{ page?: string; page_size?: string }>;
+  searchParams: Promise<{
+    page?: string;
+    page_size?: string;
+    title?: string;
+    category?: string;
+  }>;
 }
 
 export default function ExperiencesPage({ searchParams }: ExperiencesPageProps) {
@@ -20,27 +25,35 @@ export default function ExperiencesPage({ searchParams }: ExperiencesPageProps) 
   });
   const [isLoading, setIsLoading] = useState(true);
 
-  // Set view after mount to avoid hydration mismatch
+  // Load initial view from localStorage and set up resize listener
   useEffect(() => {
-    const setInitialView = () => {
-      if (typeof window !== "undefined") {
+    const stored = localStorage.getItem("experiences_view_preference");
+    if (stored === "list" || stored === "grid") {
+      setView(stored);
+    } else if (window.innerWidth < 768) {
+      setView("grid");
+    }
+
+    const handleResize = () => {
+      // Only auto-switch if no manual preference is stored
+      if (!localStorage.getItem("experiences_view_preference")) {
         if (window.innerWidth < 768) {
           setView("grid");
         } else {
-          const stored = window.localStorage.getItem("experiences_view");
-          setView(stored === "list" || stored === "grid" ? stored : "list");
+          setView("list");
         }
       }
     };
-    setInitialView();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Persist view changes
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem("experiences_view", view);
-    }
-  }, [view]);
+  // Save view preference when user manually changes it
+  const handleViewChange = (newView: "list" | "grid") => {
+    setView(newView);
+    localStorage.setItem("experiences_view_preference", newView);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,8 +61,10 @@ export default function ExperiencesPage({ searchParams }: ExperiencesPageProps) 
       const params = await searchParams;
       const page = Number(params.page) || 1;
       const pageSize = Number(params.page_size) || (view === "grid" ? 6 : 10);
+      const title = params.title || undefined;
+      const category = params.category || undefined;
 
-      const paginatedData = await getExperiences(page, pageSize);
+      const paginatedData = await getExperiences(page, pageSize, title, category);
 
       setExperiences(paginatedData.items);
       setPageData({
@@ -82,7 +97,7 @@ export default function ExperiencesPage({ searchParams }: ExperiencesPageProps) 
           pageSize: pageData.pageSize,
         }}
         view={view}
-        onViewChange={setView}
+        onViewChange={handleViewChange}
       />
     </div>
   );

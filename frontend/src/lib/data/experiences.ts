@@ -98,16 +98,29 @@ const getExperienceLookupPipeline = (match: any = {}) => [
     }
 ];
 
-export async function listExperiences(page: number = 1, pageSize: number = 10) {
+export async function listExperiences(
+    page: number = 1,
+    pageSize: number = 10,
+    search?: string,
+    category?: string
+) {
     const client = await clientPromise;
     const collection = client.db(DB).collection<Experience>(COLLECTION);
 
-    const totalItems = await collection.countDocuments();
+    const query: any = {};
+    if (search) {
+        query.title = { $regex: search, $options: "i" };
+    }
+    if (category) {
+        query.category = { $in: category.split(",") };
+    }
+
+    const totalItems = await collection.countDocuments(query);
     const totalPages = Math.ceil(totalItems / pageSize);
     const skip = (page - 1) * pageSize;
 
     const pipeline = [
-        ...getExperienceLookupPipeline(),
+        ...getExperienceLookupPipeline(query),
         { $sort: { createdAt: -1 } as const },
         { $skip: skip },
         { $limit: pageSize }

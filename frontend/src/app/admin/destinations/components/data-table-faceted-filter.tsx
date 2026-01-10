@@ -42,8 +42,8 @@ export function DataTableFacetedFilter<TData, TValue>({
 
     return (
         <Popover>
-            <PopoverTrigger asChild className="rounded-none">
-                <Button variant="outline" size="sm" className="h-9 border-dashed text-black">
+            <PopoverTrigger asChild>
+                <Button variant="outline" size="sm" className="h-8 border-dashed text-black">
                     <PlusCircle className="mr-2 h-4 w-4" />
                     {title}
                     {selectedValues?.size > 0 && (
@@ -81,7 +81,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                     )}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0 rounded-none" align="start">
+            <PopoverContent className="w-[200px] p-0" align="start">
                 <Command className="text-black">
                     <CommandInput placeholder={title} className="text-black" />
                     <CommandList>
@@ -103,11 +103,11 @@ export function DataTableFacetedFilter<TData, TValue>({
                                                 filterValues.length ? filterValues : undefined
                                             );
                                         }}
-                                        className="text-black rounded-none"
+                                        className="text-black"
                                     >
                                         <div
                                             className={cn(
-                                                "flex size-4 items-center justify-center rounded-none border",
+                                                "flex size-4 items-center justify-center rounded-[4px] border",
                                                 isSelected
                                                     ? "bg-primary border-primary text-primary-foreground"
                                                     : "border-input [&_svg]:invisible"

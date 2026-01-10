@@ -36,7 +36,7 @@ export function DataTableRowActions<TData>({
         onOpenChange={setShowDeleteDialog}
       />
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
+        <DropdownMenuTrigger asChild className="rounded-none">
           <Button
             variant="ghost"
             size="icon"
@@ -46,17 +46,17 @@ export function DataTableRowActions<TData>({
             <span className="sr-only">Open menu</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-[160px]">
+        <DropdownMenuContent align="end" className="w-[160px] rounded-none">
           <Link href={`/admin/experiences/${experience._id}/edit`}>
             <DropdownMenuItem
-              className="text-green-500 focus:text-green-500 data-[variant=default]:text-green-500 data-[variant=default]:focus:bg-green-100"
+              className="text-green-500 focus:text-green-500 data-[variant=default]:text-green-500 data-[variant=default]:focus:bg-green-100 rounded-none"
             >
               <Pencil className="mr-2 h-4 w-4 text-green-500 focus:text-green-500 data-[variant=default]:text-green-500" /> Edit
             </DropdownMenuItem>
           </Link>
           <Link href={`/admin/experiences/${experience._id}`}>
             <DropdownMenuItem
-              className="text-blue-500 focus:text-blue-500 data-[variant=default]:text-blue-500 data-[variant=default]:focus:bg-blue-100"
+              className="text-blue-500 focus:text-blue-500 data-[variant=default]:text-blue-500 data-[variant=default]:focus:bg-blue-100 rounded-none"
             >
               <Eye className="mr-2 h-4 w-4 text-blue-500 focus:text-blue-500 data-[variant=default]:text-blue-500" /> View
             </DropdownMenuItem>
@@ -65,7 +65,7 @@ export function DataTableRowActions<TData>({
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => setShowDeleteDialog(true)}
-            className="text-red-500 focus:text-red-500 data-[variant=default]:text-red-500 data-[variant=default]:focus:bg-red-100"
+            className="text-red-500 focus:text-red-500 data-[variant=default]:text-red-500 data-[variant=default]:focus:bg-red-100 rounded-none"
           >
             <Trash2 className="mr-2 h-4 w-4 text-red-500 focus:text-red-500 data-[variant=default]:text-red-500" />  Delete
           </DropdownMenuItem>

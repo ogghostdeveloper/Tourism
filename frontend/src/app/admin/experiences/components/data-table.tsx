@@ -60,10 +60,35 @@ export function DataTable<TData, TValue>({
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
+  // Initialize column filters from searchParams
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(() => {
+    const filters: ColumnFiltersState = [];
+    const title = searchParams.get("title");
+    const category = searchParams.get("category");
+    if (title) {
+      filters.push({ id: "title", value: title });
+    }
+    if (category) {
+      filters.push({ id: "category", value: category.split(",") });
+    }
+    return filters;
+  });
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
+
+  // Sync column filters when searchParams change (e.g. back navigation)
+  React.useEffect(() => {
+    const filters: ColumnFiltersState = [];
+    const title = searchParams.get("title");
+    const category = searchParams.get("category");
+    if (title) {
+      filters.push({ id: "title", value: title });
+    }
+    if (category) {
+      filters.push({ id: "category", value: category.split(",") });
+    }
+    setColumnFilters(filters);
+  }, [searchParams]);
 
   // Determine if mobile (show actions on click/tap)
   const [isMobile, setIsMobile] = React.useState(false);
@@ -103,6 +128,42 @@ export function DataTable<TData, TValue>({
     [paginationState, pathname, searchParams, router]
   );
 
+  // Handle filter changes
+  const onColumnFiltersChange: OnChangeFn<ColumnFiltersState> = React.useCallback(
+    (updaterOrValue) => {
+      const newFilters =
+        typeof updaterOrValue === "function"
+          ? updaterOrValue(columnFilters)
+          : updaterOrValue;
+
+      setColumnFilters(newFilters);
+
+      const params = new URLSearchParams(searchParams.toString());
+
+      // Clear existing filters from params first
+      params.delete("title");
+      params.delete("category");
+
+      newFilters.forEach(filter => {
+        if (filter.id === "title") {
+          if (filter.value) {
+            params.set(filter.id, filter.value as string);
+          }
+        } else if (filter.id === "category") {
+          if (Array.isArray(filter.value) && filter.value.length > 0) {
+            params.set(filter.id, filter.value.join(","));
+          }
+        }
+      });
+
+      // Reset to page 1 when filtering
+      params.set("page", "1");
+
+      router.push(`${pathname}?${params.toString()}`);
+    },
+    [columnFilters, pathname, searchParams, router]
+  );
+
   const table = useReactTable({
     data,
     columns,
@@ -115,11 +176,12 @@ export function DataTable<TData, TValue>({
       pagination: paginationState,
     },
     manualPagination: true,
+    manualFiltering: true, // Tell table we handle filtering on server
     onPaginationChange: onPaginationChange,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
+    onColumnFiltersChange: onColumnFiltersChange,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -133,7 +195,7 @@ export function DataTable<TData, TValue>({
     <div className="space-y-4">
       <DataTableToolbar table={table} view={view} onViewChange={onViewChange} />
       {view === "list" ? (
-        <div className="rounded-md border bg-card">
+        <div className="rounded-none border bg-card">
           <Table>
             <TableHeader className="bg-gray-100">
               {table.getHeaderGroups().map((headerGroup) => (
@@ -193,9 +255,22 @@ export function DataTable<TData, TValue>({
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {data.map((item: any) => (
-            <ExperienceCard key={item._id} experience={item as Experience} showActionsOnClick={isMobile} />
-          ))}
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => {
+              const experience = row.original as Experience;
+              return (
+                <ExperienceCard
+                  key={experience._id}
+                  experience={experience}
+                  showActionsOnClick={isMobile}
+                />
+              );
+            })
+          ) : (
+            <div className="col-span-full h-24 flex items-center justify-center text-center">
+              No results.
+            </div>
+          )}
         </div>
       )}
       <DataTablePagination table={table} />

@@ -20,27 +20,35 @@ export default function ExperienceTypesPage({ searchParams }: ExperienceTypesPag
   });
   const [isLoading, setIsLoading] = useState(true);
 
-  // Set view after mount to avoid hydration mismatch
+  // Load initial view from localStorage and set up resize listener
   useEffect(() => {
-    const setInitialView = () => {
-      if (typeof window !== "undefined") {
+    const stored = localStorage.getItem("experience_types_view_preference");
+    if (stored === "list" || stored === "grid") {
+      setView(stored);
+    } else if (window.innerWidth < 768) {
+      setView("grid");
+    }
+
+    const handleResize = () => {
+      // Only auto-switch if no manual preference is stored
+      if (!localStorage.getItem("experience_types_view_preference")) {
         if (window.innerWidth < 768) {
           setView("grid");
         } else {
-          const stored = window.localStorage.getItem("experience_types_view");
-          setView(stored === "list" || stored === "grid" ? stored : "list");
+          setView("list");
         }
       }
     };
-    setInitialView();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Persist view changes
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem("experience_types_view", view);
-    }
-  }, [view]);
+  // Save view preference when user manually changes it
+  const handleViewChange = (newView: "list" | "grid") => {
+    setView(newView);
+    localStorage.setItem("experience_types_view_preference", newView);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -82,7 +90,7 @@ export default function ExperienceTypesPage({ searchParams }: ExperienceTypesPag
           pageSize: pageData.pageSize,
         }}
         view={view}
-        onViewChange={setView}
+        onViewChange={handleViewChange}
       />
     </div>
   );
