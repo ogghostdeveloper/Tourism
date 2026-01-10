@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2, Save, Pencil, X } from "lucide-react";
+import { Loader2, Save, Pencil, X, Trash2, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -92,7 +92,7 @@ export default function AboutUsPage() {
       <div className="flex flex-col min-h-screen relative">
         <Button
           onClick={() => setIsEditMode(true)}
-          className="fixed top-24 right-8 z-50 bg-black text-white hover:bg-gray-800 shadow-lg rounded-full w-12 h-12 p-0 flex items-center justify-center transition-transform hover:scale-110"
+          className="fixed top-24 right-8 z-50 bg-amber-600 text-white hover:bg-amber-700 shadow-lg rounded-full w-12 h-12 p-0 flex items-center justify-center transition-transform hover:scale-110"
         >
           <Pencil className="w-5 h-5" />
         </Button>
@@ -175,21 +175,26 @@ export default function AboutUsPage() {
 
   // Edit Mode
   return (
-    <form onSubmit={handleSave} className="h-full flex-1 flex-col space-y-6 p-8 flex pb-20">
+    <form onSubmit={handleSave} className="h-full max-w-7xl mx-auto w-full flex-1 flex-col space-y-6 flex md:p-8 pt-6">
       <input type="hidden" name="missionItems" value={JSON.stringify(formData.mission.items)} />
       <input type="hidden" name="sustainableItems" value={JSON.stringify(formData.sustainable.items)} />
 
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-black">Edit About Us Content</h2>
-          <p className="text-gray-600">Update the content for all about us sections</p>
+          <h2 className="text-2xl font-semibold tracking-tight text-black">Edit About Us Content</h2>
+          <p className="text-sm text-gray-600">Update the content for all about us sections</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 text-black">
           <Button type="button" variant="outline" onClick={() => setIsEditMode(false)} disabled={isSaving}>
-            <X className="mr-2 h-4 w-4" /> Cancel
+            <X className="h-4 w-4" /> Cancel
           </Button>
-          <Button type="submit" disabled={isSaving}>
-            {isSaving ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...</> : <><Save className="mr-2 h-4 w-4" /> Save Changes</>}
+          <Button className="bg-amber-600 hover:bg-amber-700" type="submit" disabled={isSaving}>
+            {isSaving ?
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...
+              </>
+              :
+              <>Save Changes</>}
           </Button>
         </div>
       </div>
@@ -256,13 +261,13 @@ export default function AboutUsPage() {
             <div className="space-y-4 mt-4">
               <Label>Mission Items</Label>
               {formData.mission.items.map((item, index) => (
-                <div key={item.id} className="p-4 border rounded-lg space-y-4 bg-gray-50/50">
+                <div key={item.id} className="p-4 border space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="font-mono text-xs text-gray-400">ITEM #{index + 1}</span>
-                    <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-700 h-8" onClick={() => {
+                    <Button type="button" variant="outline" size="icon" className="text-red-500 hover:text-red-700 h-8" onClick={() => {
                       const newItems = formData.mission.items.filter((_, i) => i !== index);
                       setFormData({ ...formData, mission: { ...formData.mission, items: newItems } });
-                    }}>Remove</Button>
+                    }}><Trash2 className="w-4 h-4" /></Button>
                   </div>
                   <Input placeholder="Item Title" value={item.title} onChange={(e) => {
                     const newItems = [...formData.mission.items];
@@ -276,10 +281,10 @@ export default function AboutUsPage() {
                   }} />
                 </div>
               ))}
-              <Button variant="outline" size="sm" className="w-full" onClick={() => {
+              <Button type="button" size="icon" className="w-full" onClick={() => {
                 const newItems = [...formData.mission.items, { id: `mission-${Date.now()}`, title: "New Mission Item", description: "", order: formData.mission.items.length + 1 }];
                 setFormData({ ...formData, mission: { ...formData.mission, items: newItems } });
-              }}>+ Add Mission Item</Button>
+              }}><Plus className="w-4 h-4" />Add Item</Button>
             </div>
           </CardContent>
         </Card>
@@ -324,18 +329,17 @@ export default function AboutUsPage() {
               <Label htmlFor="sustainable-intro">Intro Text</Label>
               <Textarea id="sustainable-intro" name="sustainable-intro" value={formData.sustainable.intro} onChange={(e) => setFormData({ ...formData, sustainable: { ...formData.sustainable, intro: e.target.value } })} className="min-h-[100px]" />
             </div>
-            <ImageUpload name="sustainableImage" label="Section Image" defaultPreview={formData.sustainable.image} />
 
             <div className="space-y-4 mt-4">
               <Label>Sustainability Items</Label>
               {formData.sustainable.items.map((item, index) => (
-                <div key={item.id} className="p-4 border rounded-lg space-y-4 bg-gray-50/50">
+                <div key={item.id} className="p-4 border space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="font-mono text-xs text-gray-400">ITEM #{index + 1}</span>
-                    <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-700 h-8" onClick={() => {
+                    <Button type="button" variant="outline" size="icon" className="text-red-500 hover:text-red-700 h-8" onClick={() => {
                       const newItems = formData.sustainable.items.filter((_, i) => i !== index);
                       setFormData({ ...formData, sustainable: { ...formData.sustainable, items: newItems } });
-                    }}>Remove</Button>
+                    }}><Trash2 className="w-4 h-4" /></Button>
                   </div>
                   <Input placeholder="Item Title" value={item.title} onChange={(e) => {
                     const newItems = [...formData.sustainable.items];
@@ -349,10 +353,10 @@ export default function AboutUsPage() {
                   }} />
                 </div>
               ))}
-              <Button variant="outline" size="sm" className="w-full" onClick={() => {
+              <Button type="button" size="icon" className="w-full" onClick={() => {
                 const newItems = [...formData.sustainable.items, { id: `sust-${Date.now()}`, title: "New Sustainability Item", description: "", order: formData.sustainable.items.length + 1 }];
                 setFormData({ ...formData, sustainable: { ...formData.sustainable, items: newItems } });
-              }}>+ Add Sustainability Item</Button>
+              }}><Plus className="w-4 h-4" />Add Item</Button>
             </div>
           </CardContent>
         </Card>

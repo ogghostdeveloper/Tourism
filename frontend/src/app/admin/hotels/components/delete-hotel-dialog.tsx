@@ -30,9 +30,15 @@ export function DeleteHotelDialog({
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
+    const id = hotel.id || hotel._id;
+    if (!id) {
+      toast.error("Hotel ID is missing");
+      return;
+    }
+
     setIsDeleting(true);
     try {
-      const result = await deleteHotel(hotel.id);
+      const result = await deleteHotel(id);
       if (result.success) {
         toast.success(result.message);
         onOpenChange(false);
@@ -48,7 +54,7 @@ export function DeleteHotelDialog({
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
+      <AlertDialogContent className="rounded-none">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-black">Are you sure?</AlertDialogTitle>
           <AlertDialogDescription >
@@ -57,11 +63,11 @@ export function DeleteHotelDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isDeleting} className="border-gray-200 text-gray-500 hover:bg-gray-50">Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isDeleting} className="border-gray-200 text-gray-500 hover:bg-gray-50 rounded-none">Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={isDeleting}
-            className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
+            className="bg-red-600 hover:bg-red-700 focus:ring-red-600 rounded-none"
           >
             {isDeleting ? (
               <>

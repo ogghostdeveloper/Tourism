@@ -62,7 +62,7 @@ export function DataTableToolbar<TData>({
             <div className="flex items-center gap-2">
                 <DataTableViewOptions table={table} />
                 {view && onViewChange && (
-                    <div className="flex items-center gap-1 border border-gray-100 rounded-none p-1 bg-white shadow-xs">
+                    <div className="flex items-center gap-1 border rounded-none p-1 bg-white shadow-xs">
                         <Button
                             variant={view === "list" ? "default" : "ghost"}
                             size="sm"

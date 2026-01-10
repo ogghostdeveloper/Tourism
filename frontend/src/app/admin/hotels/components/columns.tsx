@@ -14,7 +14,7 @@ function ImageCell({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
     return <div className="h-10 w-16 rounded bg-muted" />;
   }
   return (
-    <div className="h-10 w-16 overflow-hidden rounded bg-muted">
+    <div className="h-10 w-16 overflow-hidden rounded-none bg-muted">
       <img
         src={imageUrl}
         alt={alt}
@@ -49,7 +49,7 @@ function DestinationCell({ destinationId }: { destinationId?: string }) {
   }, [destinationId]);
 
   return (
-    <div className="text-black capitalize">
+    <div className="text-xs text-zinc-500">
       {destinationName}
     </div>
   );
@@ -71,7 +71,7 @@ export const columns: ColumnDef<Hotel>[] = [
     cell: ({ row }) => {
       return (
         <div
-          className="max-w-[300px] truncate font-medium text-black"
+          className="max-w-[300px] truncate font-semibold text-zinc-900"
           title={row.getValue("name")}
         >
           {row.getValue("name")}
@@ -97,7 +97,7 @@ export const columns: ColumnDef<Hotel>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <div className="max-w-[200px] truncate text-black">
+        <div className="max-w-[200px] truncate font-mono text-xs text-zinc-500">
           {row.getValue("location") || "-"}
         </div>
       );
@@ -129,34 +129,6 @@ export const columns: ColumnDef<Hotel>[] = [
       );
     },
   },
-  // {
-  //   accessorKey: "rooms",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Rooms" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     const rooms = row.getValue("rooms");
-  //     return (
-  //       <div className="text-sm text-black">
-  //         {rooms ? `${rooms} rooms` : "-"}
-  //       </div>
-  //     );
-  //   },
-  // },
-  // {
-  //   accessorKey: "amenities",
-  //   header: "Amenities",
-  //   cell: ({ row }) => {
-  //     const amenities = row.original.amenities || [];
-  //     return (
-  //       <div className="max-w-[250px] truncate text-sm text-black">
-  //         {amenities.slice(0, 3).join(", ")}
-  //         {amenities.length > 3 && "..."}
-  //         {amenities.length === 0 && "-"}
-  //       </div>
-  //     );
-  //   },
-  // },
   {
     accessorKey: "updatedAt",
     header: ({ column }) => (
@@ -167,7 +139,7 @@ export const columns: ColumnDef<Hotel>[] = [
       if (!date) return null;
       try {
         return (
-          <div className="text-sm text-black">
+          <div className="text-xs text-zinc-500">
             {format(new Date(date), "MMM dd, yyyy")}
           </div>
         );

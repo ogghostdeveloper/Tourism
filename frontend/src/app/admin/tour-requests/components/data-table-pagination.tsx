@@ -57,7 +57,7 @@ export function DataTablePagination<TData>({
                     <Button
                         variant="outline"
                         size="icon"
-                        className="hidden size-8 lg:flex rounded-none"
+                        className="hidden size-9 lg:flex rounded-none"
                         onClick={() => table.setPageIndex(0)}
                         disabled={!table.getCanPreviousPage()}
                     >
@@ -67,7 +67,7 @@ export function DataTablePagination<TData>({
                     <Button
                         variant="outline"
                         size="icon"
-                        className="size-8 rounded-none"
+                        className="size-9 rounded-none"
                         onClick={() => table.previousPage()}
                         disabled={!table.getCanPreviousPage()}
                     >
@@ -77,7 +77,7 @@ export function DataTablePagination<TData>({
                     <Button
                         variant="outline"
                         size="icon"
-                        className="size-8 rounded-none"
+                        className="size-9 rounded-none"
                         onClick={() => table.nextPage()}
                         disabled={!table.getCanNextPage()}
                     >
@@ -87,7 +87,7 @@ export function DataTablePagination<TData>({
                     <Button
                         variant="outline"
                         size="icon"
-                        className="hidden size-8 lg:flex rounded-none"
+                        className="hidden size-9 lg:flex rounded-none"
                         onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                         disabled={!table.getCanNextPage()}
                     >

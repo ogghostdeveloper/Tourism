@@ -21,20 +21,35 @@ export default function HotelsPage({
   });
   const [isLoading, setIsLoading] = useState(true);
 
-  // Set default view based on screen size
+  // Load initial view from localStorage and set up resize listener
   useEffect(() => {
+    const stored = localStorage.getItem("hotels_view_preference");
+    if (stored === "list" || stored === "grid") {
+      setView(stored);
+    } else if (window.innerWidth < 768) {
+      setView("grid");
+    }
+
     const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setView("grid");
-      } else {
-        setView("list");
+      // Only auto-switch if no manual preference is stored
+      if (!localStorage.getItem("hotels_view_preference")) {
+        if (window.innerWidth < 768) {
+          setView("grid");
+        } else {
+          setView("list");
+        }
       }
     };
 
-    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // Save view preference when user manually changes it
+  const handleViewChange = (newView: "list" | "grid") => {
+    setView(newView);
+    localStorage.setItem("hotels_view_preference", newView);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,7 +90,7 @@ export default function HotelsPage({
           pageSize: pageData.pageSize,
         }}
         view={view}
-        onViewChange={setView}
+        onViewChange={handleViewChange}
       />
     </div>
   );

@@ -6,7 +6,6 @@ import { HotelOverview } from "@/app/(website)/hotels/[slug]/components/HotelOve
 import { VisualGallery } from "@/components/common/VisualGallery";
 import { LocationMap } from "@/components/common/LocationMap";
 import { RelatedHotels } from "@/app/(website)/hotels/[slug]/components/RelatedHotels";
-import CallToAction from "@/components/shared/CallToAction";
 import Link from "next/link";
 import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -69,8 +68,6 @@ export default async function HotelDetailPage({ params }: PageProps) {
       )}
 
       <RelatedHotels hotels={relatedHotels} />
-
-      <CallToAction />
     </div>
   );
 }

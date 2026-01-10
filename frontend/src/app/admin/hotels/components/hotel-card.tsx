@@ -47,20 +47,21 @@ export function HotelCard({ hotel, showActionsOnClick }: HotelCardProps) {
 
                 {/* Content Overlay */}
                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent p-6 flex flex-col justify-end">
-                    <div className="flex justify-between items-end mb-2">
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-white/70">
-                            {hotel.destinationSlug?.replace(/-/g, ' ')}
-                        </span>
-                        <Badge className="bg-white/90 text-black hover:bg-white border-none shadow-sm h-5 text-[10px] px-1.5">
+                    <div className="flex gap-4 items-center mb-2">
+                        <h3 className="text-xl font-light text-white line-clamp-1">
+                            {hotel.name}
+                        </h3>
+                        <Badge className="bg-white/90 text-black hover:bg-white border-none ">
                             {hotel.priceRange}
                         </Badge>
                     </div>
 
-                    <h3 className="text-xl font-light text-white mb-2 line-clamp-1">
-                        {hotel.name}
-                    </h3>
 
                     <div className="flex items-center gap-4 text-xs text-gray-300">
+                        <div className="flex items-center gap-1">
+                            <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                            <span>{hotel.rating}</span>
+                        </div>
                         {hotel.rooms && (
                             <div className="flex items-center gap-1">
                                 <Bed className="w-3 h-3" />
@@ -68,8 +69,8 @@ export function HotelCard({ hotel, showActionsOnClick }: HotelCardProps) {
                             </div>
                         )}
                         <div className="flex items-center gap-1">
-                            <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
-                            <span>{hotel.rating}</span>
+                            <MapPin className="w-3 h-3" />
+                            <span>{hotel.location}</span>
                         </div>
                     </div>
                 </div>

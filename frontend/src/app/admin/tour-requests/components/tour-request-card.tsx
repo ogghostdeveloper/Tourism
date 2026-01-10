@@ -132,7 +132,7 @@ export function TourRequestCard({ request, isMobile }: TourRequestCardProps) {
                 >
                     <Button
                         size="icon"
-                        className="bg-white text-black hover:bg-gray-50 w-10 h-10 rounded-none shadow-xl border border-gray-100"
+                        className="bg-amber-500 text-white hover:bg-amber-600 w-10 h-10 rounded-none shadow-xl"
                         onClick={(e) => {
                             e.stopPropagation();
                             router.push(`/admin/tour-requests/${request._id}`);

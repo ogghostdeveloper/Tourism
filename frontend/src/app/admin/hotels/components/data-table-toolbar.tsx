@@ -30,14 +30,14 @@ export function DataTableToolbar<TData>({
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          className="h-8 w-[150px] lg:w-[250px] text-black"
+          className="h-9 w-[150px] lg:w-[350px] text-black"
         />
         {isFiltered && (
           <Button
             variant="ghost"
             size="sm"
             onClick={() => table.resetColumnFilters()}
-            className="text-black"
+            className="text-black h-9"
           >
             Reset
             <X />
@@ -47,34 +47,26 @@ export function DataTableToolbar<TData>({
       <div className="flex items-center gap-2">
         <DataTableViewOptions table={table} />
         <Link href="/admin/hotels/create">
-          <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white">
+          <Button size="sm" className="h-9 bg-amber-600 hover:bg-amber-700 text-white">
             <Plus className="mr-2 h-4 w-4" />
             Add New
           </Button>
         </Link>
         {view && onViewChange && (
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 border rounded-none p-1 bg-white shadow-xs">
             <Button
-              variant={view === "list" ? "default" : "outline"}
+              variant={view === "list" ? "default" : "ghost"}
               size="sm"
               onClick={() => onViewChange("list")}
-              className={
-                view === "list"
-                  ? "bg-black text-white"
-                  : "text-black hover:text-black hover:bg-gray-100"
-              }
+              className={`h-7 w-7 p-0 rounded-none transition-all ${view === "list" ? "bg-black text-white" : "text-gray-400 hover:text-black hover:bg-gray-50"}`}
             >
               <List className="w-4 h-4" />
             </Button>
             <Button
-              variant={view === "grid" ? "default" : "outline"}
+              variant={view === "grid" ? "default" : "ghost"}
               size="sm"
               onClick={() => onViewChange("grid")}
-              className={
-                view === "grid"
-                  ? "bg-black text-white"
-                  : "text-black hover:text-black hover:bg-gray-100"
-              }
+              className={`h-7 w-7 p-0 rounded-none transition-all ${view === "grid" ? "bg-black text-white" : "text-gray-400 hover:text-black hover:bg-gray-50"}`}
             >
               <LayoutGrid className="w-4 h-4" />
             </Button>
