@@ -4,6 +4,7 @@ import * as tourDb from "@/lib/data/tours";
 import * as experienceDb from "@/lib/data/experiences";
 import * as destinationDb from "@/lib/data/destinations";
 import { tourRequestDb } from "@/lib/data/tour-requests";
+import { RequestStatus } from "@/app/admin/tour-requests/types";
 
 export async function getDashboardData() {
     try {
@@ -14,6 +15,9 @@ export async function getDashboardData() {
 
         // Fetch tour requests (limit to 5 for recent activity)
         const tourRequestsData = await tourRequestDb.getAllTourRequests(1, 5);
+
+        // Fetch pending requests specifically for the dashboard
+        const pendingRequestsData = await tourRequestDb.getAllTourRequests(1, 1, RequestStatus.PENDING);
 
         // Recent Activity
         const recentActivity = tourRequestsData.items.map(tr => ({
@@ -26,16 +30,24 @@ export async function getDashboardData() {
             packageName: tr.tourName || "General Enquiry"
         }));
 
-        // For revenue/visitors, we'll return hardcoded but dynamic-looking values for now
-        // since we don't have these metrics in the DB yet.
+        // Calculate estimated revenue (approx $2,800 per booking as a placeholder average)
+        const estimatedRevenue = tourRequestsData.total * 2800;
+        const formattedRevenue = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 0,
+            notation: "compact",
+            compactDisplay: "short"
+        }).format(estimatedRevenue);
+
         return {
             stats: {
                 totalBookings: tourRequestsData.total,
                 activeTours: toursData.total_items,
                 totalExperiences: experiencesData.total_items,
                 totalDestinations: destinationsData.total_items,
-                revenue: "$2.4M", // Placeholder
-                visitors: "45.2k" // Placeholder
+                revenue: formattedRevenue,
+                pendingRequests: pendingRequestsData.total
             },
             recentActivity
         };

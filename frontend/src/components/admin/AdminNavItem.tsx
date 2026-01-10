@@ -44,10 +44,10 @@ export function AdminNavItem({ iconName, label, href }: AdminNavItemProps) {
         <Link
           href={href}
           className={cn(
-            "flex items-center gap-3 px-3 py-2 transition-all !rounded-none",
+            "flex items-center gap-3 px-3 py-2 transition-all rounded-none!",
             isActive
-              ? "bg-white text-black font-medium border-l-4 border-black"
-              : "text-gray-300 hover:text-black hover:bg-gray-100"
+              ? "bg-amber-600! text-white! font-medium border-l-4 border-black hover:bg-amber-700! hover:text-white!"
+              : "transition-all hover:bg-amber-700! hover:text-white!"
           )}
         >
           <Icon className="w-5 h-5" />
