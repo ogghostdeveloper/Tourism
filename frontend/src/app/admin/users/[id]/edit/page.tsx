@@ -5,13 +5,14 @@ import { updateUserAction } from "../../actions";
 import { UserForm } from "../../components/user-form";
 
 interface PageProps {
-    params: {
+    params: Promise<{
         id: string;
-    };
+    }>;
 }
 
 export default async function EditUserPage({ params }: PageProps) {
-    const user = await getUserById(params.id);
+    const { id } = await params;
+    const user = await getUserById(id);
 
     if (!user) {
         notFound();
@@ -21,7 +22,7 @@ export default async function EditUserPage({ params }: PageProps) {
         <UserForm
             title="Edit User"
             initialData={user}
-            action={updateUserAction.bind(null, params.id)}
+            action={updateUserAction.bind(null, id)}
         />
     );
 }

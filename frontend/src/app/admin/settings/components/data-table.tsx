@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -10,13 +9,11 @@ import {
     getFacetedRowModel,
     getFacetedUniqueValues,
     getFilteredRowModel,
-    getPaginationRowModel,
     getSortedRowModel,
     SortingState,
     useReactTable,
     VisibilityState,
     OnChangeFn,
-    PaginationState,
 } from "@tanstack/react-table";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
@@ -29,108 +26,23 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { SettingsDataTableToolbar } from "./data-table-toolbar";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-function DataTablePagination<TData>({
-    table,
-}: {
-    table: import("@tanstack/react-table").Table<TData>;
-}) {
-    return (
-        <div className="flex items-center justify-between px-2">
-            <div className="flex-1 text-sm text-muted-foreground">
-                {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                {table.getFilteredRowModel().rows.length} row(s) selected.
-            </div>
-            <div className="flex items-center space-x-6 lg:space-x-8">
-                <div className="flex items-center space-x-2">
-                    <p className="text-sm font-medium text-black">Rows per page</p>
-                    <Select
-                        value={`${table.getState().pagination.pageSize}`}
-                        onValueChange={(value) => {
-                            table.setPageSize(Number(value));
-                        }}
-                    >
-                        <SelectTrigger className="h-8 w-[70px] text-black border-gray-200">
-                            <SelectValue placeholder={table.getState().pagination.pageSize} />
-                        </SelectTrigger>
-                        <SelectContent side="top">
-                            {[10, 20, 30, 40, 50].map((pageSize) => (
-                                <SelectItem key={pageSize} value={`${pageSize}`}>
-                                    {pageSize}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-                <div className="flex w-[100px] items-center justify-center text-sm font-medium text-black">
-                    Page {table.getState().pagination.pageIndex + 1} of{" "}
-                    {table.getPageCount() || 1}
-                </div>
-                <div className="flex items-center space-x-2">
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        className="hidden h-9 w-9 lg:flex border-gray-200"
-                        onClick={() => table.setPageIndex(0)}
-                        disabled={!table.getCanPreviousPage()}
-                    >
-                        <span className="sr-only">Go to first page</span>
-                        <ChevronsLeft className="h-4 w-4 text-black" />
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-9 w-9 border-gray-200"
-                        onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
-                    >
-                        <span className="sr-only">Go to previous page</span>
-                        <ChevronLeft className="h-4 w-4 text-black" />
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-9 w-9 border-gray-200"
-                        onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
-                    >
-                        <span className="sr-only">Go to next page</span>
-                        <ChevronRight className="h-4 w-4 text-black" />
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        className="hidden h-9 w-9 lg:flex border-gray-200"
-                        onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                        disabled={!table.getCanNextPage()}
-                    >
-                        <span className="sr-only">Go to last page</span>
-                        <ChevronsRight className="h-4 w-4 text-black" />
-                    </Button>
-                </div>
-            </div>
-        </div>
-    );
-}
+import { Loader2 } from "lucide-react";
+import { CostCard } from "./cost-card";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
-    pageCount: number;
-    pagination: {
-        pageIndex: number;
-        pageSize: number;
-    };
+    view?: "list" | "grid";
+    onViewChange?: (view: "list" | "grid") => void;
+    isLoading?: boolean;
 }
 
 export function SettingsDataTable<TData, TValue>({
     columns,
     data,
-    pageCount,
-    pagination,
+    view = "list",
+    onViewChange,
+    isLoading = false,
 }: DataTableProps<TData, TValue>) {
     const router = useRouter();
     const pathname = usePathname();
@@ -143,30 +55,14 @@ export function SettingsDataTable<TData, TValue>({
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [sorting, setSorting] = React.useState<SortingState>([]);
 
-    const [paginationState, setPaginationState] =
-        React.useState<PaginationState>(pagination);
-
+    // Determine if mobile (show actions on click/tap)
+    const [isMobile, setIsMobile] = React.useState(false);
     React.useEffect(() => {
-        setPaginationState(pagination);
-    }, [pagination]);
-
-    const onPaginationChange: OnChangeFn<PaginationState> = React.useCallback(
-        (updaterOrValue) => {
-            const newPagination =
-                typeof updaterOrValue === "function"
-                    ? updaterOrValue(paginationState)
-                    : updaterOrValue;
-
-            setPaginationState(newPagination);
-
-            const params = new URLSearchParams(searchParams.toString());
-            params.set("page", (newPagination.pageIndex + 1).toString());
-            params.set("page_size", newPagination.pageSize.toString());
-
-            router.push(`${pathname}?${params.toString()}`);
-        },
-        [paginationState, pathname, searchParams, router]
-    );
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener("resize", checkMobile);
+        return () => window.removeEventListener("resize", checkMobile);
+    }, []);
 
     const onColumnFiltersChange: OnChangeFn<ColumnFiltersState> = React.useCallback(
         (updaterOrValue) => {
@@ -179,7 +75,6 @@ export function SettingsDataTable<TData, TValue>({
 
             const params = new URLSearchParams(searchParams.toString());
 
-            // Sync all filters to URL params
             const filterIds = ["title", "travelerCategory", "isIndianNational"];
             filterIds.forEach(id => {
                 const filter = newFilters.find(f => f.id === id);
@@ -190,7 +85,6 @@ export function SettingsDataTable<TData, TValue>({
                 }
             });
 
-            params.set("page", "1");
             router.push(`${pathname}?${params.toString()}`);
         },
         [columnFilters, pathname, searchParams, router]
@@ -199,17 +93,14 @@ export function SettingsDataTable<TData, TValue>({
     const table = useReactTable({
         data,
         columns,
-        pageCount,
         state: {
             sorting,
             columnVisibility,
             rowSelection,
             columnFilters,
-            pagination: paginationState,
         },
-        manualPagination: true,
+        manualPagination: false, // Disabled manual pagination
         manualFiltering: true,
-        onPaginationChange: onPaginationChange,
         enableRowSelection: true,
         onRowSelectionChange: setRowSelection,
         onSortingChange: setSorting,
@@ -217,7 +108,6 @@ export function SettingsDataTable<TData, TValue>({
         onColumnVisibilityChange: setColumnVisibility,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFacetedRowModel: getFacetedRowModel(),
         getFacetedUniqueValues: getFacetedUniqueValues(),
@@ -225,66 +115,84 @@ export function SettingsDataTable<TData, TValue>({
 
     return (
         <div className="space-y-4">
-            <SettingsDataTableToolbar table={table} />
-            <div className="rounded-none border bg-card">
-                <Table>
-                    <TableHeader className="bg-gray-100">
-                        {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow
-                                key={headerGroup.id}
-                                className="h-16 hover:bg-gray-100/20"
-                            >
-                                {headerGroup.headers.map((header) => {
-                                    return (
-                                        <TableHead
-                                            key={header.id}
-                                            colSpan={header.colSpan}
-                                            className="px-4 text-black font-bold uppercase tracking-wider text-[11px]"
-                                        >
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )}
-                                        </TableHead>
-                                    );
-                                })}
-                            </TableRow>
-                        ))}
-                    </TableHeader>
-                    <TableBody>
-                        {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
+            <SettingsDataTableToolbar table={table} view={view} onViewChange={onViewChange} />
+
+            {isLoading ? (
+                <div className="flex items-center justify-center min-h-[400px]">
+                    <Loader2 className="h-8 w-8 animate-spin text-zinc-300" />
+                </div>
+            ) : view === "list" ? (
+                <div className="rounded-none border border-gray-200 bg-white overflow-hidden shadow-sm">
+                    <Table>
+                        <TableHeader className="bg-gray-100">
+                            {table.getHeaderGroups().map((headerGroup) => (
                                 <TableRow
-                                    key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
-                                    className="h-12"
+                                    key={headerGroup.id}
+                                    className="h-16 hover:bg-gray-100/20 border-b border-gray-200"
                                 >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id} className="px-4 py-3">
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </TableCell>
-                                    ))}
+                                    {headerGroup.headers.map((header) => {
+                                        return (
+                                            <TableHead
+                                                key={header.id}
+                                                colSpan={header.colSpan}
+                                                className="px-4 text-black font-semibold"
+                                            >
+                                                {header.isPlaceholder
+                                                    ? null
+                                                    : flexRender(
+                                                        header.column.columnDef.header,
+                                                        header.getContext()
+                                                    )}
+                                            </TableHead>
+                                        );
+                                    })}
                                 </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell
-                                    colSpan={columns.length}
-                                    className="h-24 text-center text-black"
-                                >
-                                    No results.
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </div>
-            <DataTablePagination table={table} />
+                            ))}
+                        </TableHeader>
+                        <TableBody>
+                            {table.getRowModel().rows?.length ? (
+                                table.getRowModel().rows.map((row) => (
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={row.getIsSelected() && "selected"}
+                                        className="h-12 border-b border-gray-100 last:border-0 hover:bg-zinc-50/50 transition-colors"
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell key={cell.id} className="px-4 py-3">
+                                                {flexRender(
+                                                    cell.column.columnDef.cell,
+                                                    cell.getContext()
+                                                )}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell
+                                        colSpan={columns.length}
+                                        className="h-24 text-center text-zinc-400 italic text-sm"
+                                    >
+                                        No settings found.
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {table.getRowModel().rows?.length ? (
+                        table.getRowModel().rows.map((row) => (
+                            <CostCard key={row.id} cost={row.original as any} isMobile={isMobile} />
+                        ))
+                    ) : (
+                        <div className="col-span-full text-center text-zinc-400 italic py-12 border border-dashed border-gray-200">
+                            No settings found.
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

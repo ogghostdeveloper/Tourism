@@ -1,3 +1,4 @@
+import * as React from "react";
 import "./admin.css";
 import { AdminBreadcrumbs } from "@/components/admin/AdminBreadcrumbs";
 import { redirect } from "next/navigation";
@@ -6,13 +7,11 @@ import {
   SidebarProvider,
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
   SidebarInset,
   SidebarMenu,
-  SidebarMenuItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { LogOut, Settings } from "lucide-react";
@@ -21,11 +20,20 @@ import { AdminNavItem } from "@/components/admin/AdminNavItem";
 import { Button } from "@/components/ui/button";
 
 const menuItems = [
-  { iconName: "layout-dashboard" as const, label: "Dashboard", href: "/admin" },
+  {
+    iconName: "layout-dashboard" as const,
+    label: "Dashboard",
+    href: "/admin"
+  },
   {
     iconName: "map-pin" as const,
     label: "Destinations",
     href: "/admin/destinations",
+  },
+  {
+    iconName: "layers" as const,
+    label: "Experience Types",
+    href: "/admin/experience-types",
   },
   {
     iconName: "compass" as const,
@@ -33,19 +41,35 @@ const menuItems = [
     href: "/admin/experiences",
   },
   {
-    iconName: "layers" as const,
-    label: "Experience Types",
-    href: "/admin/experience-types",
+    iconName: "hotel" as const,
+    label: "Hotels",
+    href: "/admin/hotels"
   },
-  { iconName: "package" as const, label: "Tours", href: "/admin/tours" },
+  {
+    iconName: "settings" as const,
+    label: "Fee Settings",
+    href: "/admin/settings"
+  },
+  {
+    iconName: "package" as const,
+    label: "Tours",
+    href: "/admin/tours"
+  },
   {
     iconName: "file-text" as const,
     label: "Trip Requests",
     href: "/admin/tour-requests",
   },
-  { iconName: "hotel" as const, label: "Hotels", href: "/admin/hotels" },
-  { iconName: "users" as const, label: "Users", href: "/admin/users" },
-  { iconName: "info" as const, label: "About Us", href: "/admin/about-us" },
+  {
+    iconName: "info" as const,
+    label: "About Us",
+    href: "/admin/about-us"
+  },
+  {
+    iconName: "users" as const,
+    label: "User Management",
+    href: "/admin/users"
+  },
 ];
 
 export default async function AdminLayout({
@@ -109,12 +133,7 @@ export default async function AdminLayout({
             <AdminBreadcrumbs />
           </div>
           <div className="flex items-center gap-4">
-            <Link href="/admin/settings">
-              <Button variant="outline" size="icon" className="hover:bg-gray-100 rounded-full">
-                <span className="sr-only">Settings</span>
-                <Settings className="w-5 h-5 text-gray-500" />
-              </Button>
-            </Link>
+
             <form
               action={async () => {
                 "use server";

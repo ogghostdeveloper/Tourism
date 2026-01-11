@@ -1,9 +1,10 @@
-
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Cost } from "../schema";
 import { DataTableRowActions } from "./data-table-row-actions";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 export const columns: ColumnDef<Cost>[] = [
     {
@@ -42,15 +43,18 @@ export const columns: ColumnDef<Cost>[] = [
         header: "Charge Type",
         cell: ({ row }) => {
             const type = row.getValue("type") as string || "fixed";
-            const colors: Record<string, string> = {
-                fixed: "bg-blue-100 text-blue-800 border-blue-200",
-                daily: "bg-amber-100 text-amber-800 border-amber-200",
-            };
+            const isFixed = type === "fixed";
+
             return (
                 <div className="flex flex-col gap-1">
-                    <span className={`w-fit inline-flex items-center rounded-none px-2 py-0.5 text-[9px] font-bold border uppercase tracking-wider ${colors[type] || "bg-gray-100 text-gray-800"}`}>
+                    <Badge variant="outline" className={cn(
+                        "w-fit rounded-none uppercase text-[9px] font-bold tracking-widest px-2 py-0.5",
+                        isFixed
+                            ? "bg-blue-100 text-blue-800 border-blue-200"
+                            : "bg-amber-100 text-amber-800 border-amber-200"
+                    )}>
                         {type}
-                    </span>
+                    </Badge>
                 </div>
             );
         },
@@ -74,14 +78,19 @@ export const columns: ColumnDef<Cost>[] = [
     },
     {
         accessorKey: "isIndianNational",
-        header: "Indian",
+        header: "Nationality",
         cell: ({ row }) => {
             const isIndian = row.getValue("isIndianNational") as boolean;
             return (
                 <div className="flex flex-col gap-1">
-                    <span className={`w-fit inline-flex items-center rounded-none px-2 py-0.5 text-[9px] font-bold border uppercase tracking-wider ${isIndian ? "bg-orange-100 text-orange-800 border-orange-200" : "bg-zinc-100 text-zinc-600 border-zinc-200"}`}>
-                        {isIndian ? "Indian" : "Intl"}
-                    </span>
+                    <Badge variant="outline" className={cn(
+                        "w-fit rounded-none uppercase text-[9px] font-bold tracking-widest px-2 py-0.5",
+                        isIndian
+                            ? "bg-emerald-100 text-emerald-800 border-emerald-200"
+                            : "bg-purple-100 text-purple-800 border-purple-200"
+                    )}>
+                        {isIndian ? "Indian National" : "International"}
+                    </Badge>
                 </div>
             );
         },

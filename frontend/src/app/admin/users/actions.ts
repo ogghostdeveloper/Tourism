@@ -2,9 +2,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createUser, updateUser, deleteUser, getUserByEmail } from "@/lib/data/users";
+import { createUser, updateUser, deleteUser, getUserByEmail, listUsers as listUsersData } from "@/lib/data/users";
 import { userSchema } from "./schema";
 import bcrypt from "bcryptjs";
+
+export async function listUsers(page: number, pageSize: number, search?: string) {
+    return await listUsersData(page, pageSize, search);
+}
 
 export async function createUserAction(prevState: any, formData: FormData) {
     const data = Object.fromEntries(formData.entries());

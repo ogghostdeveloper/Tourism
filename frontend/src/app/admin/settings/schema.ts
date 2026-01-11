@@ -13,4 +13,6 @@ export const costSchema = z.object({
 export type Cost = z.infer<typeof costSchema> & {
     id?: string;
     _id?: string;
+    createdAt?: string;
+    updatedAt?: string;
 };

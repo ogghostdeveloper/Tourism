@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -88,7 +87,7 @@ export function CostForm({ initialData, action, title: pageTitle }: CostFormProp
                         variant="outline"
                         onMouseEnter={() => iconRef.current?.startAnimation()}
                         onMouseLeave={() => iconRef.current?.stopAnimation()}
-                        className="text-black rounded-none border-gray-200"
+                        className="text-black"
                     >
                         <AnimatedArrowLeft ref={iconRef} className="h-4 w-4" />
                         Back
@@ -104,152 +103,149 @@ export function CostForm({ initialData, action, title: pageTitle }: CostFormProp
                 <div className="lg:col-span-8">
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                            <Card className="rounded-none border-gray-200 shadow-sm">
-                                <CardContent className="pt-6 space-y-6">
-                                    <FormField
-                                        control={form.control}
-                                        name="title"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel className="text-black font-semibold uppercase tracking-wider text-[11px]">Title *</FormLabel>
+
+                            <FormField
+                                control={form.control}
+                                name="title"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="text-black">Title *</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                placeholder="e.g. Sustainable Development Fee (SDF)"
+                                                className="bg-white border-gray-200 text-black"
+                                            />
+                                        </FormControl>
+                                        <FormMessage className="text-xs" />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="description"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="text-black">Description</FormLabel>
+                                        <FormControl>
+                                            <Textarea
+                                                {...field}
+                                                placeholder="Describe what this fee covers..."
+                                                className="min-h-[120px] bg-white border-gray-200 text-black resize-none"
+                                            />
+                                        </FormControl>
+                                        <FormMessage className="text-xs" />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <div className="grid grid-cols-2 gap-6">
+                                <FormField
+                                    control={form.control}
+                                    name="price"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-black">Price (USD) *</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="number"
+                                                    {...field}
+                                                    onChange={(e) => field.onChange(Number(e.target.value))}
+                                                    placeholder="0.00"
+                                                    min="0"
+                                                    step="0.01"
+                                                    className="bg-white border-gray-200 text-black"
+                                                />
+                                            </FormControl>
+                                            <FormMessage className="text-xs" />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="type"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-black">Charge Type</FormLabel>
+                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                 <FormControl>
-                                                    <Input
-                                                        {...field}
-                                                        placeholder="e.g. Sustainable Development Fee (SDF)"
-                                                        className="bg-white border-gray-200 text-black rounded-none focus-visible:ring-amber-500"
-                                                    />
+                                                    <SelectTrigger className="bg-white border-gray-200 text-black w-full hover:bg-white">
+                                                        <SelectValue placeholder="Select type" />
+                                                    </SelectTrigger>
                                                 </FormControl>
-                                                <FormMessage className="text-xs" />
-                                            </FormItem>
-                                        )}
-                                    />
+                                                <SelectContent className="border-gray-200">
+                                                    <SelectItem value="fixed" className="focus:bg-zinc-50 focus:text-black cursor-pointer">Fixed (Once per tour)</SelectItem>
+                                                    <SelectItem value="daily" className="focus:bg-zinc-50 focus:text-black cursor-pointer">Daily (Per night)</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <FormDescription className="text-[10px] text-zinc-400 italic">
+                                                Daily charges are multiplied by the number of tour nights.
+                                            </FormDescription>
+                                            <FormMessage className="text-xs" />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
 
-                                    <FormField
-                                        control={form.control}
-                                        name="description"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel className="text-black font-semibold uppercase tracking-wider text-[11px]">Description</FormLabel>
+                            <div className="grid grid-cols-2 gap-6">
+                                <FormField
+                                    control={form.control}
+                                    name="travelerCategory"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-black">Traveler Category</FormLabel>
+                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                 <FormControl>
-                                                    <Textarea
-                                                        {...field}
-                                                        placeholder="Describe what this fee covers..."
-                                                        className="min-h-[120px] bg-white border-gray-200 text-black rounded-none resize-none focus-visible:ring-amber-500"
-                                                    />
+                                                    <SelectTrigger className="bg-white border-gray-200 text-black w-full hover:bg-white">
+                                                        <SelectValue placeholder="Select category" />
+                                                    </SelectTrigger>
                                                 </FormControl>
-                                                <FormMessage className="text-xs" />
-                                            </FormItem>
-                                        )}
-                                    />
+                                                <SelectContent className="border-gray-200">
+                                                    <SelectItem value="adult" className="focus:bg-zinc-50 focus:text-black cursor-pointer">Adult</SelectItem>
+                                                    <SelectItem value="child_6_12" className="focus:bg-zinc-50 focus:text-black cursor-pointer">Children (6-12)</SelectItem>
+                                                    <SelectItem value="child_under_6" className="focus:bg-zinc-50 focus:text-black cursor-pointer">Children &lt; 6</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage className="text-xs" />
+                                        </FormItem>
+                                    )}
+                                />
 
-                                    <div className="grid grid-cols-2 gap-6">
-                                        <FormField
-                                            control={form.control}
-                                            name="price"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel className="text-black font-semibold uppercase tracking-wider text-[11px]">Price (USD) *</FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            type="number"
-                                                            {...field}
-                                                            onChange={(e) => field.onChange(Number(e.target.value))}
-                                                            placeholder="0.00"
-                                                            min="0"
-                                                            step="0.01"
-                                                            className="bg-white border-gray-200 text-black rounded-none focus-visible:ring-amber-500"
-                                                        />
-                                                    </FormControl>
-                                                    <FormMessage className="text-xs" />
-                                                </FormItem>
-                                            )}
-                                        />
-
-                                        <FormField
-                                            control={form.control}
-                                            name="type"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel className="text-black font-semibold uppercase tracking-wider text-[11px]">Charge Type</FormLabel>
-                                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                        <FormControl>
-                                                            <SelectTrigger className="bg-white border-gray-200 text-black rounded-none focus:ring-amber-500 w-full">
-                                                                <SelectValue placeholder="Select type" />
-                                                            </SelectTrigger>
-                                                        </FormControl>
-                                                        <SelectContent className="rounded-none border-gray-200">
-                                                            <SelectItem value="fixed" className="focus:bg-amber-50 focus:text-amber-900 rounded-none cursor-pointer">Fixed (Once per tour)</SelectItem>
-                                                            <SelectItem value="daily" className="focus:bg-amber-50 focus:text-amber-900 rounded-none cursor-pointer">Daily (Per night)</SelectItem>
-                                                        </SelectContent>
-                                                    </Select>
-                                                    <FormDescription className="text-[10px] text-zinc-400 italic">
-                                                        Daily charges are multiplied by the number of tour nights.
-                                                    </FormDescription>
-                                                    <FormMessage className="text-xs" />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-
-                                    <div className="grid grid-cols-2 gap-6">
-                                        <FormField
-                                            control={form.control}
-                                            name="travelerCategory"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel className="text-black font-semibold uppercase tracking-wider text-[11px]">Traveler Category</FormLabel>
-                                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                        <FormControl>
-                                                            <SelectTrigger className="bg-white border-gray-200 text-black rounded-none focus:ring-amber-500 w-full">
-                                                                <SelectValue placeholder="Select category" />
-                                                            </SelectTrigger>
-                                                        </FormControl>
-                                                        <SelectContent className="rounded-none border-gray-200">
-                                                            <SelectItem value="adult" className="focus:bg-amber-50 focus:text-amber-900 rounded-none cursor-pointer">Adult</SelectItem>
-                                                            <SelectItem value="child_6_12" className="focus:bg-amber-50 focus:text-amber-900 rounded-none cursor-pointer">Children (6-12)</SelectItem>
-                                                            <SelectItem value="child_under_6" className="focus:bg-amber-50 focus:text-amber-900 rounded-none cursor-pointer">Children &lt; 6</SelectItem>
-                                                        </SelectContent>
-                                                    </Select>
-                                                    <FormMessage className="text-xs" />
-                                                </FormItem>
-                                            )}
-                                        />
-
-                                        <FormField
-                                            control={form.control}
-                                            name="isIndianNational"
-                                            render={({ field }) => (
-                                                <FormItem className="flex flex-row items-center space-x-2 space-y-0 h-full pt-6">
-                                                    <FormControl>
-                                                        <Checkbox
-                                                            checked={field.value}
-                                                            onCheckedChange={field.onChange}
-                                                            className="border-gray-300 rounded-none shadow-none focus-visible:ring-amber-500"
-                                                        />
-                                                    </FormControl>
-                                                    <FormLabel className="text-sm font-medium text-black cursor-pointer">
-                                                        Indian National
-                                                    </FormLabel>
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-                                </CardContent>
-                            </Card>
+                                <FormField
+                                    control={form.control}
+                                    name="isIndianNational"
+                                    render={({ field }) => (
+                                        <FormItem className="flex flex-row items-center space-x-2 space-y-0 h-full pt-6">
+                                            <FormControl>
+                                                <Checkbox
+                                                    checked={field.value}
+                                                    onCheckedChange={field.onChange}
+                                                    className="border-gray-300 shadow-none focus-visible:ring-amber-500"
+                                                />
+                                            </FormControl>
+                                            <FormLabel className="text-sm font-medium text-black cursor-pointer">
+                                                Indian National
+                                            </FormLabel>
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
 
                             <div className="flex justify-end gap-4 pb-10">
                                 <Button
                                     variant="outline"
                                     type="button"
                                     asChild
-                                    className="text-black border-gray-200 rounded-none hover:bg-gray-50 px-8"
+                                    className="text-black min-w-[100px]"
                                 >
                                     <Link href="/admin/settings">Cancel</Link>
                                 </Button>
                                 <Button
                                     type="submit"
                                     disabled={isPending}
-                                    className="bg-amber-600 hover:bg-amber-700 text-white rounded-none px-8 min-w-[140px]"
+                                    className="bg-amber-600 hover:bg-amber-700 text-white min-w-[150px] font-medium"
                                 >
                                     {isPending ? (
                                         <>
@@ -280,7 +276,7 @@ export function CostForm({ initialData, action, title: pageTitle }: CostFormProp
                                 <Button
                                     type="button"
                                     variant="outline"
-                                    className="bg-white text-xs border-amber-200 hover:bg-amber-100 hover:text-amber-900 justify-start rounded-none h-auto py-3 px-4 flex flex-col items-start gap-1"
+                                    className="bg-white text-xs border-amber-200 hover:bg-amber-100 hover:text-amber-900 justify-start h-auto py-3 px-4 flex flex-col items-start gap-1"
                                     onClick={() => {
                                         form.setValue("title", "SDF - International Adult");
                                         form.setValue("price", 100);
@@ -296,7 +292,7 @@ export function CostForm({ initialData, action, title: pageTitle }: CostFormProp
                                 <Button
                                     type="button"
                                     variant="outline"
-                                    className="bg-white text-xs border-amber-200 hover:bg-amber-100 hover:text-amber-900 justify-start rounded-none h-auto py-3 px-4 flex flex-col items-start gap-1"
+                                    className="bg-white text-xs border-amber-200 hover:bg-amber-100 hover:text-amber-900 justify-start h-auto py-3 px-4 flex flex-col items-start gap-1"
                                     onClick={() => {
                                         form.setValue("title", "SDF - Child (6-12)");
                                         form.setValue("price", 50);
@@ -312,7 +308,7 @@ export function CostForm({ initialData, action, title: pageTitle }: CostFormProp
                                 <Button
                                     type="button"
                                     variant="outline"
-                                    className="bg-white text-xs border-amber-200 hover:bg-amber-100 hover:text-amber-900 justify-start rounded-none h-auto py-3 px-4 flex flex-col items-start gap-1"
+                                    className="bg-white text-xs border-amber-200 hover:bg-amber-100 hover:text-amber-900 justify-start h-auto py-3 px-4 flex flex-col items-start gap-1"
                                     onClick={() => {
                                         form.setValue("title", "SDF - Indian National");
                                         form.setValue("price", 15);

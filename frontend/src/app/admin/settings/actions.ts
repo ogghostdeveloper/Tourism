@@ -2,8 +2,12 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createCost, updateCost, deleteCost } from "@/lib/data/settings";
+import { createCost, updateCost, deleteCost, listCosts as listCostsData } from "@/lib/data/settings";
 import { costSchema } from "./schema";
+
+export async function listCosts(page: number, pageSize: number, search?: string, filters?: any) {
+    return await listCostsData(page, pageSize, search, filters);
+}
 
 export async function createCostAction(formData: FormData) {
     try {
