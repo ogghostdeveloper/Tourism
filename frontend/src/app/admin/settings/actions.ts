@@ -11,7 +11,9 @@ export async function createCostAction(formData: FormData) {
             title: formData.get("title"),
             description: formData.get("description"),
             price: Number(formData.get("price")),
-            isActive: formData.get("isActive") === "true",
+            type: formData.get("type"),
+            isIndianNational: formData.get("isIndianNational") === "true",
+            travelerCategory: formData.get("travelerCategory"),
         };
 
         const validatedData = costSchema.parse(rawData);
@@ -29,7 +31,9 @@ export async function updateCostAction(id: string, formData: FormData) {
             title: formData.get("title"),
             description: formData.get("description"),
             price: Number(formData.get("price")),
-            isActive: formData.get("isActive") === "true",
+            type: formData.get("type"),
+            isIndianNational: formData.get("isIndianNational") === "true",
+            travelerCategory: formData.get("travelerCategory"),
         };
 
         const validatedData = costSchema.parse(rawData);

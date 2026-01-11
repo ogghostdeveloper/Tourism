@@ -2,85 +2,92 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import Link from "next/link";
 import { Cost } from "../schema";
-import { deleteCostAction } from "../actions";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { DataTableRowActions } from "./data-table-row-actions";
 
 export const columns: ColumnDef<Cost>[] = [
     {
         accessorKey: "title",
-        header: "Title",
-    },
-    {
-        accessorKey: "price",
-        header: "Price (USD)",
+        header: "Cost Setting",
         cell: ({ row }) => {
-            const price = parseFloat(row.getValue("price"));
-            return <div className="font-medium">${price.toFixed(2)}</div>;
+            return (
+                <div className="flex flex-col">
+                    <span className="font-semibold text-zinc-900 truncate max-w-[250px]" title={row.getValue("title")}>
+                        {row.getValue("title")}
+                    </span>
+                    <span className="text-[10px] text-zinc-400 font-mono tracking-tight lowercase">
+                        {row.original.description ? (row.original.description.length > 50 ? row.original.description.substring(0, 50) + "..." : row.original.description) : "Global fee setting"}
+                    </span>
+                </div>
+            );
         },
     },
     {
-        accessorKey: "isActive",
-        header: "Status",
+        accessorKey: "price",
+        header: "Price",
         cell: ({ row }) => {
-            const isActive = row.getValue("isActive");
+            const price = parseFloat(row.getValue("price"));
             return (
-                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${isActive ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"}`}>
-                    {isActive ? "Active" : "Inactive"}
-                </span>
+                <div className="flex flex-col">
+                    <span className="text-xs font-bold text-zinc-700">
+                        {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(price)}
+                    </span>
+                    <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">USD Rate</span>
+                </div>
+            );
+        },
+    },
+    {
+        accessorKey: "type",
+        header: "Charge Type",
+        cell: ({ row }) => {
+            const type = row.getValue("type") as string || "fixed";
+            const colors: Record<string, string> = {
+                fixed: "bg-blue-100 text-blue-800 border-blue-200",
+                daily: "bg-amber-100 text-amber-800 border-amber-200",
+            };
+            return (
+                <div className="flex flex-col gap-1">
+                    <span className={`w-fit inline-flex items-center rounded-none px-2 py-0.5 text-[9px] font-bold border uppercase tracking-wider ${colors[type] || "bg-gray-100 text-gray-800"}`}>
+                        {type}
+                    </span>
+                </div>
+            );
+        },
+    },
+    {
+        accessorKey: "travelerCategory",
+        header: "Category",
+        cell: ({ row }) => {
+            const category = row.getValue("travelerCategory") as string || "adult";
+            const labelMap: Record<string, string> = {
+                adult: "Adult",
+                child_6_12: "Child (6-12)",
+                child_under_6: "Child < 6",
+            };
+            return (
+                <div className="flex flex-col">
+                    <span className="text-xs font-bold text-zinc-700">{labelMap[category]}</span>
+                </div>
+            );
+        },
+    },
+    {
+        accessorKey: "isIndianNational",
+        header: "Indian",
+        cell: ({ row }) => {
+            const isIndian = row.getValue("isIndianNational") as boolean;
+            return (
+                <div className="flex flex-col gap-1">
+                    <span className={`w-fit inline-flex items-center rounded-none px-2 py-0.5 text-[9px] font-bold border uppercase tracking-wider ${isIndian ? "bg-orange-100 text-orange-800 border-orange-200" : "bg-zinc-100 text-zinc-600 border-zinc-200"}`}>
+                        {isIndian ? "Indian" : "Intl"}
+                    </span>
+                </div>
             );
         },
     },
     {
         id: "actions",
-        cell: ({ row }) => {
-            const cost = row.original;
-            const router = useRouter();
-
-            const handleDelete = async () => {
-                if (confirm("Are you sure you want to delete this cost?")) {
-                    const result = await deleteCostAction(cost._id!);
-                    if (result.success) {
-                        toast.success(result.message);
-                        router.refresh();
-                    } else {
-                        toast.error(result.message);
-                    }
-                }
-            };
-
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem asChild>
-                            <Link href={`/admin/settings/${cost._id}/edit`} className="flex items-center cursor-pointer">
-                                <Pencil className="mr-2 h-4 w-4" /> Edit
-                            </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={handleDelete} className="text-red-600 cursor-pointer">
-                            <Trash2 className="mr-2 h-4 w-4" /> Delete
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            );
-        },
+        cell: ({ row }) => <DataTableRowActions row={row} />,
     },
 ];

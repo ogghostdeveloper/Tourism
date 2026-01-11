@@ -54,6 +54,7 @@ export const tourSchema = z.object({
     category: z.string().optional(),
     highlights: z.array(z.string()).optional(),
     days: z.array(tourDaySchema),
+    selectedCostIds: z.array(z.string()).default([]),
     createdAt: z.string().optional(),
     updatedAt: z.string().optional(),
 });

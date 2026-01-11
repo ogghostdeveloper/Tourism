@@ -20,14 +20,17 @@ import { generateSlug } from "@/utils/slugGenerator";
 import { Combobox } from "./combobox-wrapper";
 import { DaySection } from "./day-section";
 
+import { MultiSelect } from "@/components/ui/multi-select";
+import { Cost } from "../../settings/schema";
+
 interface TourFormProps {
     initialData?: Tour;
     action: (formData: FormData) => Promise<{ success: boolean; message: string }>;
     title: string;
-    initialGlobalCost?: number;
+    allCosts?: Cost[];
 }
 
-export function TourForm({ initialData, action, title: pageTitle, initialGlobalCost = 0 }: TourFormProps) {
+export function TourForm({ initialData, action, title: pageTitle, allCosts = [] }: TourFormProps) {
     const router = useRouter();
     const [isPending, startTransition] = React.useTransition();
     const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
@@ -51,26 +54,30 @@ export function TourForm({ initialData, action, title: pageTitle, initialGlobalC
         resolver: zodResolver(tourSchema) as any,
         defaultValues: initialData ? {
             ...initialData,
-            price: Number(initialData.price), // Ensure number
+            price: Number(initialData.price),
             priority: initialData.priority ?? 0,
             category: initialData.category ?? "",
             highlights: initialData.highlights ?? [],
             days: initialData.days ?? [],
+            selectedCostIds: initialData.selectedCostIds ?? [],
         } : {
             title: "",
             slug: "",
             description: "",
             image: "",
             duration: "",
-            price: initialGlobalCost || 0,
+            price: 0,
             priority: 0,
             category: "",
             highlights: [],
             days: [],
+            selectedCostIds: [],
         },
     });
 
     const watchedTitle = watch("title");
+    const watchedSelectedCostIds = watch("selectedCostIds") || [];
+    const watchedDays = watch("days") || [];
 
     React.useEffect(() => {
         if (watchedTitle) {
@@ -85,17 +92,26 @@ export function TourForm({ initialData, action, title: pageTitle, initialGlobalC
     });
 
     const calculateTotal = React.useCallback(() => {
-        const currentDays = watch("days");
-        let total = initialGlobalCost; // Start with global cost base
-        // If editing existing tour, we might want to be careful about not doubling up if the price already includes it.
-        // But the requirement is "users can edit... but add together".
-        // The default "price" field is editable.
-        // "Auto Calculate" sums the parts.
+        const currentDays = watch("days") || [];
+        const currentCostIds = watch("selectedCostIds") || [];
 
-        currentDays?.forEach(day => {
+        let total = 0;
+
+        // Add selected global costs
+        currentCostIds.forEach(id => {
+            const cost = allCosts.find(c => c.id === id || c._id === id);
+            if (cost) {
+                if (cost.type === 'daily') {
+                    total += (Number(cost.price) || 0) * currentDays.length;
+                } else {
+                    total += (Number(cost.price) || 0);
+                }
+            }
+        });
+
+        currentDays.forEach(day => {
             if (day.hotelId) {
                 const hotel = hotelOptions.find(h => h.value === day.hotelId);
-                // Ensure number to avoid string concatenation or NaN
                 if (hotel?.price != null) total += Number(hotel.price) || 0;
             }
             day.items?.forEach(item => {
@@ -106,7 +122,7 @@ export function TourForm({ initialData, action, title: pageTitle, initialGlobalC
             });
         });
         return total;
-    }, [watch, hotelOptions, experienceOptions, initialGlobalCost]);
+    }, [watch, hotelOptions, experienceOptions, allCosts]);
 
     // Watch for changes in days to auto-calculate price
     React.useEffect(() => {
@@ -154,6 +170,7 @@ export function TourForm({ initialData, action, title: pageTitle, initialGlobalC
         formData.append("highlights", JSON.stringify(data.highlights || []));
         formData.append("days", JSON.stringify(data.days));
         formData.append("image", data.image);
+        formData.append("selectedCostIds", JSON.stringify(data.selectedCostIds || []));
 
         if (selectedFile) {
             formData.append("imageFile", selectedFile);
@@ -243,29 +260,23 @@ export function TourForm({ initialData, action, title: pageTitle, initialGlobalC
 
 
                     <div className="space-y-2">
-                        <Label className="text-black font-medium">Price (USD)</Label>
-                        <div className="flex gap-2">
-                            <Input
-                                type="number"
-                                {...register("price", { valueAsNumber: true })}
-                                placeholder="0.00"
-                                className="bg-white border-gray-200 text-black font-medium"
-                            />
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => setValue("price", calculateTotal())}
-                                className="whitespace-nowrap bg-white text-black border-gray-200"
-                            >
-                                Auto Calculate
-                            </Button>
-                        </div>
-                        {initialGlobalCost > 0 && (
-                            <p className="text-xs text-amber-600 font-medium">
-                                * Includes ${initialGlobalCost} in global fees (SDF, Visa, etc.)
-                            </p>
-                        )}
-                        {errors.price && <p className="text-xs text-red-500">{errors.price.message}</p>}
+                        <Label className="text-black font-medium">Additional Costs</Label>
+                        <MultiSelect
+                            options={allCosts.map(cost => ({
+                                value: (cost.id || cost._id) as string,
+                                label: `${cost.title} (${cost.type === 'daily' ? 'Daily' : 'Fixed'}: $${cost.price})`
+                            }))}
+                            selected={watchedSelectedCostIds}
+                            onChange={(vals) => {
+                                setValue("selectedCostIds", vals);
+                                // Optional: auto-trigger calculation when selection changes
+                                setValue("price", calculateTotal());
+                            }}
+                            placeholder="Select costs to include..."
+                        />
+                        <p className="text-[10px] text-zinc-500 italic">
+                            These costs are used only for the "Auto Calculate" function below.
+                        </p>
                     </div>
 
                     <div className="space-y-2">
@@ -371,12 +382,10 @@ export function TourForm({ initialData, action, title: pageTitle, initialGlobalC
                             <Plus className="mr-2 h-4 w-4" /> Add Day
                         </Button>
                     </div>
-                </div>
 
-                <div className="flex justify-end pt-4 border-t border-gray-100">
-                    <div className="w-full max-w-sm space-y-2">
+                    <div className="space-y-4 pt-4 border-t border-gray-100">
                         <div className="flex items-center justify-between">
-                            <Label className="text-black font-medium">Total Price (USD)</Label>
+                            <Label className="text-black font-medium text-base">Total Price (USD)</Label>
                             <Button
                                 type="button"
                                 variant="ghost"
@@ -395,11 +404,15 @@ export function TourForm({ initialData, action, title: pageTitle, initialGlobalC
                             type="number"
                             {...register("price", { valueAsNumber: true })}
                             placeholder="0.00"
-                            className="bg-white border-gray-200 text-black text-lg font-semibold"
+                            className="bg-white border-gray-200 text-black font-medium text-lg"
                         />
-                        <p className="text-xs text-gray-500">
-                            Based on sum of hotels and experiences (if prices are set).
-                        </p>
+                        {watchedSelectedCostIds.length > 0 && (
+                            <div className="space-y-1 mt-1">
+                                <p className="text-xs text-amber-600 font-medium">
+                                    * Includes {watchedSelectedCostIds.length} selected global fees based on {watchedDays.length} days
+                                </p>
+                            </div>
+                        )}
                         {errors.price && <p className="text-xs text-red-500">{errors.price.message}</p>}
                     </div>
                 </div>

@@ -15,13 +15,22 @@ const formatDoc = (doc: any) => {
     };
 };
 
-export async function listCosts(page: number = 1, pageSize: number = 10, search?: string) {
+export async function listCosts(page: number = 1, pageSize: number = 10, search?: string, filters?: any) {
     const client = await clientPromise;
     const collection = client.db(DB).collection(COLLECTION);
 
     const match: any = {};
     if (search) {
         match.title = { $regex: search, $options: "i" };
+    }
+
+    // Add support for filters from URL params
+    const f = filters || {};
+    if (f.travelerCategory) {
+        match.travelerCategory = f.travelerCategory;
+    }
+    if (f.isIndianNational) {
+        match.isIndianNational = f.isIndianNational === "true";
     }
 
     const totalItems = await collection.countDocuments(match);

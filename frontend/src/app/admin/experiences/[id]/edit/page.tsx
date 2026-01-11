@@ -1,47 +1,26 @@
-"use client";
-
-import * as React from "react";
-import { use } from "react";
-import { Loader2 } from "lucide-react";
 import { getExperienceById, updateExperience } from "../../actions";
 import { ExperienceForm } from "../../components/experience-form";
+import { notFound } from "next/navigation";
 
-export default function EditExperiencePage({
+export default async function EditExperiencePage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = use(params);
-  const [experience, setExperience] = React.useState<any>(null);
-  const [isLoading, setIsLoading] = React.useState(true);
+  const { id } = await params;
+  const experience = await getExperienceById(id);
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getExperienceById(id);
-        setExperience(data);
-      } catch (error) {
-        // Silent fail, handled by state
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, [id]);
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-      </div>
-    );
+  if (!experience) {
+    notFound();
   }
+
+  const updateExperienceWithId = updateExperience.bind(null, id, null);
 
   return (
     <ExperienceForm
       title="Edit Experience"
       initialData={experience}
-      action={(formData) => updateExperience(id, null, formData)}
+      action={updateExperienceWithId}
     />
   );
 }

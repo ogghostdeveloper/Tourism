@@ -55,7 +55,7 @@ export default async function AdminLayout({
 }) {
   const session = await auth();
 
-  if (!session) {
+  if (!session || (session.user as any)?.role !== "admin") {
     redirect("/login");
   }
 
@@ -110,7 +110,7 @@ export default async function AdminLayout({
           </div>
           <div className="flex items-center gap-4">
             <Link href="/admin/settings">
-              <Button variant="ghost" size="icon" className="hover:bg-gray-100 rounded-full">
+              <Button variant="outline" size="icon" className="hover:bg-gray-100 rounded-full">
                 <span className="sr-only">Settings</span>
                 <Settings className="w-5 h-5 text-gray-500" />
               </Button>

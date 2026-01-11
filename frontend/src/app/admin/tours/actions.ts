@@ -91,6 +91,9 @@ export async function createTourAction(prevState: any, formData: FormData) {
             }
         }
 
+        const selectedCostIdsStr = formData.get("selectedCostIds") as string;
+        const selectedCostIds = JSON.parse(selectedCostIdsStr || "[]");
+
         const tourData: Partial<Tour> = {
             title,
             slug,
@@ -101,6 +104,7 @@ export async function createTourAction(prevState: any, formData: FormData) {
             priority,
             highlights,
             days,
+            selectedCostIds,
             image: imageUrl,
         };
 
@@ -150,6 +154,9 @@ export async function updateTourAction(id: string, prevState: any, formData: For
             }
         }
 
+        const selectedCostIdsStr = formData.get("selectedCostIds") as string;
+        const selectedCostIds = JSON.parse(selectedCostIdsStr || "[]");
+
         const tourData: Partial<Tour> = {
             title,
             slug,
@@ -160,6 +167,7 @@ export async function updateTourAction(id: string, prevState: any, formData: For
             priority,
             highlights,
             days,
+            selectedCostIds,
             image: imageUrl,
         };
 

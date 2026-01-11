@@ -1,6 +1,7 @@
 import { getTourById, updateTourAction } from "../../actions";
 import { notFound } from "next/navigation";
 import { TourForm } from "../../components/tour-form";
+import { getAllCosts } from "@/lib/data/settings";
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -8,7 +9,11 @@ interface PageProps {
 
 export default async function EditTourPage({ params }: PageProps) {
     const { id } = await params;
-    const tour = await getTourById(id);
+
+    const [tour, costs] = await Promise.all([
+        getTourById(id),
+        getAllCosts()
+    ]);
 
     if (!tour) {
         notFound();
@@ -21,6 +26,7 @@ export default async function EditTourPage({ params }: PageProps) {
             initialData={tour}
             title={`Edit Tour: ${tour.title}`}
             action={updateTourWithId}
+            allCosts={costs}
         />
     );
 }

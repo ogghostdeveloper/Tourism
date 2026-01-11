@@ -53,7 +53,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
                     console.log(`[Auth] Login successful for: ${identifier}`);
                     return {
-                        id: user._id,
+                        id: user._id.toString(),
                         name: user.username,
                         email: user.email,
                         role: user.role,
@@ -69,12 +69,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         signIn: "/login",
     },
     callbacks: {
+        async jwt({ token, user }) {
+            if (user) {
+                token.role = (user as any).role;
+                token.id = user.id;
+            }
+            return token;
+        },
+        async session({ session, token }) {
+            if (session.user) {
+                (session.user as any).role = token.role;
+                (session.user as any).id = token.id;
+            }
+            return session;
+        },
         authorized({ auth, request: { nextUrl } }) {
             const isLoggedIn = !!auth?.user;
             const isOnAdmin = nextUrl.pathname.startsWith("/admin");
+            const isAdmin = (auth?.user as any)?.role === "admin";
+
             if (isOnAdmin) {
-                if (isLoggedIn) return true;
-                return false; // Redirect unauthenticated users to login page
+                if (isLoggedIn && isAdmin) return true;
+                return false; // Redirect unauthenticated or non-admin users to login
             }
             return true;
         },

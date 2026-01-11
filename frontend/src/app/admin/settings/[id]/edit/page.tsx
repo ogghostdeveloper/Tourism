@@ -5,13 +5,14 @@ import { updateCostAction } from "../../actions";
 import { CostForm } from "../../components/cost-form";
 
 interface PageProps {
-    params: {
+    params: Promise<{
         id: string;
-    };
+    }>;
 }
 
 export default async function EditCostPage({ params }: PageProps) {
-    const cost = await getCostById(params.id);
+    const { id } = await params;
+    const cost = await getCostById(id);
 
     if (!cost) {
         notFound();
@@ -21,7 +22,7 @@ export default async function EditCostPage({ params }: PageProps) {
         <CostForm
             title="Edit Cost"
             initialData={cost}
-            action={updateCostAction.bind(null, params.id)}
+            action={updateCostAction.bind(null, id)}
         />
     );
 }

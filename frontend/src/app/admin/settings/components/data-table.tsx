@@ -177,14 +177,19 @@ export function SettingsDataTable<TData, TValue>({
 
             setColumnFilters(newFilters);
 
-            const titleFilter = newFilters.find(f => f.id === "title")?.value as string;
-
             const params = new URLSearchParams(searchParams.toString());
-            if (titleFilter) {
-                params.set("title", titleFilter);
-            } else {
-                params.delete("title");
-            }
+
+            // Sync all filters to URL params
+            const filterIds = ["title", "travelerCategory", "isIndianNational"];
+            filterIds.forEach(id => {
+                const filter = newFilters.find(f => f.id === id);
+                if (filter?.value) {
+                    params.set(id, String(filter.value));
+                } else {
+                    params.delete(id);
+                }
+            });
+
             params.set("page", "1");
             router.push(`${pathname}?${params.toString()}`);
         },
@@ -234,7 +239,7 @@ export function SettingsDataTable<TData, TValue>({
                                         <TableHead
                                             key={header.id}
                                             colSpan={header.colSpan}
-                                            className="px-4"
+                                            className="px-4 text-black font-bold uppercase tracking-wider text-[11px]"
                                         >
                                             {header.isPlaceholder
                                                 ? null
