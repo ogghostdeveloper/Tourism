@@ -1,6 +1,5 @@
 "use client";
 
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { Table } from "@tanstack/react-table";
 import { Settings2 } from "lucide-react";
 
@@ -11,6 +10,7 @@ import {
     DropdownMenuContent,
     DropdownMenuLabel,
     DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 export function DataTableViewOptions<TData>({
@@ -20,18 +20,18 @@ export function DataTableViewOptions<TData>({
 }) {
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger asChild className="rounded-none">
                 <Button
                     variant="outline"
                     size="sm"
                     className="ml-auto hidden h-9 lg:flex text-black"
                 >
-                    <Settings2 className="mr-2 h-4 w-4" />
+                    <Settings2 />
                     View
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[150px]">
-                <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+            <DropdownMenuContent align="end" className="w-[150px] rounded-none">
+                <DropdownMenuLabel className="text-black">Toggle columns</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {table
                     .getAllColumns()
@@ -43,7 +43,7 @@ export function DataTableViewOptions<TData>({
                         return (
                             <DropdownMenuCheckboxItem
                                 key={column.id}
-                                className="capitalize text-black"
+                                className="capitalize text-black rounded-none"
                                 checked={column.getIsVisible()}
                                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
                             >

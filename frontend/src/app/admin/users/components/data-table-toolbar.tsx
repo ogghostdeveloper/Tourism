@@ -6,7 +6,7 @@ import { X, Search, Plus, LayoutGrid, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { DataTableViewOptions } from "./data-table-view-options";
+import { DataTableViewOptions } from "@/components/admin/data-table/data-table-view-options";
 
 interface DataTableToolbarProps<TData> {
     table: Table<TData>;

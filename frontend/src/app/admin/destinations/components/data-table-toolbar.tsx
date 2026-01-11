@@ -6,10 +6,10 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DataTableViewOptions } from "./data-table-view-options";
+import { DataTableViewOptions } from "@/components/admin/data-table/data-table-view-options";
 
 import { useEffect, useState } from "react";
-import { DataTableFacetedFilter } from "./data-table-faceted-filter";
+import { DataTableFacetedFilter } from "@/components/admin/data-table/data-table-faceted-filter";
 import { getRegionsForDropdown } from "../actions";
 
 interface DataTableToolbarProps<TData> {

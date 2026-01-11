@@ -27,7 +27,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DataTablePagination } from "./data-table-pagination";
+import { DataTablePagination } from "@/components/admin/data-table/data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { DestinationCard } from "@/app/admin/destinations/components/destination-card";
 
