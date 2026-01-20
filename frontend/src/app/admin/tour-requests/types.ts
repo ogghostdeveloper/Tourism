@@ -41,9 +41,22 @@ export interface ItineraryItem {
         duration: string;
         image?: string;
     }; // Denormalized for display
+    destinationId?: string; // MongoDB ObjectId of destination (deprecated - use destinationFromId/ToId)
+    destination?: {
+        name: string;
+        image?: string;
+    }; // Denormalized for display
+    destinationFromId?: string; // MongoDB ObjectId of "from" destination
+    destinationToId?: string; // MongoDB ObjectId of "to" destination
+    hotelId?: string; // MongoDB ObjectId of hotel
+    hotel?: {
+        name: string;
+        image?: string;
+    }; // Denormalized for display
     travel?: {
         from: string;
         to: string;
         duration: number; // in hours
     };
 }
+

@@ -9,8 +9,10 @@ interface DayBuilderProps {
     day: DayItinerary;
     totalHours: number;
     isValid: boolean;
+    hasHotel: boolean;
     onAddExperience: () => void;
     onAddTravel: () => void;
+    onAddHotel: () => void;
     onRemoveItem: (itemId: string) => void;
     onReorder: (items: ItineraryItem[]) => void;
 }
@@ -19,8 +21,10 @@ export function DayBuilder({
     day,
     totalHours,
     isValid,
+    hasHotel,
     onAddExperience,
     onAddTravel,
+    onAddHotel,
     onRemoveItem,
     onReorder
 }: DayBuilderProps) {
@@ -74,6 +78,11 @@ export function DayBuilder({
                                             <h4 className="font-bold text-sm uppercase truncate">{item.experience?.title}</h4>
                                             <p className="text-xs text-gray-500 truncate">{item.experience?.duration || "Flexible Duration"}</p>
                                         </>
+                                    ) : item.hotelId ? (
+                                        <>
+                                            <h4 className="font-bold text-sm uppercase truncate">{item.hotel?.name}</h4>
+                                            <p className="text-xs text-gray-500 truncate">Accommodation</p>
+                                        </>
                                     ) : (
                                         <>
                                             <h4 className="font-bold text-sm uppercase flex items-center gap-2">
@@ -107,18 +116,36 @@ export function DayBuilder({
                 )}
 
                 {/* Buttons */}
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100">
+                <div className="grid grid-cols-3 gap-4 pt-4 border-t border-gray-100">
                     <button
                         onClick={onAddExperience}
-                        className="flex items-center justify-center gap-2 py-3 border border-dashed border-amber-200 bg-amber-50/30 text-amber-700 rounded hover:bg-amber-50 transition-colors text-xs font-bold uppercase tracking-wider"
+                        disabled={hasHotel}
+                        className={cn(
+                            "flex items-center justify-center gap-2 py-3 border border-dashed border-amber-200 bg-amber-50/30 text-amber-700 rounded hover:bg-amber-50 transition-colors text-xs font-bold uppercase tracking-wider",
+                            hasHotel && "opacity-50 cursor-not-allowed"
+                        )}
                     >
-                        <Plus className="w-4 h-4" /> Add Experience
+                        <Plus className="w-4 h-4" /> Activity
                     </button>
                     <button
                         onClick={onAddTravel}
-                        className="flex items-center justify-center gap-2 py-3 border border-dashed border-blue-200 bg-blue-50/30 text-blue-700 rounded hover:bg-blue-50 transition-colors text-xs font-bold uppercase tracking-wider"
+                        disabled={hasHotel}
+                        className={cn(
+                            "flex items-center justify-center gap-2 py-3 border border-dashed border-blue-200 bg-blue-50/30 text-blue-700 rounded hover:bg-blue-50 transition-colors text-xs font-bold uppercase tracking-wider",
+                            hasHotel && "opacity-50 cursor-not-allowed"
+                        )}
                     >
-                        <Plus className="w-4 h-4" /> Add Travel
+                        <Plus className="w-4 h-4" /> Move to...
+                    </button>
+                    <button
+                        onClick={onAddHotel}
+                        disabled={hasHotel}
+                        className={cn(
+                            "flex items-center justify-center gap-2 py-3 border border-dashed border-purple-200 bg-purple-50/30 text-purple-700 rounded hover:bg-purple-50 transition-colors text-xs font-bold uppercase tracking-wider",
+                            hasHotel && "opacity-50 cursor-not-allowed"
+                        )}
+                    >
+                        <Plus className="w-4 h-4" /> Hotel
                     </button>
                 </div>
             </div>

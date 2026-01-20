@@ -9,6 +9,8 @@ export default async function PlanMyTripPage() {
             packages={data.packages}
             destinations={data.destinations}
             experiences={data.experiences}
+            hotels={data.hotels}
+            costs={data.costs}
         />
     );
 }

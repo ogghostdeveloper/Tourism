@@ -11,7 +11,12 @@ export const experienceSchema = z.object({
   difficulty: z.enum(["Easy", "Moderate", "Challenging"]).optional(),
   coordinates: z.tuple([z.number(), z.number()]).optional(),
   destinationSlug: z.string().optional(),
+  destinations: z.array(z.string()).optional(),
   gallery: z.array(z.string()).optional(),
+  price: z.number().optional(),
+  priority: z.number().optional(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
 });
 
 export type Experience = z.infer<typeof experienceSchema>;

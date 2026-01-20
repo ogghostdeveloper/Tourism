@@ -10,6 +10,8 @@ import { TourRequestForm } from "./TourRequestForm";
 import { Tour } from "../../tours/schema";
 import { Destination } from "../../destinations/schema";
 import { Experience } from "../../experiences/schema";
+import { Hotel } from "../../../admin/hotels/schema";
+import { Cost } from "../../../admin/settings/schema";
 
 type PlanningStep = "mode_selection" | "package_list" | "custom_builder" | "inquiry_form";
 
@@ -17,9 +19,17 @@ interface PlanMyTripPageProps {
     packages: Tour[];
     destinations: Destination[];
     experiences: Experience[];
+    hotels: Hotel[];
+    costs: Cost[];
 }
 
-export default function PlanMyTripClient(props: PlanMyTripPageProps) {
+export default function PlanMyTripClient({
+    packages = [],
+    destinations = [],
+    experiences = [],
+    hotels = [],
+    costs = []
+}: PlanMyTripPageProps) {
     const [step, setStep] = useState<PlanningStep>("mode_selection");
     const [selectedTour, setSelectedTour] = useState<Tour | null>(null);
 
@@ -155,7 +165,7 @@ export default function PlanMyTripClient(props: PlanMyTripPageProps) {
                         ) : step === "package_list" ? (
                             <div className="py-24">
                                 <PackageSelection
-                                    packages={props.packages}
+                                    packages={packages}
                                     onBack={() => setStep("mode_selection")}
                                     onSelect={handleTourSelect}
                                 />
@@ -163,8 +173,10 @@ export default function PlanMyTripClient(props: PlanMyTripPageProps) {
                         ) : step === "custom_builder" ? (
                             <div className="py-24">
                                 <CustomItineraryBuilder
-                                    experiences={props.experiences}
-                                    destinations={props.destinations}
+                                    experiences={experiences}
+                                    destinations={destinations}
+                                    hotels={hotels}
+                                    costs={costs}
                                     onBack={() => setStep("mode_selection")}
                                 />
                             </div>

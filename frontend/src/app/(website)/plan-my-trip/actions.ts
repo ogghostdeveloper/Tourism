@@ -8,18 +8,27 @@ import { Tour } from "../tours/schema";
 import { Destination } from "../destinations/schema";
 import { Experience } from "../experiences/schema";
 
+import * as hotelDb from "@/lib/data/hotels";
+import { Hotel } from "../../admin/hotels/schema";
+import { Cost } from "../../admin/settings/schema";
+import * as settingsDb from "@/lib/data/settings";
+
 export interface PlanMyTripData {
     packages: Tour[];
     destinations: Destination[];
     experiences: Experience[];
+    hotels: Hotel[];
+    costs: Cost[];
 }
 
 export async function getPlanMyTripData(): Promise<PlanMyTripData> {
     try {
-        const [allTours, allDestinations, allExperiences] = await Promise.all([
+        const [allTours, allDestinations, allExperiences, allHotels, allCosts] = await Promise.all([
             tourDb.getAllTours(),
             destinationDb.getAllDestinations(),
-            experienceDb.getAllExperiences()
+            experienceDb.getAllExperiences(),
+            hotelDb.getAllHotels(),
+            settingsDb.getAllCosts()
         ]);
 
         // Filter packages if needed (e.g. only featured or specific category)
@@ -31,7 +40,9 @@ export async function getPlanMyTripData(): Promise<PlanMyTripData> {
         return {
             packages: finalPackages,
             destinations: allDestinations as Destination[],
-            experiences: allExperiences as Experience[]
+            experiences: allExperiences as Experience[],
+            hotels: allHotels as Hotel[],
+            costs: allCosts as Cost[]
         };
 
     } catch (error) {
@@ -39,7 +50,9 @@ export async function getPlanMyTripData(): Promise<PlanMyTripData> {
         return {
             packages: [],
             destinations: [],
-            experiences: []
+            experiences: [],
+            hotels: [],
+            costs: []
         };
     }
 }

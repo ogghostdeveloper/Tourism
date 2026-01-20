@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 
 interface TravelSelectorProps {
     destinations: Destination[];
-    onConfirm: (data: { from: string; to: string; duration: number }) => void;
+    onConfirm: (data: { fromId: string; toId: string; from: string; to: string; duration: number }) => void;
     onCancel: () => void;
 }
 
@@ -37,7 +37,13 @@ export function TravelSelector({ destinations, onConfirm, onCancel }: TravelSele
         if (from && to) {
             const fromName = destinations.find(d => d._id === from)?.name || "";
             const toName = destinations.find(d => d._id === to)?.name || "";
-            onConfirm({ from: fromName, to: toName, duration });
+            onConfirm({
+                fromId: from,
+                toId: to,
+                from: fromName,
+                to: toName,
+                duration
+            });
         }
     };
 
