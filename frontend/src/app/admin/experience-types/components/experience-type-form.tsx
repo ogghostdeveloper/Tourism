@@ -104,7 +104,7 @@ export function ExperienceTypeForm({ initialData, action, title, isReadOnly = fa
 
                     <div className="grid md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label htmlFor="displayOrder" className="text-black">Display Order</Label>
+                            <Label htmlFor="displayOrder" className="text-black">Priority <span className="text-xs text-gray-500 font-normal">(Higher Value = Higher Priority)</span></Label>
                             <Input
                                 id="displayOrder"
                                 name="displayOrder"

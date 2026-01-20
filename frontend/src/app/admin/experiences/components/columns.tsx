@@ -93,7 +93,7 @@ export const columns: ColumnDef<Experience>[] = [
       return (
         <div className="flex flex-col">
           <span className="text-xs font-bold text-zinc-700">{priority ?? "-"}</span>
-          <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Rank</span>
+          <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Value</span>
         </div>
       );
     },

@@ -57,7 +57,7 @@ export function ExperienceTypeCard({ experienceType, showActionsOnClick }: Exper
                                         Priority: {experienceType.displayOrder}
                                     </span>
                                 </div>
-                                <span className="text-[10px] text-zinc-400 uppercase font-bold tracking-widest mt-0.5 ml-4.5">Sort Order</span>
+                                <span className="text-[10px] text-zinc-400 uppercase font-bold tracking-widest mt-0.5 ml-4.5">Order</span>
                             </div>
                         </div>
                     </div>

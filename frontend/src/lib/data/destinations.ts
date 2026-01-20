@@ -31,7 +31,7 @@ export async function listDestinations(page: number = 1, pageSize: number = 10, 
 
     const items = await collection
         .find(query)
-        .sort({ priority: 1, name: 1 })
+        .sort({ priority: -1, name: 1 })
         .skip(skip)
         .limit(pageSize)
         .toArray();
@@ -51,7 +51,7 @@ export async function getAllDestinations() {
     const client = await clientPromise;
     const items = await client.db(DB).collection<Destination>(COLLECTION)
         .find({})
-        .sort({ priority: 1, name: 1 })
+        .sort({ priority: -1, name: 1 })
         .toArray();
     return items.map(formatDoc);
 }

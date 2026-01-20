@@ -280,7 +280,7 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
                     </div>
 
                     <div className="space-y-2">
-                        <Label className="text-black font-medium">Priority (Lower = Higher Priority)</Label>
+                        <Label className="text-black font-medium">Priority <span className="text-xs text-gray-500 font-normal">(Higher Value = Higher Priority)</span></Label>
                         <Input
                             type="number"
                             {...register("priority", { valueAsNumber: true })}

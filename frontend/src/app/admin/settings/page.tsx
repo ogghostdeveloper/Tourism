@@ -95,11 +95,6 @@ export default function SettingsPage({ searchParams }: SettingsPageProps) {
             <SettingsDataTable
                 columns={columns}
                 data={costs}
-                pageCount={pageData.pageCount}
-                pagination={{
-                    pageIndex: pageData.pageIndex,
-                    pageSize: pageData.pageSize,
-                }}
                 view={view}
                 onViewChange={handleViewChange}
                 isLoading={isLoading}

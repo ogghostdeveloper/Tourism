@@ -37,7 +37,7 @@ export async function listTours(page: number = 1, pageSize: number = 10, categor
 
     const items = await collection
         .find(query)
-        .sort({ title: 1 })
+        .sort({ priority: -1, title: 1 })
         .skip(skip)
         .limit(pageSize)
         .toArray();
@@ -73,7 +73,7 @@ export async function getAllTours() {
     const client = await clientPromise;
     const items = await client.db(DB).collection<Tour>(COLLECTION)
         .find({})
-        .sort({ title: 1 })
+        .sort({ priority: -1, title: 1 })
         .toArray();
     return items.map(formatDoc);
 }

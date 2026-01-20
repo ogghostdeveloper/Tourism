@@ -217,7 +217,7 @@ export function DestinationForm({ initialData, action, title, isReadOnly = false
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="priority" className="text-black">Priority</Label>
+                            <Label htmlFor="priority" className="text-black">Priority <span className="text-xs text-gray-500 font-normal">(Higher Value = Higher Priority)</span></Label>
                             <Input
                                 id="priority"
                                 name="priority"

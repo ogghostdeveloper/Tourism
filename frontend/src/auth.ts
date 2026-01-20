@@ -1,9 +1,23 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { CredentialsSignin } from "next-auth";
 import { getUserByEmail } from "./lib/data/users";
 import bcrypt from "bcryptjs";
 
 export const runtime = "nodejs";
+
+// Custom error classes for better error handling
+class UserNotFoundError extends CredentialsSignin {
+    code = "user_not_found";
+}
+
+class InvalidPasswordError extends CredentialsSignin {
+    code = "invalid_password";
+}
+
+class AccountSetupIncompleteError extends CredentialsSignin {
+    code = "account_setup_incomplete";
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
     providers: [
@@ -33,12 +47,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
                     if (!user) {
                         console.error(`[Auth] User not found: ${identifier}`);
-                        return null;
+                        throw new UserNotFoundError();
                     }
 
                     if (!user.passwordHash) {
                         console.error(`[Auth] User has no password hash: ${identifier}`);
-                        return null;
+                        throw new AccountSetupIncompleteError();
                     }
 
                     const passwordMatch = await bcrypt.compare(
@@ -48,7 +62,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
                     if (!passwordMatch) {
                         console.error(`[Auth] Password mismatch for: ${identifier}`);
-                        return null;
+                        throw new InvalidPasswordError();
                     }
 
                     console.log(`[Auth] Login successful for: ${identifier}`);
@@ -60,7 +74,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                     };
                 } catch (error) {
                     console.error("[Auth] Error during authorization:", error);
-                    return null;
+                    // Re-throw CredentialsSignin errors so NextAuth can handle them properly
+                    if (error instanceof CredentialsSignin) {
+                        throw error;
+                    }
+                    // For any other errors, throw a generic error
+                    throw new Error("AuthorizationError");
                 }
             },
         }),

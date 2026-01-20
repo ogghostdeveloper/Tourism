@@ -83,7 +83,7 @@ export async function listHotels(page: number = 1, pageSize: number = 10, search
 
     const pipeline = [
         ...getHotelLookupPipeline(match),
-        { $sort: { name: 1 } as const },
+        { $sort: { priority: -1, name: 1 } as const },
         { $skip: skip },
         { $limit: pageSize }
     ];

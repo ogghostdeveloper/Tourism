@@ -121,7 +121,7 @@ export async function listExperiences(
 
     const pipeline = [
         ...getExperienceLookupPipeline(query),
-        { $sort: { createdAt: -1 } as const },
+        { $sort: { priority: -1, createdAt: -1 } as const },
         { $skip: skip },
         { $limit: pageSize }
     ];

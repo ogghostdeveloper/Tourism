@@ -33,7 +33,7 @@ export async function listExperienceTypes(page: number = 1, pageSize: number = 1
 
     const items = await collection
         .find(query)
-        .sort({ displayOrder: 1, createdAt: -1 })
+        .sort({ displayOrder: -1, createdAt: -1 })
         .skip(skip)
         .limit(pageSize)
         .toArray();
@@ -68,7 +68,7 @@ export async function getAllExperienceTypes() {
     const client = await clientPromise;
     const items = await client.db(DB).collection<ExperienceType>(COLLECTION)
         .find({})
-        .sort({ displayOrder: 1, title: 1 })
+        .sort({ displayOrder: -1, title: 1 })
         .toArray();
     return items.map(formatDoc);
 }
