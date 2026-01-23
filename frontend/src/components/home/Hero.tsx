@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowDown } from "lucide-react";
 import Link from "next/link";
 
 export function Hero() {
@@ -19,7 +18,7 @@ export function Hero() {
           className="w-full h-full object-cover"
         >
           <source
-            src="/videos/LandingHero.mp4"
+            src="/videos/marketing_video.mp4"
             type="video/mp4"
           />
           Your browser does not support the video tag.

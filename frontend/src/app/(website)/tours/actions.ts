@@ -16,13 +16,14 @@ export async function getAllTours(): Promise<Tour[]> {
   }
 }
 
-export async function getFeaturedTours(): Promise<Tour[]> {
+export async function getTopPriorityTours(limit: number = 5): Promise<Tour[]> {
   try {
     const all = await tourDb.getAllTours();
-    return all.filter((tour: any) => tour.featured) as Tour[];
+    // tourDb.getAllTours() already sorts by { priority: -1, title: 1 }
+    return all.slice(0, limit) as Tour[];
   } catch (error) {
-    console.error("Error fetching featured tours:", error);
-    throw new Error("Failed to fetch featured tours");
+    console.error("Error fetching top priority tours:", error);
+    throw new Error("Failed to fetch top priority tours");
   }
 }
 
