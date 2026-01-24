@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { ExperienceType } from "@/app/admin/experience-types/schema";
 
@@ -10,7 +10,7 @@ export function ExperienceTypes({ experienceTypes }: { experienceTypes: Experien
     const showcaseExperiences = experienceTypes.slice(0, 3);
 
     return (
-        <section className="py-24 md:py-32 bg-white border-t border-black/5 relative overflow-hidden">
+        <section className="py-24 md:py-40 bg-white border-t border-black/5 relative overflow-hidden">
             {/* Background Decorative ID */}
             <div className="absolute top-0 right-12 font-mono text-[15vw] opacity-[0.03] select-none pointer-events-none font-bold uppercase tracking-tighter">
                 Intel
@@ -29,7 +29,7 @@ export function ExperienceTypes({ experienceTypes }: { experienceTypes: Experien
                 // curate your experience
                         </span>
                         <h2 className="text-5xl md:text-7xl font-light text-black tracking-tighter leading-tight uppercase">
-                            Experience <span className="italic font-serif normal-case text-amber-600">Types</span>
+                            Why <span className="italic font-serif normal-case text-amber-600">Bhutan?</span>
                         </h2>
                     </motion.div>
 
@@ -50,7 +50,7 @@ export function ExperienceTypes({ experienceTypes }: { experienceTypes: Experien
                 </div>
 
                 <div className="space-y-20">
-                    {showcaseExperiences.map((experience, index) => (
+                    {experienceTypes.map((experience, index) => (
                         <motion.div
                             key={index}
                             initial={{ opacity: 0, y: 40 }}
@@ -63,7 +63,7 @@ export function ExperienceTypes({ experienceTypes }: { experienceTypes: Experien
                             <div
                                 className="w-full md:w-1/2"
                             >
-                                <Link href={`/experiences?category=${encodeURIComponent(experience.title)}`} className="block group relative bg-neutral-100 border border-black/10 hover:border-amber-600/50 transition-all duration-700 rounded-sm overflow-hidden">
+                                <Link href={`/experiences?category=${encodeURIComponent(experience.title)}`} className="block group relative bg-neutral-100 border border-black/10 hover:border-amber-600/50 transition-all duration-700 rounded-xs overflow-hidden">
                                     {/* Image Container with Reveal */}
                                     <div className="aspect-4/3 overflow-hidden relative">
                                         <img
@@ -76,8 +76,8 @@ export function ExperienceTypes({ experienceTypes }: { experienceTypes: Experien
                                             <span className="bg-white/80 backdrop-blur-md px-3 py-1 font-mono text-[9px] tracking-widest border border-black/10 text-black">
                                                 TYPE-{index.toString().padStart(2, '0')}
                                             </span>
-                                            <div className="w-8 h-8 rounded-full bg-black/10 backdrop-blur-md border border-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0">
-                                                <ArrowRight className="w-4 h-4 text-black" />
+                                            <div className="w-12 h-12 rounded-full border border-black/10 hidden group-hover:flex items-center justify-center group-hover:border-amber-500 transition-colors">
+                                                <ArrowUpRight className="w-5 h-5 text-black transition-transform group-hover:translate-x-1 group-hover:text-amber-500 group-hover:-translate-y-1" />
                                             </div>
                                         </div>
                                     </div>
@@ -86,7 +86,7 @@ export function ExperienceTypes({ experienceTypes }: { experienceTypes: Experien
 
                             <div className="w-full md:w-1/2">
                                 <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.3em] mb-4 block">
-                            // Priority Level: High
+                            // Experience Type
                                 </span>
                                 <h3 className="text-4xl md:text-5xl font-light mb-6 text-black tracking-tight leading-tight">
                                     {experience.title}

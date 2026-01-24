@@ -17,8 +17,8 @@ export const experienceSchema = z.object({
   endDate: z.string().nullable().optional(),
   priority: z.number().optional(),
   price: z.number().optional(),
-  createdAt: z.string().optional(),
-  updatedAt: z.string().optional(),
+  createdAt: z.union([z.string(), z.date(), z.null()]).optional(),
+  updatedAt: z.union([z.string(), z.date(), z.null()]).optional(),
 });
 
 export type Experience = z.infer<typeof experienceSchema>;

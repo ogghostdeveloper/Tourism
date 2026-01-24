@@ -8,8 +8,8 @@ export const experienceTypeSchema = z.object({
     description: z.string().min(1, "Description is required"),
     image: z.string().min(1, "Image is required"),
     displayOrder: z.number().default(0),
-    createdAt: z.string().optional(),
-    updatedAt: z.string().optional(),
+    createdAt: z.union([z.string(), z.date(), z.null()]).optional(),
+    updatedAt: z.union([z.string(), z.date(), z.null()]).optional(),
 });
 
 export type ExperienceType = z.infer<typeof experienceTypeSchema>;

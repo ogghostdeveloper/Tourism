@@ -22,7 +22,7 @@ export function HotelCard({ hotel, index }: HotelCardProps) {
             transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
         >
             <Link href={`/hotels/${hotel.slug}`}>
-                <div className="group relative block aspect-4/5 overflow-hidden rounded-sm border border-black/5 bg-neutral-100 pointer-events-auto cursor-pointer">
+                <div className="group relative block aspect-4/5 overflow-hidden rounded-xs border border-black/5 bg-neutral-100 pointer-events-auto cursor-pointer">
                     {/* Image Layer */}
                     <img
                         src={hotel.image}

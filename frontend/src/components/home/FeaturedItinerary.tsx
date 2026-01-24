@@ -75,7 +75,7 @@ export function FeaturedItinerary({ itineraries }: FeaturedItineraryProps) {
                                         initial={{ opacity: 0 }}
                                         whileInView={{ opacity: 1 }}
                                         transition={{ duration: 0.8, delay: 0.4 }}
-                                        className="text-lg md:text-xl text-gray-300 leading-relaxed mb-12 font-light max-w-2xl italic font-serif"
+                                        className="text-lg md:text-xl text-gray-300 leading-relaxed mb-12 font-light max-w-2xl italic"
                                     >
                                         "{itinerary.description}"
                                     </motion.p>
@@ -88,7 +88,7 @@ export function FeaturedItinerary({ itineraries }: FeaturedItineraryProps) {
                                     >
                                         <Link
                                             href={`/tours/${itinerary.slug}`}
-                                            className="group flex items-center gap-6 bg-white text-black px-12 py-5 text-[10px] font-mono uppercase tracking-[0.4em] hover:bg-amber-500 hover:text-white transition-all duration-500 shadow-2xl relative overflow-hidden"
+                                            className="group flex items-center gap-6 bg-white text-black px-12 py-5 text-[10px] font-mono text-xs uppercase tracking-[0.2em] hover:bg-amber-500 hover:text-white transition-all duration-500 shadow-2xl relative overflow-hidden"
                                         >
                                             <span className="relative z-10">Explore Itinerary</span>
                                             <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform relative z-10" />

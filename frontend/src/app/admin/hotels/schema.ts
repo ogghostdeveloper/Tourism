@@ -21,8 +21,8 @@ export const hotelSchema = z.object({
   gallery: z.array(z.string()).optional(),
   priority: z.number().optional(),
   price: z.number().optional(),
-  createdAt: z.string().optional(),
-  updatedAt: z.string().optional(),
+  createdAt: z.union([z.string(), z.date(), z.null()]).optional(),
+  updatedAt: z.union([z.string(), z.date(), z.null()]).optional(),
 });
 
 export type Hotel = z.infer<typeof hotelSchema>;

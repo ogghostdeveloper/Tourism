@@ -16,7 +16,7 @@ export function DestinationCard({ destination, index }: DestinationCardProps) {
             className="group block relative"
         >
             {/* Image Container */}
-            <div className="relative aspect-16/10 overflow-hidden rounded-sm bg-neutral-100 border border-black/5 mb-8">
+            <div className="relative aspect-16/10 overflow-hidden rounded-xs bg-neutral-100 border border-black/5 mb-8">
                 <img
                     src={destination.image}
                     alt={destination.name}
@@ -40,7 +40,7 @@ export function DestinationCard({ destination, index }: DestinationCardProps) {
                     </h2>
                 </div>
                 <div className="w-12 h-12 rounded-full border border-black/10 flex items-center justify-center group-hover:border-amber-500 transition-colors">
-                    <ArrowUpRight className="w-5 h-5 text-black transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                    <ArrowUpRight className="w-5 h-5 text-black transition-transform group-hover:text-amber-500 group-hover:translate-x-1 group-hover:-translate-y-1" />
                 </div>
             </div>
 

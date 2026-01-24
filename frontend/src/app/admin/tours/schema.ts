@@ -55,8 +55,8 @@ export const tourSchema = z.object({
     highlights: z.array(z.string()).optional(),
     days: z.array(tourDaySchema),
     selectedCostIds: z.array(z.string()).default([]),
-    createdAt: z.string().optional(),
-    updatedAt: z.string().optional(),
+    createdAt: z.union([z.string(), z.date(), z.null()]).optional(),
+    updatedAt: z.union([z.string(), z.date(), z.null()]).optional(),
 });
 
 export type Tour = z.infer<typeof tourSchema>;

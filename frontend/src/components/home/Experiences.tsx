@@ -9,26 +9,53 @@ import { ExperienceCard } from "@/components/common/ExperienceCard";
 
 import {
   Carousel,
+  CarouselApi,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import * as React from "react";
 
 interface ExperiencesProps {
   experiences: any[]; // Use any or specific type if preferred
 }
 
 export function Experiences({ experiences }: ExperiencesProps) {
+  const [api, setApi] = React.useState<CarouselApi>();
+
+  React.useEffect(() => {
+    if (!api) return;
+
+    const interval = setInterval(() => {
+      api.scrollPrev();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [api]);
+
   if (!experiences || experiences.length === 0) return null;
 
   return (
-    <section className="py-40 bg-white text-black relative overflow-hidden border-t border-black/5">
-      {/* Decorative Background Text */}
-      <div className="absolute top-0 left-0 opacity-[0.02] select-none pointer-events-none">
-        <span className="text-[30vw] font-bold uppercase leading-none tracking-tighter text-black">
-          Explore
-        </span>
+    <section className="py-40 bg-white text-black relative overflow-hidden">
+      {/* Decorative Background Text - Seamless Loop (Right to Left) */}
+      <div className="absolute top-0 left-0 w-full overflow-hidden opacity-[0.03] select-none pointer-events-none">
+        <motion.div
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{
+            duration: 40,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+          className="flex whitespace-nowrap"
+        >
+          <span className="text-[25vw] font-bold uppercase leading-none tracking-tighter block pr-20 text-black">
+            Explore
+          </span>
+          <span className="text-[25vw] font-bold uppercase leading-none tracking-tighter block pr-20 text-black">
+            Explore
+          </span>
+        </motion.div>
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
@@ -47,7 +74,7 @@ export function Experiences({ experiences }: ExperiencesProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-5xl md:text-7xl font-light tracking-tighter leading-tight"
+              className="text-5xl md:text-7xl font-light tracking-tighter leading-tight uppercase"
             >
               Curated <span className="italic font-serif normal-case text-amber-600">Experiences</span>
             </motion.h3>
@@ -73,6 +100,7 @@ export function Experiences({ experiences }: ExperiencesProps) {
             align: "start",
             loop: true,
           }}
+          setApi={setApi}
           className="w-full"
         >
           <CarouselContent className="-ml-8">

@@ -9,8 +9,8 @@ export const destinationSchema = z.object({
   region: z.string(),
   coordinates: z.tuple([z.number(), z.number()]).optional(),
   priority: z.number().default(99),
-  createdAt: z.string().optional(),
-  updatedAt: z.string().optional(),
+  createdAt: z.union([z.string(), z.date(), z.null()]).optional(),
+  updatedAt: z.union([z.string(), z.date(), z.null()]).optional(),
 });
 
 export type Destination = z.infer<typeof destinationSchema>;

@@ -20,7 +20,7 @@ export interface ExperienceCardProps {
 
 export function ExperienceCard({ experience, index, disableLink }: ExperienceCardProps) {
     const CardContent = (
-        <div className="group relative block aspect-4/5 overflow-hidden rounded-sm border border-black/5 bg-neutral-100 pointer-events-auto cursor-pointer">
+        <div className="group relative block aspect-4/5 overflow-hidden rounded-xs border border-black/5 bg-neutral-100 pointer-events-auto cursor-pointer">
             {/* Image Layer */}
             <img
                 src={experience.image}

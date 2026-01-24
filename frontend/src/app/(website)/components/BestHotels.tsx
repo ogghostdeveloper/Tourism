@@ -7,24 +7,53 @@ import { HotelCard } from "@/components/common/HotelCard";
 
 import {
   Carousel,
+  CarouselApi,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import * as React from "react";
 
 interface BestHotelsProps {
   hotels: Hotel[];
 }
 
 export function BestHotels({ hotels }: BestHotelsProps) {
+  const [api, setApi] = React.useState<CarouselApi>();
+
+  React.useEffect(() => {
+    if (!api) return;
+
+    const interval = setInterval(() => {
+      api.scrollPrev();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [api]);
+
   if (!hotels || hotels.length === 0) return null;
 
   return (
     <section className="py-24 md:py-32 bg-white border-t border-black/5 relative overflow-hidden">
-      {/* Background Decorative ID */}
-      <div className="absolute top-0 right-12 font-mono text-[15vw] opacity-[0.03] select-none pointer-events-none font-bold uppercase tracking-tighter">
-        Stay
+      {/* Decorative Background Text - Seamless Loop (Right to Left) */}
+      <div className="absolute top-0 left-0 w-full overflow-hidden opacity-[0.03] select-none pointer-events-none">
+        <motion.div
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{
+            duration: 40,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="flex whitespace-nowrap"
+        >
+          <span className="text-[25vw] font-bold uppercase leading-none tracking-tighter block pr-20 text-black">
+            Stay
+          </span>
+          <span className="text-[25vw] font-bold uppercase leading-none tracking-tighter block pr-20 text-black">
+            Stay
+          </span>
+        </motion.div>
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
@@ -64,6 +93,7 @@ export function BestHotels({ hotels }: BestHotelsProps) {
             align: "start",
             loop: true,
           }}
+          setApi={setApi}
           className="w-full"
         >
           <CarouselContent className="-ml-8">

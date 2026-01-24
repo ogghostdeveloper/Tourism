@@ -49,8 +49,9 @@ export async function getExperiencesByCategory(category: string): Promise<Experi
 
 export async function getFeaturedExperiences(limit: number = 3): Promise<Experience[]> {
   try {
-    const data = await db.listExperiences(1, limit);
-    return data.items as Experience[];
+    const data = await db.listExperiences(1, 100);
+    const sorted = [...data.items].sort((a, b) => (b.priority || 0) - (a.priority || 0));
+    return sorted.slice(0, limit) as Experience[];
   } catch (error) {
     console.error("Error fetching featured experiences:", error);
     return [];

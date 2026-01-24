@@ -11,15 +11,16 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export default async function ExperiencePage({ params }: PageProps) {
+export default async function ExperienceDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const experience = await getExperienceBySlug(slug);
+  const [experience, allExperiences] = await Promise.all([
+    getExperienceBySlug(slug),
+    getAllExperiences()
+  ]);
 
   if (!experience) {
     notFound();
   }
-
-  const allExperiences = await getAllExperiences();
 
   return (
     <div className="min-h-screen bg-white text-black">
