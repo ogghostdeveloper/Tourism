@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 import { parseISO, format } from "date-fns";
-import { generateSlug } from "@/utils/slugGenerator";
+import { generateSlug } from "@/utils/slug-generator";
 import { ImageUpload } from "@/components/admin/image-upload";
 import { GalleryUpload } from "@/components/admin/gallery-upload";
 

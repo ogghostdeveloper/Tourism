@@ -14,7 +14,7 @@ import { AnimatedArrowLeft, type AnimatedArrowLeftHandle } from "@/components/ui
 import { ImageUpload } from "@/components/admin/image-upload";
 import { GalleryUpload } from "@/components/admin/gallery-upload";
 import { cn } from "@/lib/utils";
-import { generateSlug } from "@/utils/slugGenerator";
+import { generateSlug } from "@/utils/slug-generator";
 import { getAllDestinations } from "@/app/admin/destinations/actions";
 import {
     Popover,

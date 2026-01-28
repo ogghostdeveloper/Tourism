@@ -26,7 +26,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { DZONGKHAGS, DZONGKHAG_REGIONS } from "@/constants/dzongkhags";
-import { generateSlug } from "@/utils/slugGenerator";
+import { generateSlug } from "@/utils/slug-generator";
 import { Destination } from "../schema";
 import { getAllDestinations } from "../actions";
 

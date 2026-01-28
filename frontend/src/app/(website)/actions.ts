@@ -2,7 +2,6 @@
 
 import { destinationsData } from "./data/destinations-data";
 import { experiencesData } from "./data/experiences-data";
-import { hotelsData } from "./data/hotels-data";
 import { packagesData } from "./data/packages-data";
 
 
