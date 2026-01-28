@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Trash2, ChevronDown, ChevronUp, GripVertical, MapPin, Clock, ArrowRightLeft, Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { ImageUpload } from "@/components/admin/ImageUpload";
+import { ImageUpload } from "@/components/admin/image-upload";
 import { Combobox } from "./combobox-wrapper";
 import { Tour } from "../schema";
 

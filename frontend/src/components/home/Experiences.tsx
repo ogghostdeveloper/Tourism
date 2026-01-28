@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
-import { ExperienceCard } from "@/components/common/ExperienceCard";
+import { ExperienceCard } from "@/components/common/experience-card";
 
 import {
   Carousel,

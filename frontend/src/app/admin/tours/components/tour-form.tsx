@@ -15,7 +15,7 @@ import { AnimatedArrowLeft } from "@/components/ui/animated-arrow-left";
 import type { AnimatedArrowLeftHandle } from "@/components/ui/animated-arrow-left";
 import { tourSchema, Tour } from "../schema";
 import { getCategoriesForDropdown, getDestinationsForDropdown, getExperiencesForDropdown, getHotelsForDropdown } from "../actions";
-import { ImageUpload } from "@/components/admin/ImageUpload";
+import { ImageUpload } from "@/components/admin/image-upload";
 import { generateSlug } from "@/utils/slugGenerator";
 import { Combobox } from "./combobox-wrapper";
 import { DaySection } from "./day-section";

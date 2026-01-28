@@ -10,7 +10,7 @@ import { Loader2, Check, ChevronsUpDown, Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AnimatedArrowLeft, type AnimatedArrowLeftHandle } from "@/components/ui/animated-arrow-left";
-import { ImageUpload } from "@/components/admin/ImageUpload";
+import { ImageUpload } from "@/components/admin/image-upload";
 import { cn } from "@/lib/utils";
 import {
     Command,

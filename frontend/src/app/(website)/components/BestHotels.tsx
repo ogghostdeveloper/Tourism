@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Hotel } from "@/app/admin/hotels/schema";
-import { HotelCard } from "@/components/common/HotelCard";
+import { HotelCard } from "@/components/common/hotel-card";
 
 import {
   Carousel,

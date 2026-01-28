@@ -1,4 +1,4 @@
-import { StatCard } from "@/components/admin/StatCard";
+import { StatCard } from "@/components/admin/stats-card";
 import { Users, Package, Calendar, DollarSign, ArrowRight, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";

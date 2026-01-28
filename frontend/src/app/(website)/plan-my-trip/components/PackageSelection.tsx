@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Tour } from "../../tours/schema";
-import { TourCard } from "@/components/common/TourCard";
+import { TourCard } from "@/components/common/tour-card";
 
 interface PackageSelectionProps {
     packages: Tour[];

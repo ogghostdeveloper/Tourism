@@ -1,7 +1,7 @@
 "use client";
 
 import { Experience } from "../../schema";
-import { ExperienceCard } from "@/components/common/ExperienceCard";
+import { ExperienceCard } from "@/components/common/experience-card";
 import { useState } from "react";
 
 interface DestinationExperiencesProps {

@@ -3,10 +3,10 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, BedDouble, MapPin, Camera, ShieldCheck, Plus, ChevronLeft, ChevronRight, Clock, ArrowRightLeft, Star } from "lucide-react";
 import { DayHero } from "../../components/DayHero";
-import { ExperienceCard } from "@/components/common/ExperienceCard";
-import { TravelMap } from "@/components/common/TravelMap";
+import { ExperienceCard } from "@/components/common/experience-card";
+import { TravelMap } from "@/components/common/travel-map";
 import { TourCarousel } from "../../components/TourCarousel";
-import CallToAction from "@/components/shared/CallToAction";
+import CallToAction from "@/components/common/call-to-action";
 import { cn } from "@/lib/utils";
 
 interface PageProps {

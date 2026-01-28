@@ -1,7 +1,7 @@
 import { getAllTours } from "./actions";
 import { ToursHeader } from "./components/ToursHeader";
-import CallToAction from "@/components/shared/CallToAction";
-import { TourCard } from "@/components/common/TourCard";
+import CallToAction from "@/components/common/call-to-action";
+import { TourCard } from "@/components/common/tour-card";
 import { Tour } from "./schema";
 
 export default async function ToursPage() {

@@ -1,6 +1,6 @@
 "use client";
 
-import { ExperienceCard } from "@/components/common/ExperienceCard";
+import { ExperienceCard } from "@/components/common/experience-card";
 import { Experience } from "@/app/admin/experiences/schema";
 
 import {

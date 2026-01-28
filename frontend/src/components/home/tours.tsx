@@ -6,17 +6,31 @@ import { ArrowRight, Plane, Users, Activity, Clock } from "lucide-react";
 import { Tour } from "@/app/(website)/tours/schema";
 import {
     Carousel,
+    CarouselApi,
     CarouselContent,
     CarouselItem,
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel";
+import * as React from "react";
 
 interface FeaturedItineraryProps {
     itineraries: Tour[];
 }
 
 export function FeaturedItinerary({ itineraries }: FeaturedItineraryProps) {
+    const [api, setApi] = React.useState<CarouselApi>();
+
+    React.useEffect(() => {
+        if (!api) return;
+
+        const interval = setInterval(() => {
+            api.scrollPrev();
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, [api]);
+
     if (!itineraries || itineraries.length === 0) return null;
 
     return (
@@ -26,6 +40,7 @@ export function FeaturedItinerary({ itineraries }: FeaturedItineraryProps) {
                     align: "start",
                     loop: true,
                 }}
+                setApi={setApi}
                 className="h-full w-full"
             >
                 <CarouselContent className="h-[85vh] min-h-[700px] ml-0">

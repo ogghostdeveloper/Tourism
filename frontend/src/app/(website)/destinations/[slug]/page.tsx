@@ -12,7 +12,7 @@ import { DestinationExperiences } from "./components/DestinationExperiences";
 import { DestinationFestivals } from "./components/DestinationFestivals";
 import { DestinationHotels } from "./components/DestinationHotels";
 import { DestinationCarousel } from "./components/DestinationCarousel";
-import CallToAction from "@/components/shared/CallToAction";
+import CallToAction from "@/components/common/call-to-action";
 
 interface PageProps {
   params: Promise<{ slug: string }>;

@@ -1,6 +1,6 @@
 "use client";
 
-import { LocationMap } from "@/components/common/LocationMap";
+import { LocationMap } from "@/components/common/location-map";
 import { Experience } from "../../schema";
 
 interface ExperienceMapProps {

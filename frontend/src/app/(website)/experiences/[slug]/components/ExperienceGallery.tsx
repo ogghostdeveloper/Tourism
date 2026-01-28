@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Experience } from "@/app/admin/experiences/schema";
-import { VisualGallery } from "@/components/common/VisualGallery";
+import { VisualGallery } from "@/components/common/visual-gallery";
 
 interface ExperienceGalleryProps {
   experience: Experience;

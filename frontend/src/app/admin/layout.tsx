@@ -1,6 +1,6 @@
 import * as React from "react";
 import "./admin.css";
-import { AdminBreadcrumbs } from "@/components/admin/AdminBreadcrumbs";
+import { AdminBreadcrumbs } from "@/components/admin/admin-bread-crumbs";
 import { redirect } from "next/navigation";
 import { auth, signOut } from "@/auth";
 import {
@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/sidebar";
 import { LogOut, Settings } from "lucide-react";
 import Link from "next/link";
-import { AdminNavItem } from "@/components/admin/AdminNavItem";
+import { AdminNavItem } from "@/components/admin/admin-nav-items";
 import { Button } from "@/components/ui/button";
 
 const menuItems = [

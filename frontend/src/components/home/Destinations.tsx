@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Destination } from "@/app/(website)/destinations/schema";
-import { DestinationCard } from "@/components/common/DestinationCard";
+import { DestinationCard } from "@/components/common/destination-card";
 import {
     Carousel,
     CarouselApi,

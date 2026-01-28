@@ -8,7 +8,7 @@ import { OurMission } from "./components/OurMission";
 import { OurPurpose } from "./components/OurPurpose";
 import { SustainableTravel } from "./components/SustainableTravel";
 import { WhyBhutan } from "./components/WhyBhutan";
-import CallToAction from "@/components/shared/CallToAction";
+import CallToAction from "@/components/common/call-to-action";
 
 export default async function AboutPage() {
   // Fetch the main about content that matches admin structure

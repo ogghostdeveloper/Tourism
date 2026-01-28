@@ -1,7 +1,7 @@
 "use client";
 
 import { Experience } from "../../schema";
-import { FestivalCard } from "@/components/common/FestivalCard";
+import { FestivalCard } from "@/components/common/festival-card";
 
 interface DestinationFestivalsProps {
   festivals: Experience[];

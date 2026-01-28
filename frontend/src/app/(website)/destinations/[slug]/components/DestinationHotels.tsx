@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Hotel } from "../../schema";
-import { HotelCard } from "@/components/common/HotelCard";
+import { HotelCard } from "@/components/common/hotel-card";
 
 interface DestinationHotelsProps {
   hotels: Hotel[];

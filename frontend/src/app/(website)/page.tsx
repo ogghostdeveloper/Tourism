@@ -1,16 +1,15 @@
-import { Hero } from "@/components/home/Hero";
-import { CompanyIntro } from "./components/CompanyIntro";
-import { ExperienceTypes } from "@/components/home/ExperienceTypes";
-import { Destinations } from "@/components/home/Destinations";
-import { Experiences } from "@/components/home/Experiences";
-import { BestHotels } from "./components/BestHotels";
-import { FeaturedItinerary } from "@/components/home/FeaturedItinerary";
-import CallToAction from "@/components/shared/CallToAction";
-import { getTopPriorityTours } from "./tours/actions";
+import { Hero } from "@/components/home/hero";
 import { getBestHotels } from "./hotels/actions";
-import { getFeaturedExperiences, getExperienceTypes } from "./experiences/actions";
+import { BestHotels } from "./components/BestHotels";
+import { getTopPriorityTours } from "./tours/actions";
+import { CompanyIntro } from "./components/CompanyIntro";
+import { Experiences } from "@/components/home/experiences";
+import { FeaturedItinerary } from "@/components/home/tours";
+import { Destinations } from "@/components/home/destinations";
+import CallToAction from "@/components/common/call-to-action";
 import { getFeaturedDestinations } from "./destinations/actions";
-import { LuxuryBridge } from "./components/LuxuryBridge";
+import { ExperienceTypes } from "@/components/home/experience-types";
+import { getFeaturedExperiences, getExperienceTypes } from "./experiences/actions";
 
 export default async function Home() {
   const featuredTours = await getTopPriorityTours(5);

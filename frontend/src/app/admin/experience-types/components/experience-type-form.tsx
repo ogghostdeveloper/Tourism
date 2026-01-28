@@ -12,7 +12,7 @@ import Link from "next/link";
 import { ExperienceType } from "../schema";
 import { generateSlug } from "@/utils/slugGenerator";
 import { AnimatedArrowLeft, type AnimatedArrowLeftHandle } from "@/components/ui/animated-arrow-left";
-import { ImageUpload } from "@/components/admin/ImageUpload";
+import { ImageUpload } from "@/components/admin/image-upload";
 import { Pencil } from "lucide-react";
 
 interface ExperienceTypeFormProps {

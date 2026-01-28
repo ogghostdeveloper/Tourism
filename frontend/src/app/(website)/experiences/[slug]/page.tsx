@@ -2,10 +2,10 @@ import { getExperienceBySlug, getAllExperiences } from "../actions";
 import { notFound } from "next/navigation";
 import { ExperienceHero } from "./components/ExperienceHero";
 import { ExperienceDetails } from "./components/ExperienceDetails";
-import { LocationMap } from "@/components/common/LocationMap";
+import { LocationMap } from "@/components/common/location-map";
 import { ExperienceGallery } from "./components/ExperienceGallery";
 import { ExperienceCarousel } from "./components/ExperienceCarousel";
-import CallToAction from "@/components/shared/CallToAction";
+import CallToAction from "@/components/common/call-to-action";
 
 interface PageProps {
   params: Promise<{ slug: string }>;

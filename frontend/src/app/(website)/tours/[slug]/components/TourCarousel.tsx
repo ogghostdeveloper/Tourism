@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Tour } from "../../schema";
-import { TourCard } from "@/components/common/TourCard";
+import { TourCard } from "@/components/common/tour-card";
 import {
     Carousel,
     CarouselContent,

@@ -1,6 +1,6 @@
 "use client";
 
-import { PageHeader } from "@/components/common/PageHeader";
+import { PageHeader } from "@/components/common/page-header";
 
 export function ToursHeader() {
     return (

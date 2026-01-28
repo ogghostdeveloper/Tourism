@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { DestinationCard } from "@/components/common/DestinationCard";
+import { DestinationCard } from "@/components/common/destination-card";
 import { getDestinations } from "./actions";
 import { Destination } from "./schema";
 
-import { PageHeader } from "@/components/common/PageHeader";
+import { PageHeader } from "@/components/common/page-header";
 
 export default function DestinationsPage() {
     const [destinations, setDestinations] = useState<Destination[]>([]);
@@ -19,7 +19,7 @@ export default function DestinationsPage() {
         <div className="min-h-screen bg-white text-black pb-24 overflow-hidden">
             <PageHeader
                 label="// explore regions"
-                title="Explore Bhutan"
+                title="Our Destinations"
                 description="Mapping the diverse landscapes of Bhutan. From the high alpine valleys of the north to the lush subtropical plains of the south."
                 bgText="Regions"
             />

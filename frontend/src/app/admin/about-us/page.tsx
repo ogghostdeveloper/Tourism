@@ -16,7 +16,7 @@ import { OurPurpose } from "@/app/(website)/about-us/components/OurPurpose";
 import { SustainableTravel } from "@/app/(website)/about-us/components/SustainableTravel";
 import { WhyBhutan } from "@/app/(website)/about-us/components/WhyBhutan";
 import { getAboutContentAction, updateAboutContentAction } from "./actions";
-import { ImageUpload } from "@/components/admin/ImageUpload";
+import { ImageUpload } from "@/components/admin/image-upload";
 import { AboutContent } from "@/lib/data/about";
 
 export default function AboutUsPage() {

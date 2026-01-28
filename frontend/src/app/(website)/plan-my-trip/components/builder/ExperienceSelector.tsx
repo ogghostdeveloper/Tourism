@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, Check } from "lucide-react";
 import { Experience } from "@/app/(website)/experiences/schema";
-import { ExperienceCard } from "@/components/common/ExperienceCard";
+import { ExperienceCard } from "@/components/common/experience-card";
 import { Button } from "@/components/ui/button";
 
 interface ExperienceSelectorProps {

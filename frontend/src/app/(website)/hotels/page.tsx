@@ -1,7 +1,7 @@
 import { getAllHotels } from "./actions";
 import Link from "next/link";
 import { ArrowUpRight, Star, MapPin } from "lucide-react";
-import CallToAction from "@/components/shared/CallToAction";
+import CallToAction from "@/components/common/call-to-action";
 import { HotelsHeader } from "./components/HotelsHeader";
 
 export default async function HotelsPage() {

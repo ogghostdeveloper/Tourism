@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { Experience } from "@/app/admin/experiences/schema";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
-import { ExperienceCard } from "@/components/common/ExperienceCard";
+import { ExperienceCard } from "@/components/common/experience-card";
 
 interface ExperiencesClientProps {
     initialExperiences: Experience[];

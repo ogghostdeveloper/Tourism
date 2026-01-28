@@ -5,7 +5,7 @@ import { TourOverview } from "./components/TourOverview";
 import { TourBookingCard } from "./components/TourBookingCard";
 import { TourItinerary } from "./components/TourItinerary";
 import { TourCarousel } from "./components/TourCarousel";
-import CallToAction from "@/components/shared/CallToAction";
+import CallToAction from "@/components/common/call-to-action";
 
 interface PageProps {
   params: Promise<{ slug: string }>;

@@ -31,8 +31,8 @@ import {
 import { cn } from "@/lib/utils";
 import { parseISO, format } from "date-fns";
 import { generateSlug } from "@/utils/slugGenerator";
-import { ImageUpload } from "@/components/admin/ImageUpload";
-import { GalleryUpload } from "@/components/admin/GalleryUpload";
+import { ImageUpload } from "@/components/admin/image-upload";
+import { GalleryUpload } from "@/components/admin/gallery-upload";
 
 interface ExperienceFormProps {
     initialData?: any;

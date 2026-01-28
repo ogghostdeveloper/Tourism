@@ -2,10 +2,10 @@ import { getHotelBySlug, getRelatedHotels } from "../actions";
 import { notFound } from "next/navigation";
 import { HotelHero } from "./components/HotelHero";
 import { HotelOverview } from "./components/HotelOverview";
-import { VisualGallery } from "@/components/common/VisualGallery";
-import { LocationMap } from "@/components/common/LocationMap";
+import { VisualGallery } from "@/components/common/visual-gallery";
+import { LocationMap } from "@/components/common/location-map";
 import { RelatedHotels } from "./components/RelatedHotels";
-import CallToAction from "@/components/shared/CallToAction";
+import CallToAction from "@/components/common/call-to-action";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
