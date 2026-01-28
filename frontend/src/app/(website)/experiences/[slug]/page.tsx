@@ -1,11 +1,12 @@
-import { getExperienceBySlug, getAllExperiences } from "../actions";
 import { notFound } from "next/navigation";
-import { ExperienceHero } from "./components/ExperienceHero";
-import { ExperienceDetails } from "./components/ExperienceDetails";
-import { LocationMap } from "@/components/common/location-map";
-import { ExperienceGallery } from "./components/ExperienceGallery";
-import { ExperienceCarousel } from "./components/ExperienceCarousel";
+import { ExperienceHero } from "./components/experience-hero";
 import CallToAction from "@/components/common/call-to-action";
+import { LocationMap } from "@/components/common/location-map";
+import { ExperienceDetails } from "./components/experience-details";
+import { ExperienceGallery } from "./components/experience-gallery";
+import { getExperienceBySlug, getAllExperiences } from "../actions";
+import { ExperienceCarousel } from "./components/experience-carousel";
+import { ExperienceMap } from "./components/experience-map";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -43,16 +44,8 @@ export default async function ExperienceDetailPage({ params }: PageProps) {
           <ExperienceGallery experience={experience} />
         )}
 
-        {/* Full Width Sections Below */}
         {/* Map Section */}
-        {experience.coordinates && (
-          <LocationMap
-            name={experience.title}
-            coordinates={experience.coordinates}
-            title="Map Location"
-            subtitle="// regional geodata"
-          />
-        )}
+        <ExperienceMap name={experience.title} coordinates={experience.coordinates} />
       </div>
 
       {/* Similar Experiences */}

@@ -2,12 +2,12 @@ import {
   getAboutContent,
   getWhyBhutanItems,
 } from "./actions";
-import { AboutHero } from "./components/AboutHero";
-import { OurStory } from "./components/OurStory";
-import { OurMission } from "./components/OurMission";
-import { OurPurpose } from "./components/OurPurpose";
-import { SustainableTravel } from "./components/SustainableTravel";
-import { WhyBhutan } from "./components/WhyBhutan";
+import { AboutHero } from "./components/about-hero";
+import { OurStory } from "./components/our-story";
+import { OurMission } from "./components/our-mission";
+import { OurPurpose } from "./components/our-purpose";
+import { SustainableTravel } from "./components/sustainable-travel";
+import { WhyBhutan } from "./components/why-bhutan";
 import CallToAction from "@/components/common/call-to-action";
 
 export default async function AboutPage() {

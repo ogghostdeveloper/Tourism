@@ -6,7 +6,7 @@ import { Experiences } from "@/components/home/experiences";
 import { FeaturedItinerary } from "@/components/home/tours";
 import { Destinations } from "@/components/home/destinations";
 import CallToAction from "@/components/common/call-to-action";
-import { LuxuryBridge } from "@/components/home/luxury-bridge";
+// import { LuxuryBridge } from "@/components/home/luxury-bridge";
 import { CompanyIntro } from "@/components/home/company-intro";
 import { getFeaturedDestinations } from "./destinations/actions";
 import { ExperienceTypes } from "@/components/home/experience-types";
@@ -25,7 +25,7 @@ export default async function Home() {
       <ExperienceTypes experienceTypes={experienceTypes} />
       <FeaturedItinerary itineraries={featuredTours.slice(0, 5)} />
       <Destinations destinations={featuredDestinations} />
-      <LuxuryBridge />
+      {/* <LuxuryBridge /> */}
       <Experiences experiences={featuredExperiences} />
       <CompanyIntro />
       <BestHotels hotels={bestHotels} />

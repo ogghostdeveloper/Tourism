@@ -4,16 +4,17 @@ import { LocationMap } from "@/components/common/location-map";
 import { Experience } from "../../schema";
 
 interface ExperienceMapProps {
-    experience: Experience;
+    name: string;
+    coordinates?: [number, number] | null;
 }
 
-export function ExperienceMap({ experience }: ExperienceMapProps) {
-    if (!experience.coordinates) return null;
+export function ExperienceMap({ name, coordinates }: ExperienceMapProps) {
+    if (!coordinates) return null;
 
     return (
         <LocationMap
-            name={experience.title}
-            coordinates={experience.coordinates}
+            name={name}
+            coordinates={coordinates!}
             title="Experience Location"
             subtitle="// precise coordinates"
         />

@@ -1,6 +1,6 @@
 import { getExperiences } from "./actions";
-import { ExperiencesClient } from "./components/ExperiencesClient";
-import { ExperiencesHeader } from "./components/ExperiencesHeader";
+import { ExperiencesClient } from "./components/expereince-client";
+import { ExperiencesHeader } from "./components/experience-header";
 
 export default async function ExperiencesPage() {
   const experiences = await getExperiences();

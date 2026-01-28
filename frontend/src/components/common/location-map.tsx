@@ -42,7 +42,7 @@ export function LocationMap({ name, coordinates, title = "Map Location", subtitl
                     <motion.span
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
-                        className="block font-mono text-amber-600 text-xs uppercase tracking-[0.5em] mb-4"
+                        className="block font-mono text-amber-600 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4"
                     >
                         {subtitle}
                     </motion.span>

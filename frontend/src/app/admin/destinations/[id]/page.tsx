@@ -5,12 +5,12 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DestinationHero } from "@/app/(website)/destinations/[slug]/components/DestinationHero";
-import { DestinationOverview } from "@/app/(website)/destinations/[slug]/components/DestinationOverview";
-import { DestinationMap } from "@/app/(website)/destinations/[slug]/components/DestinationMap";
-import { DestinationExperiences } from "@/app/(website)/destinations/[slug]/components/DestinationExperiences";
-import { DestinationFestivals } from "@/app/(website)/destinations/[slug]/components/DestinationFestivals";
-import { DestinationHotels } from "@/app/(website)/destinations/[slug]/components/DestinationHotels";
+import { DestinationHero } from "@/app/(website)/destinations/[slug]/components/destination-hero";
+import { DestinationOverview } from "@/app/(website)/destinations/[slug]/components/destination-overview";
+import { DestinationMap } from "@/app/(website)/destinations/[slug]/components/destination-map";
+import { DestinationExperiences } from "@/app/(website)/destinations/[slug]/components/destination-experiences";
+import { DestinationFestivals } from "@/app/(website)/destinations/[slug]/components/destination-festivals";
+import { DestinationHotels } from "@/app/(website)/destinations/[slug]/components/destination-hotels";
 
 interface PageProps {
   params: { id: string };

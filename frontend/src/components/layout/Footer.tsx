@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { Facebook, Instagram, Twitter, Youtube } from "lucide-react";
+import { motion } from "framer-motion";
 
 export function Footer() {
   return (
@@ -93,26 +96,23 @@ export function Footer() {
             </ul>
           </div>
 
-          <div>
-            <h4 className="text-sm font-bold uppercase tracking-widest mb-6 text-gray-500">
-              Newsletter
-            </h4>
-            <p className="text-gray-400 text-sm mb-4">
-              Subscribe for travel inspiration and exclusive offers.
-            </p>
-            <form className="flex flex-col gap-3">
-              <input
-                type="email"
-                placeholder="Email Address"
-                className="bg-white/5 border border-white/10 px-4 py-2 text-sm focus:outline-none focus:border-white transition-colors"
-              />
-              <button
-                type="submit"
-                className="bg-white text-black px-4 py-2 text-sm font-medium hover:bg-gray-200 transition-colors uppercase tracking-wider"
-              >
-                Subscribe
-              </button>
-            </form>
+          <div className="space-y-8">
+            <div>
+              <h4 className="text-sm font-bold uppercase tracking-widest mb-6 text-gray-500">
+                Begin Discovery
+              </h4>
+              <h3 className="text-3xl font-light tracking-tighter text-white uppercase italic serif leading-tight">
+                Plan Your <span className="font-serif text-amber-500">Adventure</span>
+              </h3>
+            </div>
+
+            <Link
+              href="/enquire"
+              className="group relative flex items-center justify-center gap-4 bg-white py-5 text-black text-[9px] font-bold uppercase tracking-[0.4em] transition-all hover:bg-amber-600 hover:text-white overflow-hidden"
+            >
+              <span className="relative z-10">Start Planning</span>
+              <div className="absolute inset-0 translate-y-full group-hover:translate-y-0 bg-amber-500 transition-transform duration-500" />
+            </Link>
           </div>
         </div>
 

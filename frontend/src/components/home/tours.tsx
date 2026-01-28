@@ -105,7 +105,7 @@ export function FeaturedItinerary({ itineraries }: FeaturedItineraryProps) {
                                             href={`/tours/${itinerary.slug}`}
                                             className="group flex items-center gap-6 bg-white text-black px-12 py-5 text-[10px] font-mono text-xs uppercase tracking-[0.2em] hover:bg-amber-500 hover:text-white transition-all duration-500 shadow-2xl relative overflow-hidden"
                                         >
-                                            <span className="relative z-10">Explore Itinerary</span>
+                                            <span className="relative z-10 text-xs">Explore Itinerary</span>
                                             <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform relative z-10" />
                                         </Link>
 

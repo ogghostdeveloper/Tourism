@@ -60,7 +60,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
-                        className="font-mono text-amber-600 text-xs uppercase tracking-[0.6em] mb-6 block font-bold"
+                        className="font-mono text-amber-600 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] mb-6 block font-bold"
                     >
                         {subtitle}
                     </motion.span>

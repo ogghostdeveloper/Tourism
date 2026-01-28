@@ -23,11 +23,11 @@ export function DestinationHotels({ hotels }: DestinationHotelsProps) {
           <motion.span
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            className="block font-mono text-amber-600 text-xs uppercase tracking-[0.5em] mb-4"
+            className="block font-mono text-amber-600 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4"
           >
             // plan your stay
           </motion.span>
-          <h2 className="text-5xl md:text-7xl font-light tracking-tighter uppercase whitespace-nowrap text-black">
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tighter uppercase text-black leading-tight">
             Where to <span className="italic font-serif normal-case text-amber-600">Stay</span>
           </h2>
         </div>

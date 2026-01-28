@@ -48,7 +48,7 @@ export default function CallToAction() {
           <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.5em] mb-4 block">
             // start your journey
           </span>
-          <h2 className="text-5xl md:text-8xl font-light text-black tracking-tighter leading-tight mb-8 uppercase">
+          <h2 className="text-5xl md:text-7xl font-light tracking-tighter leading-tight uppercase text-black">
             Start Your <span className="italic font-serif normal-case text-amber-600">Discovery</span>
           </h2>
           <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-16 leading-relaxed font-light italic">

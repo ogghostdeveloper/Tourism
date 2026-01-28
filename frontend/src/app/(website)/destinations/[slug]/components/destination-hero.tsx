@@ -54,13 +54,13 @@ export function DestinationHero({ name, image, region }: DestinationHeroProps) {
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="font-mono text-amber-400 text-xs uppercase tracking-[0.6em] mb-8 block drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]"
+            className="font-mono text-amber-400 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] mb-6 md:mb-8 block drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]"
           >
             // exploring: {region}
           </motion.span>
-          <h1 className="text-7xl md:text-[12rem] font-light tracking-tighter leading-none mb-4 uppercase drop-shadow-2xl">
+          <h1 className="text-6xl md:text-9xl font-light text-white tracking-tighter mb-12 uppercase mix-blend-overlay opacity-90 drop-shadow-2xl">
             {name.split(' ').map((word, i) => (
-              <span key={i} className={i % 2 !== 0 ? "italic font-serif normal-case text-amber-100" : "text-white"}>
+              <span key={i} className={i % 2 !== 0 ? "italic font-serif normal-case text-amber-100 block md:inline" : "text-white"}>
                 {word}{' '}
               </span>
             ))}

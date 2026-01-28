@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 import { getExperienceById, getAllExperiences } from "../actions";
-import { ExperienceHero } from "@/app/(website)/experiences/[slug]/components/ExperienceHero";
-import { ExperienceDetails } from "@/app/(website)/experiences/[slug]/components/ExperienceDetails";
+import { ExperienceHero } from "@/app/(website)/experiences/[slug]/components/experience-hero";
+import { ExperienceDetails } from "@/app/(website)/experiences/[slug]/components/experience-details";
 import { LocationMap } from "@/components/common/location-map";
-import { ExperienceGallery } from "@/app/(website)/experiences/[slug]/components/ExperienceGallery";
-import { ExperienceCarousel } from "@/app/(website)/experiences/[slug]/components/ExperienceCarousel";
+import { ExperienceGallery } from "@/app/(website)/experiences/[slug]/components/experience-gallery";
+import { ExperienceCarousel } from "@/app/(website)/experiences/[slug]/components/experience-carousel";
 import CallToAction from "@/components/common/call-to-action";
 import Link from "next/link";
 import { Pencil } from "lucide-react";

@@ -5,13 +5,13 @@ import {
   getHotelsByDestination,
 } from "../actions";
 import { notFound } from "next/navigation";
-import { DestinationHero } from "./components/DestinationHero";
-import { DestinationOverview } from "./components/DestinationOverview";
-import { DestinationMap } from "./components/DestinationMap";
-import { DestinationExperiences } from "./components/DestinationExperiences";
-import { DestinationFestivals } from "./components/DestinationFestivals";
-import { DestinationHotels } from "./components/DestinationHotels";
-import { DestinationCarousel } from "./components/DestinationCarousel";
+import { DestinationHero } from "./components/destination-hero";
+import { DestinationOverview } from "./components/destination-overview";
+import { DestinationMap } from "./components/destination-map";
+import { DestinationExperiences } from "./components/destination-experiences";
+import { DestinationFestivals } from "./components/destination-festivals";
+import { DestinationHotels } from "./components/destination-hotels";
+import { DestinationCarousel } from "./components/destination-carousel";
 import CallToAction from "@/components/common/call-to-action";
 
 interface PageProps {
