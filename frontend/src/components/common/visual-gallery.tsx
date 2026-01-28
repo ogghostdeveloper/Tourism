@@ -68,7 +68,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="text-5xl md:text-7xl font-light text-black tracking-tighter uppercase leading-none"
+                        className="text-5xl md:text-7xl font-light tracking-tighter leading-tight uppercase text-black"
                     >
                         {title.split(' ')[0]} <span className="italic font-serif normal-case text-amber-600">{title.split(' ').slice(1).join(' ')}</span>
                     </motion.h2>

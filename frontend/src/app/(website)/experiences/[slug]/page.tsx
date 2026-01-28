@@ -35,7 +35,7 @@ export default async function ExperienceDetailPage({ params }: PageProps) {
         endDate={experience.endDate || undefined}
       />
 
-      <div className="container mx-auto px-6 py-40">
+      <div className="container mx-auto px-6 pt-40">
         <ExperienceDetails experience={experience} />
 
 

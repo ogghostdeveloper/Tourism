@@ -80,9 +80,9 @@ export function ExperienceCarousel({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-5xl md:text-7xl lg:text-8xl font-light text-black tracking-tighter leading-tight uppercase"
+              className="text-5xl md:text-7xl font-light tracking-tighter leading-tight uppercase text-black"
             >
-              Expand Your <span className="italic font-serif normal-case text-amber-600">Horizon</span>
+              Other <span className="italic font-serif normal-case text-amber-600">Experiences</span>
             </motion.h2>
           </div>
           <motion.div
