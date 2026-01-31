@@ -46,7 +46,7 @@ export function TourHero({ title, image, category, duration, price }: TourHeroPr
             </div>
 
             <div className="container mx-auto px-6 h-full flex flex-col justify-end pb-24 relative z-10">
-                <div className="max-w-5xl">
+                <div>
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -63,7 +63,7 @@ export function TourHero({ title, image, category, duration, price }: TourHeroPr
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1, delay: 0.7 }}
-                        className="text-7xl md:text-9xl font-light tracking-tighter leading-none mb-12 uppercase text-white"
+                        className="text-6xl md:text-9xl font-light text-white tracking-tighter mb-12 uppercase mix-blend-overlay opacity-90 drop-shadow-2xl"
                     >
                         The <span className="italic font-serif normal-case text-amber-500">Journey</span> <br />
                         Through {title}

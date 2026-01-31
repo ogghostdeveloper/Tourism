@@ -15,6 +15,7 @@ export const hotelSchema = z.object({
     rooms: z.number().optional(),
     coordinates: z.tuple([z.number(), z.number()]).optional(),
     gallery: z.array(z.string()).optional(),
+    priority: z.number().optional(),
 });
 
 export type Hotel = z.infer<typeof hotelSchema>;

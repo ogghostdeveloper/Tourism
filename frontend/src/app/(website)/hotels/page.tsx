@@ -1,8 +1,8 @@
 import { getAllHotels } from "./actions";
 import Link from "next/link";
-import { ArrowUpRight, Star, MapPin } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import CallToAction from "@/components/common/call-to-action";
-import { HotelsHeader } from "./components/HotelsHeader";
+import { HotelsHeader } from "./components/hotels-header";
 
 export default async function HotelsPage() {
     const hotels = await getAllHotels();

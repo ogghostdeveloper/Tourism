@@ -3,11 +3,11 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { TourHero } from "@/app/(website)/tours/[slug]/components/TourHero";
-import { TourOverview } from "@/app/(website)/tours/[slug]/components/TourOverview";
-import { TourBookingCard } from "@/app/(website)/tours/[slug]/components/TourBookingCard";
-import { TourItinerary } from "@/app/(website)/tours/[slug]/components/TourItinerary";
-import { TourCarousel } from "@/app/(website)/tours/[slug]/components/TourCarousel";
+import { TourHero } from "@/app/(website)/tours/[slug]/components/tour-hero";
+import { TourOverview } from "@/app/(website)/tours/[slug]/components/tour-overview";
+import { TourBookingCard } from "@/app/(website)/tours/[slug]/components/tour-booking-card";
+import { TourItinerary } from "@/app/(website)/tours/[slug]/components/tour-itenary";
+import { TourCarousel } from "@/app/(website)/tours/[slug]/components/tour-carousel";
 import { Tour as WebsiteTour, TourDay as WebsiteTourDay } from "@/app/(website)/tours/schema";
 
 interface PageProps {

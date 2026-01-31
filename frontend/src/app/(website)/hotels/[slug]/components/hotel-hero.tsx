@@ -13,7 +13,7 @@ interface HotelHeroProps {
 
 export function HotelHero({ name, image, location, rating, priceRange }: HotelHeroProps) {
     return (
-        <div className="h-[80vh] relative overflow-hidden bg-white">
+        <div className="h-screen relative overflow-hidden bg-white">
             {/* Background Image */}
             <motion.div
                 initial={{ scale: 1.1, opacity: 0 }}

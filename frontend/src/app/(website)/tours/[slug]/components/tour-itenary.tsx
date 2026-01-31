@@ -1,6 +1,6 @@
 "use client";
 
-import { TourTimeline } from "./TourTimeline";
+import { TourTimeline } from "./tour-timeline";
 import { TourDay } from "../../schema";
 
 interface TourItineraryProps {

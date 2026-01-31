@@ -44,7 +44,7 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
     const CardContent = (
         <>
             {/* Image Container */}
-            <div className={`relative aspect-16/10 overflow-hidden rounded-sm bg-neutral-100 border transition-colors duration-500 mb-8 ${isSelected ? 'border-amber-600 ring-2 ring-amber-600/20' : 'border-black/5'}`}>
+            <div className={`relative aspect-16/10 overflow-hidden rounded-XS bg-neutral-100 border transition-colors duration-500 mb-8 ${isSelected ? 'border-amber-600 ring-2 ring-amber-600/20' : 'border-black/5'}`}>
                 <img
                     src={tour.image}
                     alt={tour.title}
@@ -90,14 +90,14 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
                                 <Calendar className="w-3.5 h-3.5 text-amber-600/60" />
                                 {tour.duration}
                             </div>
-                            <div className="flex items-center gap-2 px-3 py-1 bg-amber-600/10 rounded-sm text-black border border-amber-600/20 shadow-xs">
+                            <div className="flex items-center gap-2 px-3 py-1 bg-amber-600/10 rounded-xs text-black border border-amber-600/20 shadow-xs">
                                 <DollarSign className="w-3.5 h-3.5 text-amber-600" />
                                 {formatPrice(tour.price)}
                             </div>
                         </div>
                     </div>
 
-                    <h3 className="text-5xl md:text-6xl font-light tracking-tighter text-black group-hover:italic transition-all duration-500 line-clamp-1 uppercase group-hover:translate-x-3 origin-left">
+                    <h3 className="text-4xl md:text-5xl font-light tracking-tighter text-black k group-hover:italic transition-all duration-500 line-clamp-1 uppercase group-hover:translate-x-3 origin-left">
                         {tour.title}
                     </h3>
                 </div>
@@ -111,7 +111,7 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
                 </div>
             </div>
 
-            <p className="mt-8 text-gray-600 font-light leading-relaxed max-w-xl line-clamp-2 italic text-lg opacity-80 group-hover:opacity-100 transition-opacity">
+            <p className="mt-6 text-gray-600 font-light leading-relaxed max-w-xl line-clamp-2 italic text-lg opacity-80 group-hover:opacity-100 transition-opacity">
                 "{tour.description}"
             </p>
 

@@ -1,10 +1,10 @@
 import { getHotelBySlug, getRelatedHotels } from "../actions";
 import { notFound } from "next/navigation";
-import { HotelHero } from "./components/HotelHero";
-import { HotelOverview } from "./components/HotelOverview";
+import { HotelHero } from "./components/hotel-hero";
+import { HotelOverview } from "./components/hotel-overview";
 import { VisualGallery } from "@/components/common/visual-gallery";
 import { LocationMap } from "@/components/common/location-map";
-import { RelatedHotels } from "./components/RelatedHotels";
+import { RelatedHotels } from "./components/related-hotels";
 import CallToAction from "@/components/common/call-to-action";
 
 interface PageProps {

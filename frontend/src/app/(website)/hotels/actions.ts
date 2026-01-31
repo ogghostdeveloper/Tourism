@@ -41,7 +41,7 @@ export async function getHotelBySlug(slug: string): Promise<Hotel | null> {
     }
 }
 
-export async function getRelatedHotels(destinationIdOrSlug: string, excludeId: string, limit: number = 3): Promise<Hotel[]> {
+export async function getRelatedHotels(destinationIdOrSlug: string, excludeId: string, limit: number = 6): Promise<Hotel[]> {
     try {
         const all = await hotelDb.getAllHotels();
         return all
@@ -50,6 +50,7 @@ export async function getRelatedHotels(destinationIdOrSlug: string, excludeId: s
                 const hotelDest = h.destination || h.destinationSlug;
                 return hotelDest === destinationIdOrSlug && h.id !== excludeId;
             })
+            .sort((a, b) => (b.priority || 0) - (a.priority || 0))
             .slice(0, limit) as Hotel[];
     } catch (error) {
         console.error("Error fetching related hotels:", error);

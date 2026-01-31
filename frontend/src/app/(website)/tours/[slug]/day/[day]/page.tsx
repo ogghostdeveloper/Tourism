@@ -2,10 +2,10 @@ import { getTourDay, getRelatedTours } from "../../../actions";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, BedDouble, MapPin, Camera, ShieldCheck, Plus, ChevronLeft, ChevronRight, Clock, ArrowRightLeft, Star } from "lucide-react";
-import { DayHero } from "../../components/DayHero";
+import { DayHero } from "../../components/day-hero";
 import { ExperienceCard } from "@/components/common/experience-card";
 import { TravelMap } from "@/components/common/travel-map";
-import { TourCarousel } from "../../components/TourCarousel";
+import { TourCarousel } from "../../components/tour-carousel";
 import CallToAction from "@/components/common/call-to-action";
 import { cn } from "@/lib/utils";
 

@@ -50,7 +50,7 @@ export function HotelCard({ hotel, index }: HotelCardProps) {
                             <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-amber-500 mb-4 block">
                                 Hospitality
                             </span>
-                            <h4 className="text-3xl font-light tracking-tighter text-white mb-6 group-hover:italic transition-all duration-500 line-clamp-2">
+                            <h4 className="text-3xl font-light tracking-tighter text-white mb-6 group-hover:italic transition-all duration-500 line-clamp-2 uppercase">
                                 {hotel.name}
                             </h4>
                             <p className="text-xs text-white/60 font-light leading-relaxed line-clamp-2 italic mb-6">

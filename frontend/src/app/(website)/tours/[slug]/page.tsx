@@ -1,11 +1,11 @@
-import { getTourBySlug, getRelatedTours } from "../actions";
 import { notFound } from "next/navigation";
-import { TourHero } from "./components/TourHero";
-import { TourOverview } from "./components/TourOverview";
-import { TourBookingCard } from "./components/TourBookingCard";
-import { TourItinerary } from "./components/TourItinerary";
-import { TourCarousel } from "./components/TourCarousel";
+import { TourHero } from "./components/tour-hero";
+import { TourCarousel } from "./components/tour-carousel";
+import { TourItinerary } from "./components/tour-itenary";
+import { TourOverview } from "./components/tour-overview";
+import { getTourBySlug, getRelatedTours } from "../actions";
 import CallToAction from "@/components/common/call-to-action";
+import { TourBookingCard } from "./components/tour-booking-card";
 
 interface PageProps {
   params: Promise<{ slug: string }>;

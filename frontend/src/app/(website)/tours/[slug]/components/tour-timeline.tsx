@@ -35,6 +35,24 @@ export function TourTimeline({ days, slug }: TourTimelineProps) {
 
             {/* Content Area */}
             <div className="lg:col-span-11 grid grid-cols-1 md:grid-cols-2 gap-12 items-start border-l border-black/5 pl-12 pb-24 group-hover:border-amber-500/30 transition-colors duration-700">
+              {day.image && (
+                <div className="relative aspect-video overflow-hidden rounded-xs border border-black/5">
+                  <img
+                    src={day.image}
+                    alt={day.title}
+                    className="w-full h-full object-cover saturate-[0.6] brightness-[1.05] contrast-[0.95] transition-all duration-1000 group-hover:saturate-[1.1] group-hover:brightness-100 group-hover:contrast-100 group-hover:scale-105"
+                  />
+                  {/* Vibrant Overlays - Removing desaturating overlays */}
+                  <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-700" />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity duration-700" />
+
+                  <div className="absolute bottom-4 left-4">
+                    <span className="font-mono text-[10px] text-white tracking-widest uppercase bg-black/40 backdrop-blur-md px-3 py-1.5 font-bold">
+                      Visual Record // FRM-{day.day}
+                    </span>
+                  </div>
+                </div>
+              )}
               <div>
                 <div className="flex items-center gap-4 mb-4">
                   <span className="font-mono text-[10px] text-gray-500 uppercase tracking-widest px-3 py-1 border border-black/5 rounded-full font-bold">
@@ -54,25 +72,6 @@ export function TourTimeline({ days, slug }: TourTimelineProps) {
                   <Plus className="w-4 h-4 text-amber-600" /> [ Read Detailed Briefing ]
                 </div>
               </div>
-
-              {day.image && (
-                <div className="relative aspect-video overflow-hidden rounded-sm border border-black/5">
-                  <img
-                    src={day.image}
-                    alt={day.title}
-                    className="w-full h-full object-cover saturate-[0.6] brightness-[1.05] contrast-[0.95] transition-all duration-1000 group-hover:saturate-[1.1] group-hover:brightness-100 group-hover:contrast-100 group-hover:scale-105"
-                  />
-                  {/* Vibrant Overlays - Removing desaturating overlays */}
-                  <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-700" />
-                  <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity duration-700" />
-
-                  <div className="absolute bottom-4 left-4">
-                    <span className="font-mono text-[10px] text-white tracking-widest uppercase bg-black/40 backdrop-blur-md px-3 py-1.5 font-bold">
-                      Visual Record // FRM-{day.day}
-                    </span>
-                  </div>
-                </div>
-              )}
             </div>
           </motion.div>
         </Link>

@@ -77,7 +77,7 @@ export function FeaturedItinerary({ itineraries }: FeaturedItineraryProps) {
                                         initial={{ opacity: 0, y: 30 }}
                                         whileInView={{ opacity: 1, y: 0 }}
                                         transition={{ duration: 0.8, delay: 0.2 }}
-                                        className="text-5xl md:text-7xl lg:text-8xl font-light tracking-tighter text-white leading-none mb-10 uppercase"
+                                        className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tighter leading-tight mb-8 md:mb-12 uppercase"
                                     >
                                         {itinerary.title.split(' ').map((word, i) => (
                                             <span key={i} className={i % 2 !== 0 ? "italic font-serif normal-case text-amber-500 block md:inline" : ""}>

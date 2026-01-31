@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
 import { getRelatedHotels } from "@/app/(website)/hotels/actions";
 import { getHotelById } from "@/lib/data/hotels";
-import { HotelHero } from "@/app/(website)/hotels/[slug]/components/HotelHero";
-import { HotelOverview } from "@/app/(website)/hotels/[slug]/components/HotelOverview";
+import { HotelHero } from "@/app/(website)/hotels/[slug]/components/hotel-hero";
+import { HotelOverview } from "@/app/(website)/hotels/[slug]/components/hotel-overview";
 import { VisualGallery } from "@/components/common/visual-gallery";
 import { LocationMap } from "@/components/common/location-map";
-import { RelatedHotels } from "@/app/(website)/hotels/[slug]/components/RelatedHotels";
+import { RelatedHotels } from "@/app/(website)/hotels/[slug]/components/related-hotels";
 import Link from "next/link";
 import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";

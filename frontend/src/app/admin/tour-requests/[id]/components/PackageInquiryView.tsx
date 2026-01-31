@@ -4,8 +4,8 @@ import { useState } from "react";
 import { MapPin, ChevronDown, ChevronUp } from "lucide-react";
 import { Tour } from "@/app/(website)/tours/schema";
 import { TourCard } from "@/components/common/tour-card";
-import { TourOverview } from "@/app/(website)/tours/[slug]/components/TourOverview";
-import { TourItinerary } from "@/app/(website)/tours/[slug]/components/TourItinerary";
+import { TourOverview } from "@/app/(website)/tours/[slug]/components/tour-overview";
+import { TourItinerary } from "@/app/(website)/tours/[slug]/components/tour-itenary";
 import { Button } from "@/components/ui/button";
 
 interface PackageInquiryViewProps {

@@ -51,7 +51,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
     };
 
     return (
-        <section ref={containerRef} className="py-20 md:py-40 bg-white relative overflow-hidden min-h-screen">
+        <section ref={containerRef} className="py-20 bg-white relative overflow-hidden min-h-screen">
             <div className="container mx-auto px-6 relative z-10 w-full max-w-7xl h-full">
 
                 {/* Restored Header */}
@@ -60,7 +60,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
-                        className="font-mono text-amber-600 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] mb-6 block font-bold"
+                        className="font-mono text-amber-600 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4 block"
                     >
                         {subtitle}
                     </motion.span>
@@ -88,7 +88,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                         whileInView={{ scale: 1, opacity: 1 }}
                         viewport={{ once: true, margin: "-10%" }}
                         transition={{ ...entranceTransition, delay: 0.1 }}
-                        className="absolute top-0 left-[22%] w-[56%] h-[53%] z-10 cursor-pointer overflow-hidden shadow-2xl"
+                        className="absolute top-0 left-[22%] w-[56%] h-[53%] z-10 cursor-pointer overflow-hidden "
                         onClick={() => openLightbox(0)}
                     >
                         <motion.img
@@ -112,7 +112,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                             <motion.img
                                 style={{ y: useTransform(scrollYProgress, [0, 1], [10, -10]) }}
                                 src={images[1]}
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-contain"
                                 alt="Gallery detail L1"
                             />
                         </motion.div>
@@ -131,7 +131,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                             <motion.img
                                 style={{ y: useTransform(scrollYProgress, [0, 1], [30, -30]) }}
                                 src={images[2]}
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-contain"
                                 alt="Gallery detail L2"
                             />
                         </motion.div>
@@ -163,7 +163,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                             whileInView={{ scale: 1, opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-10%" }}
                             transition={{ ...entranceTransition, delay: 0.5 }}
-                            className="absolute top-[56%] left-[56%] w-[22%] h-[42%] z-10 cursor-pointer overflow-hidden shadow-xl"
+                            className="absolute top-[56%] left-[56%] w-[22%] h-[42%] z-10 cursor-pointer overflow-hidden"
                             onClick={() => openLightbox(4)}
                         >
                             <motion.img
@@ -226,7 +226,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                             <motion.img
                                 style={{ y: useTransform(scrollYProgress, [0, 1], [-30, 30]) }}
                                 src={images[7]}
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-contain"
                                 alt="Gallery detail R3"
                             />
                         </motion.div>
