@@ -37,40 +37,6 @@ export function ExperienceOverview({
                 </div>
             </motion.div>
 
-            {highlights && highlights.length > 0 && (
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                    className="p-12 border border-black/5 bg-neutral-50 backdrop-blur-xl group relative overflow-hidden"
-                >
-                    {/* Corner Accent */}
-                    <div className="absolute top-0 right-0 w-24 h-24 pointer-events-none opacity-10">
-                        <div className="absolute top-0 right-0 w-full h-px bg-black" />
-                        <div className="absolute top-0 right-0 w-px h-full bg-black" />
-                    </div>
-
-                    <h3 className="font-mono text-xs font-bold tracking-[0.3em] text-black uppercase mb-12">
-                        Key highlights
-                    </h3>
-                    <ul className="space-y-8">
-                        {highlights.map((highlight, index) => (
-                            <li key={index} className="flex items-start gap-6 group/item">
-                                <span className="font-mono text-[10px] text-amber-600/50 mt-1">[0{index + 1}]</span>
-                                <p className="text-gray-500 leading-relaxed font-light group-hover/item:text-black transition-colors duration-500">
-                                    {highlight}
-                                </p>
-                            </li>
-                        ))}
-                    </ul>
-
-                    <div className="mt-16 flex items-center gap-4">
-                        <div className="h-px flex-1 bg-black/10" />
-                        <span className="font-mono text-[8px] text-gray-400 tracking-[0.5em] uppercase">End of overview</span>
-                    </div>
-                </motion.div>
-            )}
         </div>
     );
 }

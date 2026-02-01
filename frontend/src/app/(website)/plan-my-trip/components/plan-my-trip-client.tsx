@@ -4,10 +4,9 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Sparkles, Heart } from "lucide-react";
-import { PackageSelection } from "./PackageSelection";
-import { CustomItineraryBuilder } from "./CustomItineraryBuilder";
-import { TourRequestForm } from "./TourRequestForm";
-
+import { PackageSelection } from "./package-selection";
+import { CustomItineraryBuilder } from "./custom-itinerary-builder";
+import { TourRequestForm } from "./tour-request-form";
 import { Tour } from "../../tours/schema";
 import { Destination } from "../../destinations/schema";
 import { Experience } from "../../experiences/schema";
@@ -78,7 +77,7 @@ export default function PlanMyTripClient({
                             Architecture <br />
                             <span className="italic font-serif normal-case text-amber-600">of Bliss</span>
                         </h1>
-                        <p className="text-xl md:text-2xl text-white/80 font-light max-w-2xl mx-auto leading-relaxed italic font-serif">
+                        <p className="text-xl md:text-2xl text-white/80 font-light max-w-2xl mx-auto leading-relaxed italic">
                             Decide between our curated collections or craft a custom narrative tailored to your personal frequency.
                         </p>
                     </motion.div>
@@ -129,7 +128,7 @@ export default function PlanMyTripClient({
                                                 Curated <br />
                                                 <span className="italic font-serif normal-case text-amber-600">Collections</span>
                                             </h2>
-                                            <p className="text-gray-500 text-lg leading-relaxed font-light italic font-serif max-w-sm">
+                                            <p className="text-gray-500 text-lg leading-relaxed font-light italic max-w-sm">
                                                 Select from our masterfully designed archetypes for a seamless immersion into Bhutan's soul.
                                             </p>
                                         </div>
@@ -159,7 +158,7 @@ export default function PlanMyTripClient({
                                                 Bespoke <br />
                                                 <span className="italic font-serif normal-case text-amber-600">Architecture</span>
                                             </h2>
-                                            <p className="text-gray-500 text-lg leading-relaxed font-light italic font-serif max-w-sm">
+                                            <p className="text-gray-500 text-lg leading-relaxed font-light italic max-w-sm">
                                                 Engage our interactive workshop to architect a unique journey that resonates with your specific narrative.
                                             </p>
                                         </div>

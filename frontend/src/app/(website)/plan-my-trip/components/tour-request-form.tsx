@@ -123,11 +123,40 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-24">
                 {/* Sidebar Info */}
                 <div className="lg:col-span-4 space-y-12">
-                    <div className="bg-neutral-50 p-8 border border-black/5 rounded-sm">
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-black block mb-4">Selected Package</span>
-                        <h3 className="text-2xl font-light uppercase tracking-tight mb-2">{selectedTour?.title}</h3>
-                        <p className="text-amber-600 font-mono text-xs font-bold tracking-widest mb-6">{selectedTour?.price}</p>
-                        <div className="text-sm text-black italic leading-relaxed line-clamp-4">"{selectedTour?.description}"</div>
+                    <div className="relative aspect-4/5 overflow-hidden rounded-xs group">
+                        <img
+                            src={selectedTour?.image}
+                            alt={selectedTour?.title}
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent" />
+
+                        <div className="absolute inset-0 p-8 flex flex-col justify-between">
+                            <div className="flex justify-between items-start">
+                                <span className="inline-block bg-amber-600/90 backdrop-blur-sm px-3 py-1 font-mono text-[8px] font-bold uppercase tracking-widest text-white">
+                                    // Selected Archetype
+                                </span>
+                            </div>
+
+                            <div>
+                                <h3 className="text-3xl font-light uppercase tracking-tight text-white mb-2 leading-none">
+                                    {selectedTour?.title}
+                                </h3>
+                                <p className="text-white/60 text-sm font-light italic mb-6 line-clamp-2">
+                                    "{selectedTour?.description}"
+                                </p>
+                                <div className="border-t border-white/20 pt-6 flex justify-between items-end">
+                                    <div>
+                                        <span className="block text-[8px] uppercase tracking-widest text-white/50 mb-1">Investment</span>
+                                        <p className="font-mono text-lg text-amber-500">{selectedTour?.price}</p>
+                                    </div>
+                                    <div className="text-right">
+                                        <span className="block text-[8px] uppercase tracking-widest text-white/50 mb-1">Duration</span>
+                                        <p className="font-mono text-sm text-white">{selectedTour?.duration}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -182,7 +211,7 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                                     value={formState.travelers}
                                     onValueChange={(value) => setFormState({ ...formState, travelers: value })}
                                 >
-                                    <SelectTrigger className="w-full border-b border-black/10 py-4 text-lg font-light focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none placeholder:text-gray-300 h-auto px-0">
+                                    <SelectTrigger className="flex w-full h-auto min-h-[60px] items-center justify-between text-black border-0 border-b border-black/10 py-4 text-lg font-light focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none px-0 shadow-none ring-0 focus:ring-0">
                                         <SelectValue placeholder="Select volume" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -214,7 +243,7 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                                 rows={4}
                                 value={formState.message}
                                 onChange={handleChange}
-                                className="w-full border-b border-black/10 py-4 text-lg font-light focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none resize-none placeholder:text-gray-300 italic serif"
+                                className="w-full text-black border-b border-black/10 py-4 text-lg font-light focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none resize-none placeholder:text-gray-300 italic serif"
                                 placeholder="Describe your vision, interests, or any special moments you wish to experience..."
                             />
                         </div>
@@ -229,7 +258,7 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                                     isSubmitting && "opacity-70 cursor-not-allowed"
                                 )}
                             >
-                                <span className="relative z-10 flex items-center justify-center gap-6">
+                                <span className="text-xs relative z-10 flex items-center justify-center gap-6">
                                     {isSubmitting ? "Initiating Transmission..." : "Submit Application"}
                                     {!isSubmitting && <ArrowRight className="w-5 h-5 group-hover:translate-x-3 transition-transform duration-500" />}
                                 </span>

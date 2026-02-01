@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { getPlanMyTripData } from "./actions";
-import PlanMyTripClient from "./components/PlanMyTripClient";
+import PlanMyTripClient from "./components/plan-my-trip-client";
 
 export default async function PlanMyTripPage() {
     const data = await getPlanMyTripData();

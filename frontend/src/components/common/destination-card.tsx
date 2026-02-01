@@ -3,18 +3,19 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Destination } from "@/app/(website)/destinations/schema";
+import { cn } from "@/lib/utils";
 
 interface DestinationCardProps {
     destination: Destination;
     index: number;
+    className?: string;
+    onClick?: () => void;
+    disableLink?: boolean;
 }
 
-export function DestinationCard({ destination, index }: DestinationCardProps) {
-    return (
-        <Link
-            href={`/destinations/${destination.slug}`}
-            className="group block relative"
-        >
+export function DestinationCard({ destination, index, className, onClick, disableLink }: DestinationCardProps) {
+    const CardContent = (
+        <>
             {/* Image Container */}
             <div className="relative aspect-16/10 overflow-hidden rounded-xs bg-neutral-100 border border-black/5 mb-8">
                 <img
@@ -52,6 +53,26 @@ export function DestinationCard({ destination, index }: DestinationCardProps) {
             <div className="absolute top-0 -right-4 font-mono text-[8px] tracking-widest text-gray-300 rotate-90 origin-top-left py-2 border-l border-black/5">
                 DEST-0{index + 1} // BHUTAN
             </div>
+        </>
+    );
+
+    if (onClick || disableLink) {
+        return (
+            <div
+                onClick={onClick}
+                className={cn("group block relative cursor-pointer", className)}
+            >
+                {CardContent}
+            </div>
+        );
+    }
+
+    return (
+        <Link
+            href={`/destinations/${destination.slug}`}
+            className={cn("group block relative", className)}
+        >
+            {CardContent}
         </Link>
     );
 }

@@ -30,7 +30,7 @@ export function DayBuilder({
 }: DayBuilderProps) {
 
     return (
-        <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
+        <div className="border border-gray-200 rounded-xs overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
             {/* Header */}
             <div className="bg-gray-50 border-b border-gray-200 p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
@@ -62,7 +62,7 @@ export function DayBuilder({
                 <Reorder.Group axis="y" values={day.items} onReorder={onReorder} className="space-y-3">
                     {day.items.map((item) => (
                         <Reorder.Item key={item.id} value={item} className="cursor-grab active:cursor-grabbing">
-                            <div className="bg-white border border-gray-100 rounded-md p-4 shadow-sm flex items-center gap-4 group hover:border-amber-200 transition-colors">
+                            <div className="bg-white text-black border border-gray-100 rounded-xs p-4 shadow-sm flex items-center gap-4 group hover:border-amber-200 transition-colors">
                                 {/* Icon */}
                                 <div className={cn(
                                     "w-10 h-10 rounded-full flex items-center justify-center shrink-0",

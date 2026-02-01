@@ -20,7 +20,7 @@ export function PackageSelection({ packages, selectedPackage, onBack, onSelect }
             exit={{ opacity: 0, y: -20 }}
             className="w-full"
         >
-            <div className="flex justify-between items-end mb-24 border-b border-black/5 pb-12">
+            <div className="flex justify-between items-end mb-24 pb-12">
                 <div className="space-y-4">
                     <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.5em] font-bold block">
                         // selection mode

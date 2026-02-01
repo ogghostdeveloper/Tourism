@@ -1,7 +1,7 @@
 import { getTourDay, getAllTours } from "../../../actions";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, MapPin, ShieldCheck, ChevronLeft, ChevronRight, Clock, ArrowRightLeft, Star, BedDouble } from "lucide-react";
+import { ArrowLeft, MapPin, ShieldCheck, ChevronLeft, ChevronRight, Clock, ArrowRightLeft, Star, BedDouble, Eye } from "lucide-react";
 import { DayHero } from "../../components/day-hero";
 import { ExperienceCard } from "@/components/common/experience-card";
 import { HotelCard } from "@/components/common/hotel-card";
@@ -142,7 +142,7 @@ export default async function TourDayPage({ params }: PageProps) {
                                   <div className="p-2 bg-blue-50 rounded-full">
                                     <ArrowRightLeft className="w-4 h-4 text-blue-600" />
                                   </div>
-                                  <h4 className="font-mono text-[10px] uppercase tracking-[0.3em] text-blue-600 font-bold">Transfer Operations</h4>
+                                  <h4 className="font-mono text-[10px] uppercase tracking-[0.3em] text-blue-600 font-bold">Change Destination</h4>
                                 </div>
 
                                 <TravelMap
@@ -171,6 +171,12 @@ export default async function TourDayPage({ params }: PageProps) {
                               </div>
                             ) : (
                               <div className="space-y-8">
+
+                                <h4 className="flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.4em] text-amber-500 font-bold">
+                                  <Eye className="w-4 h-4" /> [ Sightseeing ]
+                                </h4>
+
+
                                 {experience ? (
                                   <div className="w-full">
                                     <ExperienceCard experience={experience} index={idx} className="sm:aspect-video" />
@@ -213,7 +219,7 @@ export default async function TourDayPage({ params }: PageProps) {
               {(hotel || dayData.accommodation) && (
                 <div className="mt-16 pt-12 border-t border-black/5">
                   <h4 className="flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.4em] text-amber-500 mb-10 font-bold">
-                    <BedDouble className="w-4 h-4" /> [ Base Operations ]
+                    <BedDouble className="w-4 h-4" /> [ Accomodation for the Night ]
                   </h4>
 
                   {hotel ? (

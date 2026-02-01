@@ -2,21 +2,22 @@
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Plus, Calendar, Loader2, Sparkles, Check, X, XCircle } from "lucide-react";
+import { ArrowRight, Plus, Calendar, Loader2, Sparkles, Check, X, XCircle, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Destination } from "../../destinations/schema";
 import { Experience } from "../../experiences/schema";
 import { Hotel } from "../../../admin/hotels/schema";
 import { Cost } from "../../../admin/settings/schema";
 import { DayItinerary, ItineraryItem } from "@/app/admin/tour-requests/types";
-import { DayBuilder } from "./builder/DayBuilder";
-import { ExperienceSelector } from "./builder/ExperienceSelector";
-import { TravelSelector } from "./builder/TravelSelector";
-import { HotelSelector } from "./builder/HotelSelector";
+import { DayBuilder } from "./builder/day-builder";
+import { ExperienceSelector } from "./builder/experience-selector";
+import { TravelSelector } from "./builder/travel-selector";
+import { HotelSelector } from "./builder/hotel-selector";
 import { submitTourRequest } from "../actions";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getTravelTime } from "@/constants/travel-times";
+import { DestinationCard } from "@/components/common/destination-card";
 
 function generateId() {
     return Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
@@ -51,6 +52,7 @@ export function CustomItineraryBuilder({
     const [showTravelSelector, setShowTravelSelector] = useState(false);
     const [showHotelSelector, setShowHotelSelector] = useState(false);
     const [showDestinationChangeGrid, setShowDestinationChangeGrid] = useState(false);
+    const [destinationSearch, setDestinationSearch] = useState("");
 
     // Form State
     const [userDetails, setUserDetails] = useState({
@@ -328,7 +330,7 @@ export function CustomItineraryBuilder({
                             ← Back
                         </button>
                     )}
-                    <button onClick={onBack} className="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-red-500 transition-colors">
+                    <button onClick={onBack} className="text-xs font-medium uppercase tracking-widest text-gray-400 hover:text-red-500 transition-colors">
                         Exit Studio
                     </button>
                 </div>
@@ -343,7 +345,7 @@ export function CustomItineraryBuilder({
                         exit={{ opacity: 0, x: -20 }}
                         className="max-w-3xl mx-auto space-y-12"
                     >
-                        <div className="bg-amber-50/50 p-8 rounded-xl border border-amber-100 mb-8">
+                        <div className="bg-amber-50/50 p-8 rounded-xs border border-amber-100 mb-8">
                             <div className="flex items-center gap-4 text-amber-900 mb-4">
                                 <Sparkles className="w-5 h-5" />
                                 <h3 className="text-sm font-bold uppercase tracking-widest">Bespoke Information Gathering</h3>
@@ -398,7 +400,7 @@ export function CustomItineraryBuilder({
                                         value={userDetails.nationality}
                                         onValueChange={(value: "Indian" | "International") => setUserDetails({ ...userDetails, nationality: value })}
                                     >
-                                        <SelectTrigger className="w-full border-b border-black/10 py-4 text-lg font-light focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none h-auto px-0">
+                                        <SelectTrigger className="flex w-full h-auto min-h-[60px] items-center justify-between text-black border-0 border-b border-black/10 py-4 text-lg font-light focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none px-0 shadow-none ring-0 focus:ring-0">
                                             <SelectValue placeholder="Select nationality" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -424,7 +426,7 @@ export function CustomItineraryBuilder({
                             </div>
 
                             {/* Travelers Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-10 bg-neutral-50 p-8 rounded-lg border border-neutral-100">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-10 bg-neutral-50 p-8 roundedxs border border-neutral-100">
                                 <FormInput
                                     label="Adults (12+)"
                                     name="adults"
@@ -461,7 +463,7 @@ export function CustomItineraryBuilder({
                                     rows={4}
                                     value={userDetails.message}
                                     onChange={e => setUserDetails({ ...userDetails, message: e.target.value })}
-                                    className="w-full border-b border-black/10 py-4 text-lg font-light focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none resize-none placeholder:text-gray-300 italic serif"
+                                    className="w-full text-black border-b border-black/10 py-4 text-lg font-light focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none resize-none placeholder:text-gray-300 italic serif"
                                     placeholder="Any dietary restrictions, physical limitations, or special occasions?"
                                 />
                             </div>
@@ -489,7 +491,7 @@ export function CustomItineraryBuilder({
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -20 }}
-                        className="max-w-4xl mx-auto space-y-12"
+                        className="space-y-12"
                     >
                         <div className="text-center space-y-4 mb-12">
                             <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-amber-600 font-mono">// spatial initialization</span>
@@ -498,9 +500,12 @@ export function CustomItineraryBuilder({
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {destinations.filter(d => ["Paro", "Phuentsholing", "Samdrup Jongkhar", "Gelephu"].some(name => d.name.includes(name))).map((dest) => (
-                                <button
+                            {destinations.filter(d => ["Paro", "Phuentsholing", "Samdrup Jongkhar", "Gelephu"].some(name => d.name.includes(name))).map((dest, index) => (
+                                <DestinationCard
                                     key={dest._id}
+                                    destination={dest}
+                                    index={index}
+                                    disableLink
                                     onClick={() => {
                                         const entryItem: ItineraryItem = {
                                             id: generateId(),
@@ -517,14 +522,7 @@ export function CustomItineraryBuilder({
                                         setActiveDestination(dest);
                                         setStep("BUILDER");
                                     }}
-                                    className="group relative overflow-hidden bg-white aspect-video rounded-lg border border-neutral-100 hover:border-amber-600 transition-all shadow-sm hover:shadow-xl"
-                                >
-                                    <img src={dest.image} alt={dest.name} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-                                    <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8 text-left">
-                                        <h4 className="text-2xl font-light uppercase tracking-tight text-white group-hover:text-amber-600 transition-colors">{dest.name}</h4>
-                                        <p className="text-[10px] text-white/60 uppercase tracking-[0.4em] font-bold mt-2">Initialize at this coordinate</p>
-                                    </div>
-                                </button>
+                                />
                             ))}
                         </div>
                     </motion.div>
@@ -539,7 +537,7 @@ export function CustomItineraryBuilder({
                         {/* Sidebar: Cost Summary */}
                         <div className="lg:col-span-4 space-y-8">
                             <div className="sticky top-24 space-y-8">
-                                <div className="bg-black text-white p-8 rounded-lg shadow-2xl">
+                                <div className="bg-black text-white p-8 rounded-xs shadow-2xl">
                                     <div className="flex items-center gap-3 mb-8 text-amber-500">
                                         <Sparkles className="w-5 h-5" />
                                         <span className="text-[10px] font-bold uppercase tracking-[0.3em]">Estimated Investment</span>
@@ -593,7 +591,7 @@ export function CustomItineraryBuilder({
                         {/* Main Builder Area */}
                         <div className="lg:col-span-8 space-y-12">
                             {/* Destination Header */}
-                            <div className="flex items-center justify-between p-8 bg-white border border-neutral-100 rounded-lg shadow-sm">
+                            <div className="flex items-center justify-between p-8 bg-white border border-neutral-100 rounded-xs shadow-sm">
                                 <div className="flex items-center gap-6">
                                     {activeDestination && (
                                         <img src={activeDestination.image} className="w-16 h-16 rounded-full object-cover ring-2 ring-amber-500/20" alt="" />
@@ -644,7 +642,7 @@ export function CustomItineraryBuilder({
 
                             <button
                                 onClick={addDay}
-                                className="w-full py-12 border-2 border-dashed border-neutral-200 rounded-xl text-neutral-400 hover:text-black hover:border-black transition-all flex flex-col items-center gap-4 group"
+                                className="w-full py-12 border-2 border-dashed border-neutral-200 rounded-xs text-neutral-400 hover:text-black hover:border-black transition-all flex flex-col items-center gap-4 group"
                             >
                                 <Plus className="w-8 h-8 group-hover:scale-110 transition-transform" />
                                 <span className="text-[10px] font-bold uppercase tracking-[0.4em]">Expand Chronology (Day {days.length + 1})</span>
@@ -680,38 +678,60 @@ export function CustomItineraryBuilder({
             <AnimatePresence>
                 {
                     showDestinationChangeGrid && (
-                        <div className="fixed inset-0 z-100 flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm">
+                        <div className="fixed inset-0 z-100 flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm" onClick={() => setShowDestinationChangeGrid(false)}>
                             <motion.div
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.95 }}
-                                className="bg-white w-full max-w-4xl max-h-[85vh] overflow-hidden rounded-xl shadow-2xl flex flex-col"
+                                initial={{ scale: 0.95, y: 20 }}
+                                animate={{ scale: 1, y: 0 }}
+                                exit={{ scale: 0.95, y: 20 }}
+                                className="bg-neutral-50 w-full max-w-7xl max-h-[90vh] rounded-xs overflow-hidden shadow-2xl flex flex-col"
+                                onClick={e => e.stopPropagation()}
                             >
-                                <div className="p-8 border-b border-neutral-100 flex justify-between items-center">
+                                {/* Header */}
+                                <div className="p-6 border-b border-gray-200 flex items-center justify-between bg-white z-10">
                                     <div>
-                                        <h3 className="text-2xl font-light uppercase tracking-tight">Select Next Coordinate</h3>
-                                        <p className="text-xs text-gray-400 uppercase tracking-widest mt-1">Automatic travel time calculation will be applied</p>
+                                        <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-amber-600 block mb-2">
+                                            // navigation
+                                        </span>
+                                        <h2 className="text-black text-3xl font-light tracking-tight uppercase">Select Next Coordinate</h2>
                                     </div>
-                                    <button onClick={() => setShowDestinationChangeGrid(false)} className="text-gray-400 hover:text-black">
-                                        <X className="w-6 h-6" />
+                                    <button
+                                        onClick={() => setShowDestinationChangeGrid(false)}
+                                        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                                    >
+                                        <X className="w-6 h-6 text-gray-400" />
                                     </button>
                                 </div>
-                                <div className="p-8 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                                    {destinations.filter(d => d._id !== activeDestination?._id).map((dest) => (
-                                        <button
-                                            key={dest._id}
-                                            onClick={() => addTravelBetweenDestinations(activeDayIndex ?? days.length - 1, dest)}
-                                            className="group relative aspect-video overflow-hidden rounded-lg bg-neutral-100"
-                                        >
-                                            <img src={dest.image} alt={dest.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <span className="text-white text-[10px] font-bold uppercase tracking-widest border border-white/40 px-4 py-2">Select {dest.name}</span>
-                                            </div>
-                                            <div className="absolute bottom-4 left-4">
-                                                <h4 className="text-white font-light uppercase tracking-tight text-lg">{dest.name}</h4>
-                                            </div>
-                                        </button>
-                                    ))}
+
+                                {/* Filters */}
+                                <div className="p-6 bg-white border-b border-gray-200">
+                                    <div className="relative">
+                                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                        <input
+                                            type="text"
+                                            placeholder="Search destinations..."
+                                            value={destinationSearch}
+                                            onChange={(e) => setDestinationSearch(e.target.value)}
+                                            className="w-full text-black bg-gray-50 border border-gray-200 rounded-xs pl-12 pr-4 py-3 placeholder:text-gray-400 focus:outline-none focus:border-amber-600 transition-colors"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Content */}
+                                <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {destinations
+                                            .filter(d => d._id !== activeDestination?._id)
+                                            .filter(d => d.name.toLowerCase().includes(destinationSearch.toLowerCase()))
+                                            .map((dest, index) => (
+                                                <DestinationCard
+                                                    key={dest._id}
+                                                    destination={dest}
+                                                    index={index}
+                                                    disableLink
+                                                    onClick={() => addTravelBetweenDestinations(activeDayIndex ?? days.length - 1, dest)}
+                                                />
+                                            ))}
+                                    </div>
                                 </div>
                             </motion.div>
                         </div>

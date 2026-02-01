@@ -38,7 +38,7 @@ export function ExperienceSelector({ experiences, onSelect, onClose }: Experienc
                 initial={{ scale: 0.95, y: 20 }}
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.95, y: 20 }}
-                className="bg-neutral-50 w-full max-w-6xl max-h-[90vh] rounded-xl overflow-hidden shadow-2xl flex flex-col"
+                className="bg-neutral-50 w-full max-w-7xl max-h-[90vh] rounded-xs overflow-hidden shadow-2xl flex flex-col"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Header */}
@@ -47,7 +47,7 @@ export function ExperienceSelector({ experiences, onSelect, onClose }: Experienc
                         <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-amber-600 block mb-2">
               // curated selection
                         </span>
-                        <h2 className="text-3xl font-light tracking-tight uppercase">Select Experience</h2>
+                        <h2 className="text-black text-3xl font-light tracking-tight uppercase">Select Experience</h2>
                     </div>
                     <button
                         onClick={onClose}
@@ -66,7 +66,7 @@ export function ExperienceSelector({ experiences, onSelect, onClose }: Experienc
                             placeholder="Search experiences..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full bg-gray-50 border border-gray-200 rounded-lg pl-12 pr-4 py-3 placeholder:text-gray-400 focus:outline-none focus:border-amber-600 transition-colors"
+                            className="w-full text-black bg-gray-50 border border-gray-200 rounded-xs pl-12 pr-4 py-3 placeholder:text-gray-400 focus:outline-none focus:border-amber-600 transition-colors"
                         />
                     </div>
                     <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">

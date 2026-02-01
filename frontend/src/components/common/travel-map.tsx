@@ -23,7 +23,7 @@ export function TravelMap({ from, to, fromCoordinates, toCoordinates }: TravelMa
     const displayCoordinates = fromCoordinates || toCoordinates;
 
     return (
-        <div className="relative w-full aspect-video bg-neutral-100 border border-black/5 rounded-sm overflow-hidden group">
+        <div className="relative w-full aspect-video bg-neutral-100 border border-black/5 rounded-xs overflow-hidden group">
             {/* Map Layer */}
             <div className="absolute inset-0 opacity-60 grayscale group-hover:grayscale-0 transition-all duration-1000">
                 {hasCoordinates ? (
