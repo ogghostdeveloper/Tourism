@@ -2,8 +2,9 @@
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Plus, Calendar, Loader2, Sparkles, Check, X, XCircle, Search } from "lucide-react";
+import { ArrowRight, Plus, Calendar, Loader2, Sparkles, Check, X, XCircle, Search, Headphones } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import { Destination } from "../../destinations/schema";
 import { Experience } from "../../experiences/schema";
 import { Hotel } from "../../../admin/hotels/schema";
@@ -537,6 +538,22 @@ export function CustomItineraryBuilder({
                         {/* Sidebar: Cost Summary */}
                         <div className="lg:col-span-4 space-y-8">
                             <div className="sticky top-24 space-y-8">
+                                <Link
+                                    href="/enquire"
+                                    className="w-full bg-white border border-gray-200 py-6 px-6 rounded-xs flex items-center justify-between group hover:border-amber-500 transition-colors shadow-sm"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-10 h-10 bg-amber-50 rounded-full flex items-center justify-center text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition-colors">
+                                            <Headphones className="w-5 h-5" />
+                                        </div>
+                                        <div className="text-left">
+                                            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover:text-amber-600 transition-colors block">Need Assistance?</span>
+                                            <span className="text-sm font-bold uppercase tracking-wide text-black mt-1 block">Get Help Planning</span>
+                                        </div>
+                                    </div>
+                                    <ArrowRight className="w-5 h-5 text-gray-300 group-hover:text-amber-600 transition-colors" />
+                                </Link>
+
                                 <div className="bg-black text-white p-8 rounded-xs shadow-2xl">
                                     <div className="flex items-center gap-3 mb-8 text-amber-500">
                                         <Sparkles className="w-5 h-5" />

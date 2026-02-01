@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, Search } from "lucide-react";
-import { OverlayMenu } from "@/components/ui/OverlayMenu";
+import { OverlayMenu } from "@/components/ui/overlay-menu";
 import { useScroll, useMotionValueEvent } from "framer-motion";
 
 export function Header() {

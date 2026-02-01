@@ -63,18 +63,10 @@ export function Footer() {
             <ul className="space-y-4 text-sm">
               <li>
                 <Link
-                  href="/contact"
+                  href="/enquire"
                   className="hover:text-gray-300 transition-colors"
                 >
                   Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/faq"
-                  className="hover:text-gray-300 transition-colors"
-                >
-                  FAQs
                 </Link>
               </li>
               <li>
@@ -107,7 +99,7 @@ export function Footer() {
             </div>
 
             <Link
-              href="/enquire"
+              href="/plan-my-trip"
               className="group relative flex items-center justify-center gap-4 bg-white py-5 text-black text-[9px] font-bold uppercase tracking-[0.4em] transition-all hover:bg-amber-600 hover:text-white overflow-hidden"
             >
               <span className="relative z-10">Start Planning</span>

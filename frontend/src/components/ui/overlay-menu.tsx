@@ -111,6 +111,15 @@ export function OverlayMenu({ isOpen, onClose }: OverlayMenuProps) {
                     About Us
                   </Link>
                 </motion.div>
+                <motion.div variants={itemVariants}>
+                  <Link
+                    href="/enquire"
+                    className="text-4xl lg:text-6xl font-light hover:text-gray-300 transition-colors"
+                    onClick={onClose}
+                  >
+                    Enquire
+                  </Link>
+                </motion.div>
               </motion.nav>
 
               {/* Secondary Navigation / Contact */}
