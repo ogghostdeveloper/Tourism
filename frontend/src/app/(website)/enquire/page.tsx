@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowRight, Check, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -61,10 +61,10 @@ export default function EnquirePage() {
                         <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.6em] block font-bold">
                             // journey initiated
                         </span>
-                        <h1 className="text-5xl md:text-7xl font-light tracking-tighter text-white uppercase">
+                        <h1 className="text-6xl md:text-9xl font-light text-white tracking-tighter mb-12 uppercase mix-blend-overlay opacity-90 drop-shadow-2xl">
                             Your <span className="italic font-serif normal-case text-amber-600">Sanctuary</span> awaits
                         </h1>
-                        <p className="text-gray-400 leading-relaxed text-xl font-light italic max-w-lg mx-auto">
+                        <p className="text-gray-400 text-lg md:text-xl leading-relaxed font-light italic">
                             "The path to the Kingdom is now being prepared for you. Our specialists will reach out to weave your story shortly."
                         </p>
                     </div>
@@ -121,18 +121,9 @@ export default function EnquirePage() {
                             Begin Your <br />
                             <span className="italic font-serif normal-case text-amber-600">Odyssey</span>
                         </h1>
-                        <p className="text-xl md:text-2xl text-white/60 font-light italic max-w-2xl mx-auto leading-relaxed">
+                        <p className="text-lg md:text-xl text-white/60 font-light italic max-w-2xl mx-auto leading-relaxed">
                             "Tell us the texture of your curiosity. Every journey we plan is a unique weave in the tapestry of the Kingdom of Bhutan."
                         </p>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 1 }}
-                        className="absolute bottom-10 left-1/2 -translate-x-1/2"
-                    >
-                        <ChevronDown className="w-10 h-10 text-white/40 animate-bounce font-light" />
                     </motion.div>
                 </div>
             </section>
