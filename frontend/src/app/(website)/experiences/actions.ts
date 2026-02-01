@@ -26,9 +26,20 @@ export async function getExperiences(): Promise<Experience[]> {
   }
 }
 
+async function resolveExperienceCategory(experience: any) {
+  if (experience && experience.category && experience.category.length === 24) {
+    const categoryDoc = await typeDb.getExperienceTypeById(experience.category);
+    if (categoryDoc) {
+      experience.category = categoryDoc.title;
+    }
+  }
+  return experience;
+}
+
 export async function getExperienceBySlug(slug: string): Promise<Experience | null> {
   try {
     const experience = await db.getExperienceBySlug(slug);
+    if (experience) await resolveExperienceCategory(experience);
     return experience as Experience | null;
   } catch (error) {
     console.error("Error fetching experience:", error);
@@ -39,8 +50,9 @@ export async function getExperienceBySlug(slug: string): Promise<Experience | nu
 export async function getExperiencesByCategory(category: string): Promise<Experience[]> {
   try {
     const data = await db.listExperiences(1, 100);
-    if (category === "All") return data.items as Experience[];
-    return (data.items as Experience[]).filter((e) => e.category === category);
+    const resolved = await Promise.all(data.items.map(resolveExperienceCategory));
+    if (category === "All") return resolved as Experience[];
+    return (resolved as Experience[]).filter((e) => e.category === category);
   } catch (error) {
     console.error("Error fetching experiences by category:", error);
     return [];
@@ -50,7 +62,8 @@ export async function getExperiencesByCategory(category: string): Promise<Experi
 export async function getFeaturedExperiences(limit: number = 3): Promise<Experience[]> {
   try {
     const data = await db.listExperiences(1, 100);
-    const sorted = [...data.items].sort((a, b) => (b.priority || 0) - (a.priority || 0));
+    const resolved = await Promise.all(data.items.map(resolveExperienceCategory));
+    const sorted = [...resolved].sort((a, b) => (b.priority || 0) - (a.priority || 0));
     return sorted.slice(0, limit) as Experience[];
   } catch (error) {
     console.error("Error fetching featured experiences:", error);
@@ -61,7 +74,8 @@ export async function getFeaturedExperiences(limit: number = 3): Promise<Experie
 export async function getAllExperiences(): Promise<Experience[]> {
   try {
     const data = await db.listExperiences(1, 1000);
-    return data.items as Experience[];
+    const resolved = await Promise.all(data.items.map(resolveExperienceCategory));
+    return resolved as Experience[];
   } catch (error) {
     console.error("Error fetching all experiences:", error);
     return [];

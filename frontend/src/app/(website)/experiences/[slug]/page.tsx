@@ -38,14 +38,14 @@ export default async function ExperienceDetailPage({ params }: PageProps) {
       <div className="container mx-auto px-6 pt-40">
         <ExperienceDetails experience={experience} />
 
+        {/* Map Section */}
+        <ExperienceMap name={experience.title} coordinates={experience.coordinates} />
 
         {/* Gallery Section */}
         {experience.gallery && (
           <ExperienceGallery experience={experience} />
         )}
 
-        {/* Map Section */}
-        <ExperienceMap name={experience.title} coordinates={experience.coordinates} />
       </div>
 
       {/* Similar Experiences */}

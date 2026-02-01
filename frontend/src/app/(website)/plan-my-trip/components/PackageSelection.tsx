@@ -6,11 +6,12 @@ import { TourCard } from "@/components/common/tour-card";
 
 interface PackageSelectionProps {
     packages: Tour[];
+    selectedPackage?: Tour | null;
     onBack: () => void;
     onSelect: (tour: Tour) => void;
 }
 
-export function PackageSelection({ packages, onBack, onSelect }: PackageSelectionProps) {
+export function PackageSelection({ packages, selectedPackage, onBack, onSelect }: PackageSelectionProps) {
 
     return (
         <motion.div
@@ -38,14 +39,33 @@ export function PackageSelection({ packages, onBack, onSelect }: PackageSelectio
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-                {packages.map((pkg, index) => (
-                    <TourCard
-                        key={pkg._id || index}
-                        tour={pkg}
-                        index={index}
-                        onClick={() => onSelect(pkg)}
-                    />
-                ))}
+                {selectedPackage && (
+                    <div className="md:col-span-2 mb-12">
+                        <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.5em] font-bold block mb-8">
+                            // current selection
+                        </span>
+                        <TourCard
+                            tour={selectedPackage}
+                            index={0}
+                            onClick={() => onSelect(selectedPackage)}
+                        />
+                        <div className="mt-16 pt-16 border-t border-black/5">
+                            <span className="font-mono text-gray-400 text-[10px] uppercase tracking-[0.5em] font-bold block">
+                                // other archetypes
+                            </span>
+                        </div>
+                    </div>
+                )}
+                {packages
+                    .filter(pkg => pkg.slug !== selectedPackage?.slug)
+                    .map((pkg, index) => (
+                        <TourCard
+                            key={pkg.slug || index}
+                            tour={pkg}
+                            index={index + (selectedPackage ? 1 : 0)}
+                            onClick={() => onSelect(pkg)}
+                        />
+                    ))}
             </div>
 
             <div className="mt-32 text-center pt-24 border-t border-black/5">

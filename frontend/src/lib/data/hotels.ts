@@ -20,8 +20,8 @@ const getHotelLookupPipeline = (match: any = {}) => [
         $addFields: {
             destinationObjectId: {
                 $cond: {
-                    if: { $regexMatch: { input: { $ifNull: ["$destinationId", { $ifNull: ["$destinationSlug", ""] }] }, regex: /^[0-9a-fA-F]{24}$/ } },
-                    then: { $toObjectId: { $ifNull: ["$destinationId", "$destinationSlug"] } },
+                    if: { $regexMatch: { input: { $ifNull: ["$destination", { $ifNull: ["$destinationId", { $ifNull: ["$destinationSlug", ""] }] }] }, regex: /^[0-9a-fA-F]{24}$/ } },
+                    then: { $toObjectId: { $ifNull: ["$destination", { $ifNull: ["$destinationId", "$destinationSlug"] }] } },
                     else: null
                 }
             }
@@ -156,10 +156,30 @@ export async function getAllHotels() {
     return items.map(formatDoc);
 }
 
-export async function getHotelsByDestination(slug: string) {
+export async function getHotelsByDestination(destinationId?: string, slug?: string) {
     const client = await clientPromise;
     const collection = client.db(DB).collection(COLLECTION);
-    const items = await collection.aggregate(getHotelLookupPipeline({ destinationSlug: slug })).toArray();
+
+    const match: any = { $or: [] };
+    if (destinationId) {
+        match.$or.push({ destinationId: destinationId });
+        match.$or.push({ destination: destinationId });
+        try {
+            const oid = new ObjectId(destinationId);
+            match.$or.push({ destinationId: oid });
+            match.$or.push({ destination: oid });
+        } catch (e) {
+            // Not an ObjectId string, skip
+        }
+    }
+    if (slug) {
+        match.$or.push({ destinationSlug: slug });
+        match.$or.push({ destination: slug });
+    }
+
+    if (match.$or.length === 0) return [];
+
+    const items = await collection.aggregate(getHotelLookupPipeline(match)).toArray();
     return items.map(formatDoc);
 }
 

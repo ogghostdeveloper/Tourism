@@ -64,43 +64,22 @@ export async function getAllDestinations(): Promise<Destination[]> {
 }
 
 export async function getExperiencesByDestination(
-  slug: string
+  destinationId?: string,
+  slug?: string
 ): Promise<Experience[]> {
   try {
-    // We can either find experiences that have this destination in their 'destinations' array
-    // OR find experiences that match the slugs in the destination's 'experiences' array.
-    // Let's do both for robustness if the data is migating.
-    const destination = await destDb.getDestinationBySlug(slug);
-    const allExperiences = await expDb.getAllExperiences();
-
-    if (!destination) return [];
-
-    const linkedByDestination = allExperiences.filter(exp =>
-      // destination.experiences?.includes(exp.slug) || // Deprecated: we now only link from Experience -> Destination
-      exp.destinationSlug === slug ||
-      exp.destinations?.includes(slug)
-    );
-
-    return linkedByDestination as Experience[];
+    const data = await expDb.getExperiencesByDestination(destinationId, slug);
+    return data as Experience[];
   } catch (error) {
     console.error("Error fetching experiences by destination:", error);
     return [];
   }
 }
 
-export async function getHotelsByDestination(slug: string): Promise<Hotel[]> {
+export async function getHotelsByDestination(destinationId?: string, slug?: string): Promise<Hotel[]> {
   try {
-    const destination = await destDb.getDestinationBySlug(slug);
-    const allHotels = await hotelDb.getAllHotels();
-
-    if (!destination) return [];
-
-    const linkedHotels = allHotels.filter(hotel =>
-      // destination.hotels?.includes(hotel.id) || // Deprecated: we now only link from Hotel -> Destination
-      hotel.destinationSlug === slug
-    );
-
-    return linkedHotels as Hotel[];
+    const data = await hotelDb.getHotelsByDestination(destinationId, slug);
+    return data as Hotel[];
   } catch (error) {
     console.error("Error fetching hotels by destination:", error);
     return [];

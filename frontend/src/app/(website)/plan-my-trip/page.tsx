@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getPlanMyTripData } from "./actions";
 import PlanMyTripClient from "./components/PlanMyTripClient";
 
@@ -5,12 +6,14 @@ export default async function PlanMyTripPage() {
     const data = await getPlanMyTripData();
 
     return (
-        <PlanMyTripClient
-            packages={data.packages}
-            destinations={data.destinations}
-            experiences={data.experiences}
-            hotels={data.hotels}
-            costs={data.costs}
-        />
+        <Suspense fallback={<div className="min-h-screen bg-white" />}>
+            <PlanMyTripClient
+                packages={data.packages}
+                destinations={data.destinations}
+                experiences={data.experiences}
+                hotels={data.hotels}
+                costs={data.costs}
+            />
+        </Suspense>
     );
 }

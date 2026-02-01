@@ -204,8 +204,29 @@ export async function getCategoriesForDropdown() {
     return categories.map(cat => ({ title: cat, value: cat }));
 }
 
-export async function getExperiencesByDestination(slug: string) {
+export async function getExperiencesByDestination(destinationId?: string, slug?: string) {
     const client = await clientPromise;
-    const items = await client.db(DB).collection<Experience>(COLLECTION).find({ destinationSlug: slug }).toArray();
+    const collection = client.db(DB).collection<Experience>(COLLECTION);
+
+    const query: any = { $or: [] };
+    if (destinationId) {
+        query.$or.push({ destinations: destinationId });
+        query.$or.push({ destinationId: destinationId });
+        try {
+            const oid = new ObjectId(destinationId);
+            query.$or.push({ destinations: oid });
+            query.$or.push({ destinationId: oid });
+        } catch (e) {
+            // Not an ObjectId string
+        }
+    }
+    if (slug) {
+        query.$or.push({ destinationSlug: slug });
+        query.$or.push({ destinations: slug });
+    }
+
+    if (query.$or.length === 0) return [];
+
+    const items = await collection.aggregate(getExperienceLookupPipeline(query)).toArray();
     return items.map(formatDoc);
 }

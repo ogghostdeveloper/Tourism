@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Hotel } from "@/app/admin/hotels/schema";
@@ -7,9 +8,10 @@ import { Hotel } from "@/app/admin/hotels/schema";
 interface HotelCardProps {
     hotel: Hotel;
     index: number;
+    className?: string;
 }
 
-export function HotelCard({ hotel, index }: HotelCardProps) {
+export function HotelCard({ hotel, index, className }: HotelCardProps) {
     // Handle rating logic (can be string or number)
     const ratingValue = typeof hotel.rating === 'string' ? parseFloat(hotel.rating) : hotel.rating || 5;
     const starsArray = [...Array(Math.floor(ratingValue))].slice(0, 5);
@@ -22,7 +24,10 @@ export function HotelCard({ hotel, index }: HotelCardProps) {
             transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
         >
             <Link href={`/hotels/${hotel.slug}`}>
-                <div className="group relative block aspect-4/5 overflow-hidden rounded-xs border border-black/5 bg-neutral-100 pointer-events-auto cursor-pointer">
+                <div className={cn(
+                    "group relative block aspect-4/5 overflow-hidden rounded-xs border border-black/5 bg-neutral-100 pointer-events-auto cursor-pointer",
+                    className
+                )}>
                     {/* Image Layer */}
                     <img
                         src={hotel.image}

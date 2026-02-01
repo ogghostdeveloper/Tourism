@@ -43,7 +43,19 @@ export function DestinationCarousel({
   if (otherDestinations.length === 0) return null;
 
   return (
-    <section className="py-24 md:py-40 bg-white relative overflow-hidden">
+    <section className="py-24 md:py-40 relative overflow-hidden border-t border-black/5">
+      {/* Noise Grain Texture */}
+      {/* <div className="absolute inset-0 opacity-[0.2] pointer-events-none mix-blend-overlay">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <filter id="noiseFilter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+          </filter>
+          <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+        </svg>
+      </div> */}
+
+      {/* Soft Vignette */}
+      <div className="absolute inset-0 bg-radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.02) 100%) pointer-events-none" />
       {/* Decorative Background Text - Seamless Loop */}
       <div className="absolute top-0 left-0 w-full overflow-hidden opacity-[0.03] select-none pointer-events-none">
         <motion.div

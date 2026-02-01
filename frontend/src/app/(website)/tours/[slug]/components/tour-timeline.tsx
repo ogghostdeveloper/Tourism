@@ -40,7 +40,7 @@ export function TourTimeline({ days, slug }: TourTimelineProps) {
                   <img
                     src={day.image}
                     alt={day.title}
-                    className="w-full h-full object-cover saturate-[0.6] brightness-[1.05] contrast-[0.95] transition-all duration-1000 group-hover:saturate-[1.1] group-hover:brightness-100 group-hover:contrast-100 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105"
                   />
                   {/* Vibrant Overlays - Removing desaturating overlays */}
                   <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-700" />

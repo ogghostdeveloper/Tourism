@@ -22,6 +22,7 @@ export const experienceSchema = z.object({
   coordinates: z.tuple([z.number(), z.number()]).optional(),
   destinationSlug: z.string().optional(),
   gallery: z.array(z.string()).optional(),
+  priority: z.number().optional(),
 });
 
 export const hotelSchema = z.object({
@@ -32,6 +33,7 @@ export const hotelSchema = z.object({
   destinationSlug: z.string(),
   rating: z.number().min(1).max(5),
   priceRange: z.enum(["$$", "$$$", "$$$$"]),
+  priority: z.number().optional(),
 });
 
 export type Destination = z.infer<typeof destinationSchema>;

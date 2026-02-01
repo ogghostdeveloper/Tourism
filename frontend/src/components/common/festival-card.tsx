@@ -30,7 +30,7 @@ export function FestivalCard({ festival, index }: FestivalCardProps) {
                 className="group block relative overflow-hidden bg-neutral-100 border border-black/5 p-8 md:p-12 hover:border-amber-600/30 transition-all duration-700"
             >
                 <div className="flex flex-col gap-10">
-                    <div className="relative aspect-video overflow-hidden rounded-sm">
+                    <div className="relative aspect-video overflow-hidden rounded-xs">
                         <img
                             src={festival.image}
                             alt={festival.title}

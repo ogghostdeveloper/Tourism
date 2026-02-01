@@ -11,7 +11,14 @@ interface TourHeroProps {
     price?: number;
 }
 
-export function TourHero({ title, image, category, duration, price }: TourHeroProps) {
+
+export function TourHero({
+    title,
+    image,
+    category = "Tours",
+    duration,
+    price
+}: TourHeroProps) {
     const formatPrice = (price?: number) => {
         if (price === undefined) return null;
         return new Intl.NumberFormat('en-US', {
@@ -23,89 +30,111 @@ export function TourHero({ title, image, category, duration, price }: TourHeroPr
     };
 
     return (
-        <section className="h-screen relative overflow-hidden bg-white">
-            {/* Background Image with Reveal */}
+        <div className="h-screen relative overflow-hidden bg-white">
+            {/* Background Image with Color Reveal */}
             <motion.div
-                initial={{ scale: 1.1, opacity: 0 }}
+                initial={{ scale: 1.2, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
                 className="absolute inset-0"
             >
-                <img
-                    src={image}
-                    alt={title}
-                    className="w-full h-full object-cover"
-                />
+                <img src={image} alt={title} className="w-full h-full object-cover saturate-[1.1] contrast-[1.1]" />
+                {/* Cinematic Overlays */}
                 <div className="absolute inset-0 bg-linear-to-b from-black/80 via-transparent to-white via-90%" />
                 <div className="absolute inset-0 bg-linear-to-tr from-amber-500/5 via-transparent to-blue-500/5 mix-blend-overlay" />
             </motion.div>
 
-            {/* Decorative Elements */}
-            <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-0 right-0 w-1/3 h-full bg-linear-to-l from-white/20 to-transparent" />
-            </div>
+            {/* Animated Light Leak */}
+            <motion.div
+                animate={{
+                    opacity: [0.3, 0.5, 0.3],
+                    scale: [1, 1.1, 1],
+                }}
+                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -top-[20%] -right-[10%] w-[60%] h-[60%] bg-amber-500/20 blur-[120px] rounded-full mix-blend-screen"
+            />
 
-            <div className="container mx-auto px-6 h-full flex flex-col justify-end pb-24 relative z-10">
-                <div>
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4 overflow-hidden">
+                {/* Background Large Text (Color Accent) */}
+                <motion.div
+                    initial={{ opacity: 0, x: 100 }}
+                    animate={{ opacity: 0.07, x: 0 }}
+                    transition={{ duration: 2 }}
+                    className="absolute font-bold text-[20vw] uppercase leading-none tracking-tighter select-none pointer-events-none text-amber-500 whitespace-nowrap"
+                >
+                    {category}
+                </motion.div>
+
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.3, duration: 1 }}
+                    className="relative z-10"
+                >
+                    <motion.span
+                        initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.5 }}
-                        className="flex items-center gap-6 mb-8"
+                        className="font-mono text-amber-400 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] mb-6 md:mb-8 block drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]"
                     >
-                        <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.5em]">
-              // expedition: {category || "Bhutan Discovery"}
-                        </span>
-                        <span className="h-px w-12 bg-black/10" />
-                    </motion.div>
+                        // exploring: {category}
+                    </motion.span>
+                    <h1 className="text-6xl md:text-9xl font-light text-white tracking-tighter mb-12 uppercase mix-blend-overlay opacity-90 drop-shadow-2xl">
+                        {title.split(' ').map((word, i) => (
+                            <span key={i} className={i % 2 !== 0 ? "italic font-serif normal-case text-amber-500" : "text-white"}>
+                                {word}{' '}
+                            </span>
+                        ))}
+                    </h1>
 
-                    <motion.h1
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 1, delay: 0.7 }}
-                        className="text-6xl md:text-9xl font-light text-white tracking-tighter mb-12 uppercase mix-blend-overlay opacity-90 drop-shadow-2xl"
-                    >
-                        The <span className="italic font-serif normal-case text-amber-500">Journey</span> <br />
-                        Through {title}
-                    </motion.h1>
-
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 1, delay: 1 }}
-                        className="flex flex-wrap items-center gap-12 border-t border-black/5 pt-12"
-                    >
+                    <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 mt-12 bg-black/30 backdrop-blur-2xl border border-white/10 p-10 md:p-12 rounded-sm transition-all duration-700">
                         {duration && (
-                            <div className="flex flex-col gap-2">
-                                <span className="font-mono text-[10px] text-white uppercase tracking-widest font-bold">Duration</span>
-                                <div className="flex items-center gap-3">
-                                    <Clock className="w-4 h-4 text-amber-600" />
-                                    <span className="text-xl font-light uppercase tracking-tight text-white">{duration}</span>
+                            <div className="flex items-center gap-6 group">
+                                <div className="w-14 h-14 rounded-full border border-white/10 bg-white/5 flex items-center justify-center transition-all duration-500 group-hover:border-amber-500/60">
+                                    <Clock className="w-6 h-6 text-amber-500" />
+                                </div>
+                                <div className="text-left">
+                                    <span className="block font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-1">Duration</span>
+                                    <span className="font-light tracking-widest text-lg md:text-xl uppercase text-white">{duration}</span>
                                 </div>
                             </div>
                         )}
 
                         {price !== undefined && (
-                            <div className="flex flex-col gap-2">
-                                <span className="font-mono text-[10px] text-white uppercase tracking-widest font-bold">Pricing</span>
-                                <div className="flex items-center gap-3">
-                                    <Tag className="w-4 h-4 text-amber-600" />
-                                    <span className="text-xl font-light uppercase tracking-tight text-white">{formatPrice(price)}</span>
+                            <>
+                                <div className="h-16 w-px bg-white/10 hidden md:block" />
+                                <div className="flex items-center gap-6 group">
+                                    <div className="w-14 h-14 rounded-full border border-white/10 bg-white/5 flex items-center justify-center transition-all duration-500 group-hover:border-amber-500/60">
+                                        <Tag className="w-6 h-6 text-amber-500" />
+                                    </div>
+                                    <div className="text-left">
+                                        <span className="block font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-1">Pricing From</span>
+                                        <span className="font-light tracking-widest text-lg md:text-xl uppercase text-white">{formatPrice(price)}</span>
+                                    </div>
                                 </div>
-                            </div>
+                            </>
                         )}
-
-                        <div className="ml-auto hidden md:block">
-                            <span className="font-mono text-[10px] text-gray-400 uppercase tracking-[0.5em] writing-mode-vertical-rl rotate-180">
-                // authenticated expedition
-                            </span>
-                        </div>
-                    </motion.div>
-                </div>
+                    </div>
+                </motion.div>
             </div>
 
-            {/* Light Leak Effect (Subtle) */}
-            <div className="absolute top-0 left-0 w-full h-full bg-linear-to-tr from-amber-500/5 via-transparent to-transparent pointer-events-none mix-blend-soft-light" />
-        </section>
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.5, duration: 1 }}
+                className="absolute bottom-12 left-12 flex flex-col items-start gap-4"
+            >
+                <div className="font-mono text-[9px] tracking-[0.3em] text-amber-700/60 uppercase space-y-2">
+                    <p className="flex items-center gap-2">
+                        <span className="w-1 h-1 bg-amber-600 rounded-full animate-pulse" />
+                        Kingdom of Bhutan
+                    </p>
+                    <p className="flex items-center gap-2 text-gray-500">
+                        Official Expeditions
+                    </p>
+                </div>
+                <div className="w-px h-16 bg-linear-to-b from-amber-600/50 to-transparent" />
+            </motion.div>
+        </div>
     );
 }
+

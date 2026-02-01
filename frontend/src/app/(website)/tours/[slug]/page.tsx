@@ -3,7 +3,7 @@ import { TourHero } from "./components/tour-hero";
 import { TourCarousel } from "./components/tour-carousel";
 import { TourItinerary } from "./components/tour-itenary";
 import { TourOverview } from "./components/tour-overview";
-import { getTourBySlug, getRelatedTours } from "../actions";
+import { getTourBySlug, getAllTours } from "../actions";
 import CallToAction from "@/components/common/call-to-action";
 import { TourBookingCard } from "./components/tour-booking-card";
 
@@ -13,13 +13,14 @@ interface PageProps {
 
 export default async function TourPage({ params }: PageProps) {
   const { slug } = await params;
-  const tour = await getTourBySlug(slug);
+  const [tour, allTours] = await Promise.all([
+    getTourBySlug(slug),
+    getAllTours()
+  ]);
 
   if (!tour) {
     notFound();
   }
-
-  const relatedTours = await getRelatedTours(slug);
 
   return (
     <div className="min-h-screen bg-white text-black">
@@ -31,8 +32,8 @@ export default async function TourPage({ params }: PageProps) {
         price={tour.price}
       />
 
-      <div className="container mx-auto px-6 py-40">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-start mb-40">
+      <div className="container mx-auto px-6 pt-40">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-start">
           <TourOverview tour={tour} />
           <TourBookingCard slug={tour.slug} />
         </div>
@@ -41,7 +42,7 @@ export default async function TourPage({ params }: PageProps) {
       </div>
 
       {/* Related Tours Section */}
-      <TourCarousel tours={relatedTours} currentSlug={slug} />
+      <TourCarousel tours={allTours} currentSlug={slug} />
       <CallToAction />
     </div>
   );

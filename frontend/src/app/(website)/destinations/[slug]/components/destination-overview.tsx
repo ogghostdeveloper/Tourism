@@ -15,7 +15,7 @@ export function DestinationOverview({
   slug,
 }: DestinationOverviewProps) {
   return (
-    <section className="py-40 bg-white text-black relative">
+    <section className="pt-40 bg-white text-black relative">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-start">
           <motion.div

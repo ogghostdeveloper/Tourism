@@ -30,8 +30,8 @@ export default async function DestinationPage({ params }: PageProps) {
 
   // Fetch related data
   const allDestinations = await getAllDestinations();
-  const experiences = await getExperiencesByDestination(slug);
-  const hotels = await getHotelsByDestination(slug);
+  const experiences = await getExperiencesByDestination(destination._id, slug);
+  const hotels = await getHotelsByDestination(destination._id, slug);
 
   // Filter festivals (Case insensitive check on category or title)
   const festivals = experiences.filter(

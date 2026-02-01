@@ -6,10 +6,23 @@ import * as experienceDb from "@/lib/data/experiences";
 import * as destinationDb from "@/lib/data/destinations";
 import { Tour, TourDay } from "./schema";
 
+import * as experienceTypeDb from "@/lib/data/experience-types";
+
+async function resolveTourCategory(tour: any) {
+  if (tour && tour.category && tour.category.length === 24) {
+    const categoryDoc = await experienceTypeDb.getExperienceTypeById(tour.category);
+    if (categoryDoc) {
+      tour.category = categoryDoc.title;
+    }
+  }
+  return tour;
+}
+
 export async function getAllTours(): Promise<Tour[]> {
   try {
     const all = await tourDb.getAllTours();
-    return all as Tour[];
+    const resolved = await Promise.all(all.map(resolveTourCategory));
+    return resolved as Tour[];
   } catch (error) {
     console.error("Error fetching all tours:", error);
     throw new Error("Failed to fetch tours");
@@ -19,8 +32,8 @@ export async function getAllTours(): Promise<Tour[]> {
 export async function getTopPriorityTours(limit: number = 5): Promise<Tour[]> {
   try {
     const all = await tourDb.getAllTours();
-    // tourDb.getAllTours() already sorts by { priority: -1, title: 1 }
-    return all.slice(0, limit) as Tour[];
+    const resolved = await Promise.all(all.slice(0, limit).map(resolveTourCategory));
+    return resolved as Tour[];
   } catch (error) {
     console.error("Error fetching top priority tours:", error);
     throw new Error("Failed to fetch top priority tours");
@@ -30,6 +43,7 @@ export async function getTopPriorityTours(limit: number = 5): Promise<Tour[]> {
 export async function getTourBySlug(slug: string): Promise<Tour | null> {
   try {
     const tour = await tourDb.getTourBySlug(slug);
+    if (tour) await resolveTourCategory(tour);
     return tour as Tour | null;
   } catch (error) {
     console.error(`Error fetching tour with slug ${slug}:`, error);
@@ -40,6 +54,7 @@ export async function getTourBySlug(slug: string): Promise<Tour | null> {
 export async function getTourById(id: string): Promise<Tour | null> {
   try {
     const tour = await tourDb.getTourById(id);
+    if (tour) await resolveTourCategory(tour);
     return tour as Tour | null;
   } catch (error) {
     console.error(`Error fetching tour with id ${id}:`, error);

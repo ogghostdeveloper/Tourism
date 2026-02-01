@@ -1,15 +1,11 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
 export default function CallToAction() {
   return (
-    <section className="py-40 bg-white relative overflow-hidden border-t border-black/5">
-      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=2952&auto=format&fit=crop')] bg-cover bg-center opacity-10 saturate-[0.5]" />
-      <div className="absolute inset-0 bg-linear-to-t from-white via-white/80 to-white" />
-
+    <section className="py-40 bg-white relative overflow-hidden ">
       {/* Background Decorative Waves */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
         <svg
@@ -28,9 +24,31 @@ export default function CallToAction() {
         </svg>
       </div>
 
-      {/* Background Grid - Minimalist Overlay */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
-        <div className="h-full w-full bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-size-[60px_60px]" />
+      {/* Abstract Organic Topography - Refined & More Visible with Seamless Fading */}
+      <div className="absolute inset-0 opacity-[0.2] pointer-events-none">
+        <div className="absolute inset-0 bg-linear-to-b from-[#faf9f6] via-transparent to-[#faf9f6] z-10" />
+        <svg width="100%" height="100%" viewBox="0 0 1440 800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <g fill="none" stroke="black" strokeWidth="1">
+            {/* Dense Cluster Right */}
+            <path d="M1300 0 C 1350 150, 1550 200, 1500 350 S 1300 500, 1400 650 S 1550 850, 1500 1000" />
+            <path d="M1250 0 C 1300 160, 1500 210, 1450 360 S 1250 510, 1350 660 S 1500 860, 1450 1010" />
+            <path d="M1200 0 C 1250 170, 1450 220, 1400 370 S 1200 520, 1300 670 S 1450 870, 1400 1020" />
+            <path d="M1150 0 C 1200 180, 1400 230, 1350 380 S 1150 530, 1250 680 S 1400 880, 1350 1030" />
+
+            {/* Dense Cluster Left */}
+            <path d="M300 0 C 250 150, 50 200, 100 350 S 300 500, 200 650 S 50 850, 100 1000" />
+            <path d="M250 0 C 200 160, 0 210, 50 360 S 250 510, 150 660 S 0 860, 50 1010" />
+            <path d="M200 0 C 150 170, -50 220, 0 370 S 200 520, 100 670 S -50 870, 0 1020" />
+            <path d="M150 0 C 100 180, -100 230, -50 380 S 150 530, 50 680 S -100 880, -50 1030" />
+
+            {/* Central Floating Topo Islands */}
+            <path d="M720 150 C 820 100, 950 200, 900 300 S 650 350, 720 150 Z" />
+            <path d="M725 160 C 810 115, 930 210, 885 290 S 665 330, 725 160 Z" />
+
+            <path d="M480 600 C 580 550, 750 650, 700 750 S 400 850, 480 600 Z" />
+            <path d="M485 610 C 570 565, 730 660, 685 740 S 415 830, 485 610 Z" />
+          </g>
+        </svg>
       </div>
 
       {/* Narrative ID Overlay */}

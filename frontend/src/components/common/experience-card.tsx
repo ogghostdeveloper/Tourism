@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import Link from "next/link";
 export interface Experience {
@@ -16,11 +17,15 @@ export interface ExperienceCardProps {
     experience: Experience;
     index: number;
     disableLink?: boolean;
+    className?: string;
 }
 
-export function ExperienceCard({ experience, index, disableLink }: ExperienceCardProps) {
+export function ExperienceCard({ experience, index, disableLink, className }: ExperienceCardProps) {
     const CardContent = (
-        <div className="group relative block aspect-4/5 overflow-hidden rounded-xs border border-black/5 bg-neutral-100 pointer-events-auto cursor-pointer">
+        <div className={cn(
+            "group relative block aspect-4/5 overflow-hidden rounded-xs border border-black/5 bg-neutral-100 pointer-events-auto cursor-pointer",
+            className
+        )}>
             {/* Image Layer */}
             <img
                 src={experience.image}

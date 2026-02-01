@@ -1,13 +1,14 @@
-import { getTourDay, getRelatedTours } from "../../../actions";
+import { getTourDay, getAllTours } from "../../../actions";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, BedDouble, MapPin, Camera, ShieldCheck, Plus, ChevronLeft, ChevronRight, Clock, ArrowRightLeft, Star } from "lucide-react";
+import { ArrowLeft, MapPin, ShieldCheck, ChevronLeft, ChevronRight, Clock, ArrowRightLeft, Star, BedDouble } from "lucide-react";
 import { DayHero } from "../../components/day-hero";
 import { ExperienceCard } from "@/components/common/experience-card";
+import { HotelCard } from "@/components/common/hotel-card";
 import { TravelMap } from "@/components/common/travel-map";
 import { TourCarousel } from "../../components/tour-carousel";
 import CallToAction from "@/components/common/call-to-action";
-import { cn } from "@/lib/utils";
+import { TourBookingCard } from "../../components/tour-booking-card";
 
 interface PageProps {
   params: Promise<{ slug: string; day: string }>;
@@ -23,7 +24,7 @@ export default async function TourDayPage({ params }: PageProps) {
   }
 
   const { dayData, tour, hotel, experiences } = data;
-  const relatedTours = await getRelatedTours(slug);
+  const allTours = await getAllTours();
 
   const prevDay = dayNumber > 1 ? dayNumber - 1 : null;
   const nextDay = dayNumber < tour.days.length ? dayNumber + 1 : null;
@@ -38,9 +39,9 @@ export default async function TourDayPage({ params }: PageProps) {
       />
 
       {/* Narrative & Protocol Controls */}
-      <div className="container mx-auto px-6 py-12">
+      <div className="container mx-auto px-6 pt-24 md:pt-40">
         {/* Superior Navigation */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-24 gap-8 pb-12">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-8 pb-24">
           <Link
             href={`/tours/${slug}`}
             className="group flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.4em] text-gray-500 hover:text-black transition-all font-bold"
@@ -53,7 +54,7 @@ export default async function TourDayPage({ params }: PageProps) {
             <div className="font-mono text-[10px] text-gray-400 uppercase tracking-widest hidden lg:block font-bold">
               Sequence Registry // Kingdom of Bhutan
             </div>
-            <div className="flex bg-black/5 p-1 rounded-sm">
+            <div className="flex bg-black/5 p-1 rounded-xs">
               {prevDay ? (
                 <Link
                   href={`/tours/${slug}/day/${prevDay}`}
@@ -82,22 +83,22 @@ export default async function TourDayPage({ params }: PageProps) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-start mb-40">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-start mb-48">
           {/* Detailed Briefing */}
           <div className="lg:col-span-8">
-            <div className="flex flex-col gap-12">
+            <div className="flex flex-col gap-20">
               <div className="max-w-3xl">
-                <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-4 block">
+                <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-6 block">
                   // daily briefing log: {dayNumber < 10 ? `0${dayNumber}` : dayNumber}
                 </span>
-                <h2 className="text-5xl md:text-7xl font-light tracking-tighter leading-tight mb-12 uppercase">
+                <h2 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tighter leading-tight mb-8 md:mb-12 uppercase">
                   The <span className="italic font-serif normal-case text-amber-600">Experience</span> <br />of {dayData.title}
                 </h2>
-                <div className="relative pl-8 border-l border-black/10">
-                  <p className="text-xl text-gray-500 leading-relaxed font-light italic">
+                <div className="relative pl-12 border-l border-black/10">
+                  <p className="text-lg md:text-xl text-gray-500 leading-relaxed font-light italic">
                     "{dayData.description}"
                   </p>
-                  <div className="mt-8 font-mono text-[10px] text-gray-500 uppercase tracking-widest flex items-center gap-3 font-bold">
+                  <div className="mt-10 font-mono text-[10px] text-gray-500 uppercase tracking-widest flex items-center gap-3 font-bold">
                     <ShieldCheck className="w-4 h-4 text-amber-600" />
                     Verified Logistics // Sequence Authenticated
                   </div>
@@ -106,14 +107,14 @@ export default async function TourDayPage({ params }: PageProps) {
 
               {/* Protocol Details Grid: Itinerary Items */}
               {dayData.items && dayData.items.length > 0 && (
-                <div className="space-y-12">
-                  <div className="flex items-center gap-4 mb-8">
+                <div className="space-y-20">
+                  <div className="flex items-center gap-4 mb-12">
                     <div className="h-px flex-1 bg-black/5" />
                     <h3 className="font-mono text-xs uppercase tracking-[0.4em] text-gray-400">Planned Sequence</h3>
                     <div className="h-px flex-1 bg-black/5" />
                   </div>
 
-                  <div className="space-y-16 relative">
+                  <div className="space-y-24 relative">
                     {/* Timeline vertical line */}
                     <div className="absolute left-[23px] top-4 bottom-4 w-px bg-black/5 hidden md:block" />
 
@@ -124,7 +125,7 @@ export default async function TourDayPage({ params }: PageProps) {
                         : null;
 
                       return (
-                        <div key={idx} className="relative flex flex-col md:flex-row gap-8 items-start group">
+                        <div key={idx} className="relative flex flex-col md:flex-row gap-12 items-start group">
                           {/* Timeline Dot */}
                           <div className="absolute left-[19px] top-6 w-[9px] h-[9px] rounded-full border border-amber-600 bg-white z-10 hidden md:block group-hover:bg-amber-600 transition-colors" />
 
@@ -136,8 +137,8 @@ export default async function TourDayPage({ params }: PageProps) {
 
                           <div className="flex-1 w-full">
                             {item.type === "travel" ? (
-                              <div className="space-y-4">
-                                <div className="flex items-center gap-4 mb-2">
+                              <div className="space-y-6">
+                                <div className="flex items-center gap-4 mb-4">
                                   <div className="p-2 bg-blue-50 rounded-full">
                                     <ArrowRightLeft className="w-4 h-4 text-blue-600" />
                                   </div>
@@ -169,18 +170,13 @@ export default async function TourDayPage({ params }: PageProps) {
                                 )}
                               </div>
                             ) : (
-                              <div className="space-y-6">
-                                <div className="flex items-center gap-4 mb-2">
-                                  <div className="p-2 bg-amber-50 rounded-full">
-                                    <Star className="w-4 h-4 text-amber-600" />
-                                  </div>
-                                  <h4 className="font-mono text-[10px] uppercase tracking-[0.3em] text-amber-600 font-bold">Curated Experience</h4>
-                                </div>
-
+                              <div className="space-y-8">
                                 {experience ? (
-                                  <ExperienceCard experience={experience} index={idx} />
+                                  <div className="w-full">
+                                    <ExperienceCard experience={experience} index={idx} className="sm:aspect-video" />
+                                  </div>
                                 ) : (
-                                  <div className="bg-neutral-50/50 p-8 rounded-sm border border-black/5">
+                                  <div className="bg-neutral-50/50 p-8 rounded-sm border border-black/5 max-w-sm">
                                     <p className="text-gray-400 italic text-sm">Experience data unavailable</p>
                                   </div>
                                 )}
@@ -196,11 +192,11 @@ export default async function TourDayPage({ params }: PageProps) {
 
               {/* Legacy Activities if no items */}
               {(!dayData.items || dayData.items.length === 0) && dayData.activities && dayData.activities.length > 0 && (
-                <div className="bg-white p-12 hover:bg-neutral-50 transition-colors duration-500 group border border-black/5">
-                  <h4 className="flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.4em] text-amber-600 mb-8 font-bold">
+                <div className="bg-white p-16 hover:bg-neutral-50 transition-colors duration-500 group border border-black/5">
+                  <h4 className="flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.4em] text-amber-600 mb-10 font-bold">
                     <MapPin className="w-4 h-4" /> [ Strategic Objectives ]
                   </h4>
-                  <ul className="space-y-6">
+                  <ul className="space-y-8">
                     {dayData.activities.map((activity: string, index: number) => (
                       <li key={index} className="flex items-start gap-4 group/item">
                         <span className="font-mono text-[10px] text-gray-300 mt-1">[0{index + 1}]</span>
@@ -215,113 +211,42 @@ export default async function TourDayPage({ params }: PageProps) {
 
               {/* Base Operations (Hotel) */}
               {(hotel || dayData.accommodation) && (
-                <div className="mt-12 bg-black text-white p-12 rounded-sm relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 -rotate-45 translate-x-16 -translate-y-16 transition-transform group-hover:rotate-0" />
-
-                  <h4 className="flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.4em] text-amber-500 mb-8 font-bold">
+                <div className="mt-16 pt-12 border-t border-black/5">
+                  <h4 className="flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.4em] text-amber-500 mb-10 font-bold">
                     <BedDouble className="w-4 h-4" /> [ Base Operations ]
                   </h4>
 
                   {hotel ? (
-                    <div className="grid md:grid-cols-2 gap-12 items-center">
-                      <div className="space-y-6">
-                        <div className="flex items-center gap-2">
-                          {Array.from({ length: hotel.rating || 5 }).map((_, i) => (
-                            <Star key={i} className="w-3 h-3 fill-amber-500 text-amber-500" />
-                          ))}
-                        </div>
-                        <h3 className="text-4xl font-light italic serif tracking-tight">
-                          {hotel.name}
-                        </h3>
-                        <p className="text-gray-400 font-light leading-relaxed italic text-lg">
-                          "{hotel.description}"
-                        </p>
-                        <div className="flex items-center gap-4 font-mono text-[10px] text-amber-500 uppercase tracking-widest font-bold">
-                          {hotel.priceRange} // Luxury Verified
-                        </div>
-                      </div>
-                      <div className="aspect-[4/3] rounded-sm overflow-hidden border border-white/10">
-                        <img
-                          src={hotel.image}
-                          alt={hotel.name}
-                          className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000"
-                        />
-                      </div>
+                    <div className="w-full ">
+                      <HotelCard hotel={hotel} index={0} className="sm:aspect-video" />
                     </div>
                   ) : (
-                    <div>
-                      <span className="text-xs font-mono text-gray-400 block mb-2 uppercase tracking-widest font-bold">
-                        Accommodation Verified:
-                      </span>
-                      <p className="text-3xl font-light italic uppercase tracking-tight">
-                        {dayData.accommodation}
-                      </p>
+                    <div className="bg-black text-white p-12 rounded-sm relative overflow-hidden group">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 -rotate-45 translate-x-16 -translate-y-16 transition-transform group-hover:rotate-0" />
+                      <div>
+                        <span className="text-xs font-mono text-gray-400 block mb-2 uppercase tracking-widest font-bold">
+                          Accommodation Verified:
+                        </span>
+                        <p className="text-3xl font-light italic uppercase tracking-tight">
+                          {dayData.accommodation}
+                        </p>
+                      </div>
                     </div>
                   )}
                 </div>
               )}
-
-              {dayData.highlights && dayData.highlights.length > 0 && (
-                <div className="mt-12 pt-8 border-t border-black/5">
-                  <h4 className="text-xs font-mono uppercase tracking-widest text-gray-400 mb-6">Mission Objectives</h4>
-                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {dayData.highlights.map((highlight: string, idx: number) => (
-                      <li key={idx} className="flex items-start gap-3 text-sm text-gray-600 font-light group">
-                        <span className="mt-1.5 w-1 h-1 bg-amber-500 rounded-full group-hover:scale-150 transition-transform" />
-                        <span className="leading-relaxed group-hover:text-black transition-colors">{highlight}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
             </div>
           </div>
 
-          {/* Sidebar / Reserve Briefing */}
-          <div className="lg:col-span-4 sticky top-32">
-            <div className="relative p-10 border border-black/5 bg-white shadow-xs overflow-hidden group">
-              <div className="absolute top-0 right-0 w-16 h-16 border-t border-r border-amber-500/20 group-hover:border-amber-500/50 transition-colors" />
-
-              <span className="font-mono text-[10px] text-amber-600 uppercase tracking-[0.5em] mb-8 block font-bold">
-                // reserve discovery
-              </span>
-
-              <h3 className="text-3xl font-light tracking-tighter text-black mb-8 uppercase italic serif">
-                Plan This <span className="font-serif normal-case">Journey</span>
-              </h3>
-
-              <p className="text-gray-600 font-light leading-relaxed mb-12 italic text-base">
-                "Our travel specialists can expand this specific day or refine the entire {tour.title} expedition to your liking."
-              </p>
-
-              <div className="space-y-6">
-                <a
-                  href="/enquire"
-                  className="group relative flex items-center justify-center gap-6 bg-black py-6 text-white text-[10px] font-bold uppercase tracking-[0.4em] transition-all hover:bg-amber-600 overflow-hidden"
-                >
-                  <span className="relative z-10">Request Briefing</span>
-                  <div className="absolute inset-0 translate-y-full group-hover:translate-y-0 bg-amber-500 transition-transform duration-500" />
-                </a>
-              </div>
-
-              {/* Additional Meta */}
-              <div className="mt-12 pt-8 border-t border-black/5 text-gray-500 font-mono text-[10px] uppercase tracking-[0.3em] leading-loose flex justify-between items-end font-bold">
-                <div>
-                  Ref: {tour.slug.toUpperCase()} <br />
-                  Log: Sequence-{dayNumber < 10 ? `0${dayNumber}` : dayNumber}
-                </div>
-                <div className="text-right">
-                  Status: <br /> Active
-                </div>
-              </div>
-            </div>
-          </div>
+          <TourBookingCard slug={tour.slug} />
         </div>
 
       </div>
       {/* Similar Journeys */}
-      <TourCarousel tours={relatedTours} currentSlug={slug} />
+      <TourCarousel tours={allTours} currentSlug={slug} />
       <CallToAction />
     </div>
   );
 }
+
+

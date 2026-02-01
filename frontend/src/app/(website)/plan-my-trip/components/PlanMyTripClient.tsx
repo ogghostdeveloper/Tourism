@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Sparkles, Heart } from "lucide-react";
 import { PackageSelection } from "./PackageSelection";
@@ -30,8 +31,20 @@ export default function PlanMyTripClient({
     hotels = [],
     costs = []
 }: PlanMyTripPageProps) {
+    const searchParams = useSearchParams();
     const [step, setStep] = useState<PlanningStep>("mode_selection");
     const [selectedTour, setSelectedTour] = useState<Tour | null>(null);
+
+    useEffect(() => {
+        const packageSlug = searchParams.get("package");
+        if (packageSlug && packages.length > 0) {
+            const foundTour = packages.find(p => p.slug === packageSlug);
+            if (foundTour) {
+                setStep("package_list");
+                setSelectedTour(foundTour);
+            }
+        }
+    }, [searchParams, packages]);
 
     const handleTourSelect = (tour: Tour) => {
         setSelectedTour(tour);
@@ -166,6 +179,7 @@ export default function PlanMyTripClient({
                             <div className="py-24">
                                 <PackageSelection
                                     packages={packages}
+                                    selectedPackage={selectedTour}
                                     onBack={() => setStep("mode_selection")}
                                     onSelect={handleTourSelect}
                                 />
