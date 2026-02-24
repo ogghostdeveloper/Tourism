@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { Loader2, Check, ChevronsUpDown, Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -51,6 +52,7 @@ export function DestinationForm({ initialData, action, title, isReadOnly = false
     const [latitude, setLatitude] = React.useState(initialData?.coordinates?.[0]?.toString() || "");
     const [longitude, setLongitude] = React.useState(initialData?.coordinates?.[1]?.toString() || "");
     const [priority, setPriority] = React.useState(initialData?.priority || 0);
+    const [isEntryPoint, setIsEntryPoint] = React.useState(initialData?.isEntryPoint || false);
     const [previewUrl, setPreviewUrl] = React.useState<string | null>(initialData?.image || null);
     const [availableDzongkhags, setAvailableDzongkhags] = React.useState<string[]>([]);
     const [isLoadingDzongkhags, setIsLoadingDzongkhags] = React.useState(true);
@@ -281,6 +283,24 @@ export function DestinationForm({ initialData, action, title, isReadOnly = false
                                 />
                             </div>
                         </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                            <Checkbox
+                                id="isEntryPoint"
+                                checked={isEntryPoint}
+                                onCheckedChange={(checked) => setIsEntryPoint(checked as boolean)}
+                                disabled={isReadOnly}
+                            />
+                            <input type="hidden" name="isEntryPoint" value={isEntryPoint ? "true" : "false"} />
+                            <Label htmlFor="isEntryPoint" className="mb-0 text-black">
+                                Is Entry Point
+                            </Label>
+                        </div>
+                        <p className="text-sm text-gray-500">
+                            Check if this is a valid arrival point for international visitors
+                        </p>
                     </div>
 
                     <ImageUpload

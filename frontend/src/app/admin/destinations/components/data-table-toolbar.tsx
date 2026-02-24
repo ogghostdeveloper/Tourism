@@ -55,6 +55,16 @@ export function DataTableToolbar<TData>({
             options={regions}
           />
         )}
+        {table.getColumn("isEntryPoint") && (
+          <DataTableFacetedFilter
+            column={table.getColumn("isEntryPoint")}
+            title="Entry Point"
+            options={[
+              { label: "Yes", value: "true" },
+              { label: "No", value: "false" },
+            ]}
+          />
+        )}
         {isFiltered && (
           <Button
             variant="ghost"

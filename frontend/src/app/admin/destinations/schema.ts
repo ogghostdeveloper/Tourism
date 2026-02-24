@@ -9,6 +9,7 @@ export const destinationSchema = z.object({
   region: z.string(),
   coordinates: z.tuple([z.number(), z.number()]).optional(),
   priority: z.number().default(99),
+  isEntryPoint: z.boolean().default(false),
   createdAt: z.union([z.string(), z.date(), z.null()]).optional(),
   updatedAt: z.union([z.string(), z.date(), z.null()]).optional(),
 });

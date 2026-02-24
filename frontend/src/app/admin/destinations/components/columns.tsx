@@ -72,6 +72,28 @@ export const columns: ColumnDef<Destination>[] = [
     },
   },
   {
+    accessorKey: "isEntryPoint",
+    header: "Entry Point",
+    cell: ({ row }) => {
+      const isEntryPoint = row.getValue("isEntryPoint") as boolean;
+      return (
+        <div className="flex items-center">
+          {isEntryPoint ? (
+            <div className="flex flex-col">
+              <span className="text-xs font-bold text-emerald-700 uppercase tracking-tight">Yes</span>
+              <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Main Entry</span>
+            </div>
+          ) : (
+            <div className="flex flex-col">
+              <span className="text-xs font-bold text-zinc-400 uppercase tracking-tight">No</span>
+              <span className="text-[10px] text-zinc-200 uppercase font-medium tracking-tight">Standard</span>
+            </div>
+          )}
+        </div>
+      );
+    },
+  },
+  {
     accessorKey: "updatedAt",
     header: "Updated",
     cell: ({ row }) => {
@@ -86,7 +108,7 @@ export const columns: ColumnDef<Destination>[] = [
             <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Last Update</span>
           </div>
         );
-      } catch {
+      } catch (error) {
         return null;
       }
     },

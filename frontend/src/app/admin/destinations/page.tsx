@@ -12,6 +12,7 @@ interface DestinationsPageProps {
     page_size?: string;
     name?: string;
     region?: string;
+    isEntryPoint?: string;
   }>;
 }
 
@@ -63,8 +64,9 @@ export default function DestinationsPage({ searchParams }: DestinationsPageProps
       const pageSize = Number(params.page_size) || 6;
       const name = params.name || undefined;
       const region = params.region || undefined;
+      const isEntryPoint = params.isEntryPoint === "true" ? true : params.isEntryPoint === "false" ? false : undefined;
 
-      const paginatedData = await getDestinations(page, pageSize, name, region);
+      const paginatedData = await getDestinations(page, pageSize, name, region, isEntryPoint);
 
       setDestinations(paginatedData.items);
       setPageData({

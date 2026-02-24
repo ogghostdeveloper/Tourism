@@ -64,11 +64,15 @@ export function DataTable<TData, TValue>({
     const filters: ColumnFiltersState = [];
     const name = searchParams.get("name");
     const region = searchParams.get("region");
+    const isEntryPoint = searchParams.get("isEntryPoint");
     if (name) {
       filters.push({ id: "name", value: name });
     }
     if (region) {
       filters.push({ id: "region", value: region.split(",") });
+    }
+    if (isEntryPoint) {
+      filters.push({ id: "isEntryPoint", value: [isEntryPoint] });
     }
     return filters;
   });
@@ -80,11 +84,15 @@ export function DataTable<TData, TValue>({
     const filters: ColumnFiltersState = [];
     const name = searchParams.get("name");
     const region = searchParams.get("region");
+    const isEntryPoint = searchParams.get("isEntryPoint");
     if (name) {
       filters.push({ id: "name", value: name });
     }
     if (region) {
       filters.push({ id: "region", value: region.split(",") });
+    }
+    if (isEntryPoint) {
+      filters.push({ id: "isEntryPoint", value: [isEntryPoint] });
     }
     setColumnFilters(filters);
   }, [searchParams]);
@@ -142,6 +150,7 @@ export function DataTable<TData, TValue>({
       // Clear existing filters from params first
       params.delete("name");
       params.delete("region");
+      params.delete("isEntryPoint");
 
       newFilters.forEach(filter => {
         if (filter.id === "name") {
@@ -151,6 +160,10 @@ export function DataTable<TData, TValue>({
         } else if (filter.id === "region") {
           if (Array.isArray(filter.value) && filter.value.length > 0) {
             params.set(filter.id, filter.value.join(","));
+          }
+        } else if (filter.id === "isEntryPoint") {
+          if (Array.isArray(filter.value) && filter.value.length > 0) {
+            params.set(filter.id, filter.value[0]);
           }
         }
       });

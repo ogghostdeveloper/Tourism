@@ -501,7 +501,7 @@ export function CustomItineraryBuilder({
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {destinations.filter(d => ["Paro", "Phuentsholing", "Samdrup Jongkhar", "Gelephu"].some(name => d.name.includes(name))).map((dest, index) => (
+                            {destinations.map((dest, index) => (
                                 <DestinationCard
                                     key={dest._id}
                                     destination={dest}

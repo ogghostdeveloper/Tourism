@@ -13,7 +13,7 @@ const formatDoc = (doc: any) => {
     };
 };
 
-export async function listDestinations(page: number = 1, pageSize: number = 10, search?: string, region?: string) {
+export async function listDestinations(page: number = 1, pageSize: number = 10, search?: string, region?: string, isEntryPoint?: boolean) {
     const client = await clientPromise;
     const collection = client.db(DB).collection<Destination>(COLLECTION);
 
@@ -23,6 +23,9 @@ export async function listDestinations(page: number = 1, pageSize: number = 10, 
     }
     if (region) {
         query.region = { $in: region.split(",") };
+    }
+    if (isEntryPoint !== undefined) {
+        query.isEntryPoint = isEntryPoint;
     }
 
     const totalItems = await collection.countDocuments(query);
@@ -104,4 +107,13 @@ export async function getRegionsForDropdown() {
     const client = await clientPromise;
     const regions = await client.db(DB).collection(COLLECTION).distinct("region");
     return regions.map(region => ({ title: region, value: region }));
+}
+
+export async function getEntryPointDestinations() {
+    const client = await clientPromise;
+    const items = await client.db(DB).collection<Destination>(COLLECTION)
+        .find({ isEntryPoint: true })
+        .sort({ priority: -1, name: 1 })
+        .toArray();
+    return items.map(formatDoc);
 }

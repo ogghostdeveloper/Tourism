@@ -23,9 +23,9 @@ export interface PlanMyTripData {
 
 export async function getPlanMyTripData(): Promise<PlanMyTripData> {
     try {
-        const [allTours, allDestinations, allExperiences, allHotels, allCosts] = await Promise.all([
+        const [allTours, entryPointDestinations, allExperiences, allHotels, allCosts] = await Promise.all([
             tourDb.getAllTours(),
-            destinationDb.getAllDestinations(),
+            destinationDb.getEntryPointDestinations(),
             experienceDb.getAllExperiences(),
             hotelDb.getAllHotels(),
             settingsDb.getAllCosts()
@@ -39,7 +39,7 @@ export async function getPlanMyTripData(): Promise<PlanMyTripData> {
 
         return {
             packages: finalPackages,
-            destinations: allDestinations as Destination[],
+            destinations: entryPointDestinations as Destination[],
             experiences: allExperiences as Experience[],
             hotels: allHotels as Hotel[],
             costs: allCosts as Cost[]

@@ -10,10 +10,11 @@ export async function getDestinations(
   page: number = 1,
   pageSize: number = 10,
   search?: string,
-  region?: string
+  region?: string,
+  isEntryPoint?: boolean
 ): Promise<PaginatedDestinations> {
   try {
-    const data = await db.listDestinations(page, pageSize, search, region);
+    const data = await db.listDestinations(page, pageSize, search, region, isEntryPoint);
     return data as PaginatedDestinations;
   } catch (error) {
     return {
@@ -66,6 +67,7 @@ export async function createDestination(prevState: any, formData: FormData) {
     const region = formData.get("region") as string;
     const description = formData.get("description") as string;
     const priority = parseInt(formData.get("priority") as string) || 0;
+    const isEntryPoint = formData.get("isEntryPoint") === "on" || formData.get("isEntryPoint") === "true";
 
     const latStr = formData.get("latitude") as string;
     const lngStr = formData.get("longitude") as string;
@@ -88,6 +90,7 @@ export async function createDestination(prevState: any, formData: FormData) {
       region,
       description,
       priority,
+      isEntryPoint,
       image: imageUrl,
     };
 
@@ -127,6 +130,7 @@ export async function updateDestination(
     const region = formData.get("region") as string;
     const description = formData.get("description") as string;
     const priority = parseInt(formData.get("priority") as string) || 0;
+    const isEntryPoint = formData.get("isEntryPoint") === "on" || formData.get("isEntryPoint") === "true";
 
     const latStr = formData.get("latitude") as string;
     const lngStr = formData.get("longitude") as string;
@@ -150,6 +154,7 @@ export async function updateDestination(
       region,
       description,
       priority,
+      isEntryPoint,
       image: imageUrl,
     };
 
