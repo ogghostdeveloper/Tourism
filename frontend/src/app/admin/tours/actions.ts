@@ -209,7 +209,7 @@ export async function getCategoriesForDropdown(): Promise<{ value: string; label
     }
 }
 
-export async function getExperiencesForDropdown(): Promise<{ value: string; label: string; price?: number; duration?: string; image?: string }[]> {
+export async function getExperiencesForDropdown(): Promise<{ value: string; label: string; price?: number; duration?: string; image?: string; destinationIds?: string[]; destinationSlug?: string }[]> {
     try {
         const experiences = await experienceDb.getAllExperiences();
         return experiences.map((exp: any) => ({
@@ -218,13 +218,16 @@ export async function getExperiencesForDropdown(): Promise<{ value: string; labe
             price: exp.price != null ? Number(exp.price) : 0,
             duration: exp.duration || "2 Hours",
             image: exp.image || "",
+            // resolved IDs from pipeline, fallback to raw array
+            destinationIds: exp.destinationIds || exp.destinations || [],
+            destinationSlug: exp.destinationSlug || (exp.resolvedDestinations?.[0] ?? ""),
         }));
     } catch (error) {
         return [];
     }
 }
 
-export async function getHotelsForDropdown(): Promise<{ value: string; label: string; price?: number; image?: string }[]> {
+export async function getHotelsForDropdown(): Promise<{ value: string; label: string; price?: number; image?: string; destinationId?: string; destinationSlug?: string }[]> {
     try {
         const hotels = await hotelDb.getAllHotels();
         return hotels.map((hotel: any) => ({
@@ -232,6 +235,9 @@ export async function getHotelsForDropdown(): Promise<{ value: string; label: st
             label: hotel.name,
             price: hotel.price != null ? Number(hotel.price) : 0,
             image: hotel.image || "",
+            // resolved by pipeline
+            destinationId: hotel.destinationId || hotel.destination || "",
+            destinationSlug: hotel.resolvedDestinationSlug || hotel.destinationSlug || "",
         }));
     } catch (error) {
         return [];
@@ -253,6 +259,20 @@ export async function getDestinationsForDropdown(): Promise<{ value: string; lab
 export async function getAllDestinationObjects(): Promise<{ _id: string; name: string; image?: string; slug?: string }[]> {
     try {
         const destinations = await destinationDb.getAllDestinations();
+        return destinations.map((dest: any) => ({
+            _id: dest._id,
+            name: dest.name,
+            image: dest.image || "",
+            slug: dest.slug || "",
+        }));
+    } catch (error) {
+        return [];
+    }
+}
+
+export async function getEntryPointDestinationObjects(): Promise<{ _id: string; name: string; image?: string; slug?: string }[]> {
+    try {
+        const destinations = await destinationDb.getEntryPointDestinations();
         return destinations.map((dest: any) => ({
             _id: dest._id,
             name: dest.name,

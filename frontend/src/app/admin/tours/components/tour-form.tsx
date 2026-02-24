@@ -22,6 +22,7 @@ import {
     getExperiencesForDropdown,
     getHotelsForDropdown,
     getAllDestinationObjects,
+    getEntryPointDestinationObjects,
 } from "../actions";
 import { ImageUpload } from "@/components/admin/image-upload";
 import { generateSlug } from "@/utils/slug-generator";
@@ -45,6 +46,8 @@ interface ExperienceObj {
     price?: number;
     duration?: string;
     image?: string;
+    destinationIds?: string[];
+    destinationSlug?: string;
 }
 
 interface HotelObj {
@@ -52,6 +55,8 @@ interface HotelObj {
     label: string;
     price?: number;
     image?: string;
+    destinationId?: string;
+    destinationSlug?: string;
 }
 
 interface BuilderItem {
@@ -115,7 +120,8 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
     const [categoryOptions, setCategoryOptions] = React.useState<{ value: string; label: string }[]>([]);
     const [experienceOptions, setExperienceOptions] = React.useState<ExperienceObj[]>([]);
     const [hotelOptions, setHotelOptions] = React.useState<HotelObj[]>([]);
-    const [destinationObjects, setDestinationObjects] = React.useState<DestinationObj[]>([]);
+    const [destinationObjects, setDestinationObjects] = React.useState<DestinationObj[]>([]); // all destinations for "Move to"
+    const [entryPointDestinations, setEntryPointDestinations] = React.useState<DestinationObj[]>([]); // isEntryPoint only
     const [isLoadingOptions, setIsLoadingOptions] = React.useState(true);
 
     // ── Builder state ────────────────────────────────────────────────────────
@@ -187,16 +193,18 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
     React.useEffect(() => {
         const fetchOptions = async () => {
             try {
-                const [categories, experiences, hotels, destinations] = await Promise.all([
+                const [categories, experiences, hotels, allDests, entryDests] = await Promise.all([
                     getCategoriesForDropdown(),
                     getExperiencesForDropdown(),
                     getHotelsForDropdown(),
                     getAllDestinationObjects(),
+                    getEntryPointDestinationObjects(),
                 ]);
                 setCategoryOptions(categories);
-                setExperienceOptions(experiences);
-                setHotelOptions(hotels);
-                setDestinationObjects(destinations);
+                setExperienceOptions(experiences as ExperienceObj[]);
+                setHotelOptions(hotels as HotelObj[]);
+                setDestinationObjects(allDests);
+                setEntryPointDestinations(entryDests);
             } catch {
                 toast.error("Failed to fetch options");
             } finally {
@@ -578,7 +586,7 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
                         )}
                     </div>
 
-                    {/* Entry Point Selector */}
+                    {/* Entry Point Selector — shows only isEntryPoint destinations */}
                     {!entryPointSelected ? (
                         <div className="space-y-4">
                             <p className="text-sm text-gray-500">Select the starting destination (entry point) for this tour.</p>
@@ -598,7 +606,7 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                                    {destinationObjects
+                                    {entryPointDestinations
                                         .filter(d => d.name.toLowerCase().includes(entrySearch.toLowerCase()))
                                         .map(dest => (
                                             <button
@@ -654,12 +662,12 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
                                                     <Clock className="h-3 w-3" />
                                                     {hours.toFixed(1)}h / 18h
                                                 </div>
-                                                <Button type="button" variant="outline" size="icon" onClick={() => dayIndex > 0 && moveDay(dayIndex, dayIndex - 1)} disabled={dayIndex === 0}>
+                                                {/* <Button type="button" variant="outline" size="icon" onClick={() => dayIndex > 0 && moveDay(dayIndex, dayIndex - 1)} disabled={dayIndex === 0}>
                                                     <ChevronUp className="h-4 w-4" />
                                                 </Button>
                                                 <Button type="button" variant="outline" size="icon" onClick={() => dayIndex < days.length - 1 && moveDay(dayIndex, dayIndex + 1)} disabled={dayIndex === days.length - 1}>
                                                     <ChevronDown className="h-4 w-4" />
-                                                </Button>
+                                                </Button> */}
                                                 {days.length > 1 && (
                                                     <Button type="button" variant="outline" size="icon" className="text-destructive hover:bg-destructive/10" onClick={() => removeDay(dayIndex)}>
                                                         <Trash2 className="h-4 w-4" />
@@ -810,7 +818,9 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
                 {/* ── Section 3: Duration + Price (after itinerary) ── */}
                 <div className="grid md:grid-cols-2 gap-6 border-t border-gray-100 pt-6">
                     <div className="space-y-2">
-                        <Label className="text-black font-medium">Duration <span className="text-xs text-gray-400 font-normal">(auto-calculated)</span></Label>
+                        <div className="flex items-center justify-between">
+                            <Label className="text-black font-medium">Duration <span className="text-xs text-gray-400 font-normal">(auto-calculated)</span></Label>
+                        </div>
                         <Input
                             {...register("duration")}
                             readOnly
@@ -864,7 +874,7 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
                 </div>
             </form>
 
-            {/* ── Destination selector modal ── */}
+            {/* ── Destination selector modal (all destinations except current) ── */}
             {showDestModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/70 backdrop-blur-sm" onClick={() => setShowDestModal(false)}>
                     <div className="bg-white w-full max-w-2xl max-h-[80vh] flex flex-col shadow-2xl rounded-sm" onClick={e => e.stopPropagation()}>
@@ -913,7 +923,7 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
                 </div>
             )}
 
-            {/* ── Experience selector modal ── */}
+            {/* ── Experience selector modal (filtered by active destination) ── */}
             {showExpModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/70 backdrop-blur-sm" onClick={() => setShowExpModal(false)}>
                     <div className="bg-white w-full max-w-2xl max-h-[80vh] flex flex-col shadow-2xl rounded-sm" onClick={e => e.stopPropagation()}>
@@ -921,6 +931,11 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
                             <div>
                                 <p className="text-[10px] font-bold uppercase tracking-widest text-amber-600">// Curated Activity</p>
                                 <h3 className="text-xl font-semibold text-black">Add Experience</h3>
+                                {activeDayIndex !== null && (getContextDestination(activeDayIndex) || activeDestination) && (
+                                    <p className="text-xs text-gray-400 mt-0.5">
+                                        Showing experiences for <span className="font-semibold text-amber-700">{(getContextDestination(activeDayIndex) || activeDestination)?.name}</span>
+                                    </p>
+                                )}
                             </div>
                             <button onClick={() => setShowExpModal(false)} className="p-1.5 hover:bg-gray-100 rounded"><X className="h-5 w-5 text-gray-500" /></button>
                         </div>
@@ -937,9 +952,25 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
                             </div>
                         </div>
                         <div className="flex-1 overflow-y-auto p-4 space-y-1.5">
-                            {experienceOptions
-                                .filter(e => e.label.toLowerCase().includes(expSearch.toLowerCase()))
-                                .map(exp => (
+                            {(() => {
+                                const dest = activeDayIndex !== null ? (getContextDestination(activeDayIndex) || activeDestination) : activeDestination;
+                                const filtered = experienceOptions.filter(e => {
+                                    if (!dest) return true;
+                                    const byId = e.destinationIds?.includes(dest._id);
+                                    const bySlug = dest.slug ? e.destinationSlug === dest.slug : false;
+                                    return byId || bySlug;
+                                }).filter(e => e.label.toLowerCase().includes(expSearch.toLowerCase()));
+
+                                if (filtered.length === 0) {
+                                    return (
+                                        <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+                                            <Star className="h-8 w-8 mb-3 opacity-30" />
+                                            <p className="text-sm">No experiences found for this destination.</p>
+                                        </div>
+                                    );
+                                }
+
+                                return filtered.map(exp => (
                                     <button
                                         key={exp.value}
                                         type="button"
@@ -956,13 +987,14 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
                                             <p className="text-xs text-gray-400">{exp.duration} {exp.price ? `· $${exp.price}` : ""}</p>
                                         </div>
                                     </button>
-                                ))}
+                                ));
+                            })()}
                         </div>
                     </div>
                 </div>
             )}
 
-            {/* ── Hotel selector modal ── */}
+            {/* ── Hotel selector modal (filtered by active destination) ── */}
             {showHotelModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/70 backdrop-blur-sm" onClick={() => setShowHotelModal(false)}>
                     <div className="bg-white w-full max-w-2xl max-h-[80vh] flex flex-col shadow-2xl rounded-sm" onClick={e => e.stopPropagation()}>
@@ -970,6 +1002,11 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
                             <div>
                                 <p className="text-[10px] font-bold uppercase tracking-widest text-amber-600">// Overnight Stay</p>
                                 <h3 className="text-xl font-semibold text-black">Select Hotel</h3>
+                                {activeDayIndex !== null && (getContextDestination(activeDayIndex) || activeDestination) && (
+                                    <p className="text-xs text-gray-400 mt-0.5">
+                                        Showing hotels for <span className="font-semibold text-blue-700">{(getContextDestination(activeDayIndex) || activeDestination)?.name}</span>
+                                    </p>
+                                )}
                             </div>
                             <button onClick={() => setShowHotelModal(false)} className="p-1.5 hover:bg-gray-100 rounded"><X className="h-5 w-5 text-gray-500" /></button>
                         </div>
@@ -986,9 +1023,25 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
                             </div>
                         </div>
                         <div className="flex-1 overflow-y-auto p-4 space-y-1.5">
-                            {hotelOptions
-                                .filter(h => h.label.toLowerCase().includes(hotelSearch.toLowerCase()))
-                                .map(hotel => (
+                            {(() => {
+                                const dest = activeDayIndex !== null ? (getContextDestination(activeDayIndex) || activeDestination) : activeDestination;
+                                const filtered = hotelOptions.filter(h => {
+                                    if (!dest) return true;
+                                    const byId = h.destinationId === dest._id;
+                                    const bySlug = dest.slug ? h.destinationSlug === dest.slug : false;
+                                    return byId || bySlug;
+                                }).filter(h => h.label.toLowerCase().includes(hotelSearch.toLowerCase()));
+
+                                if (filtered.length === 0) {
+                                    return (
+                                        <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+                                            <BedDouble className="h-8 w-8 mb-3 opacity-30" />
+                                            <p className="text-sm">No hotels found for this destination.</p>
+                                        </div>
+                                    );
+                                }
+
+                                return filtered.map(hotel => (
                                     <button
                                         key={hotel.value}
                                         type="button"
@@ -1005,7 +1058,8 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
                                             {hotel.price ? <p className="text-xs text-gray-400">${hotel.price}/night</p> : null}
                                         </div>
                                     </button>
-                                ))}
+                                ));
+                            })()}
                         </div>
                     </div>
                 </div>

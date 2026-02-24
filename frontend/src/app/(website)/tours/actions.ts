@@ -73,10 +73,15 @@ export async function getTourDay(
     const dayData = tour.days.find((d: any) => d.day === dayNumber);
     if (!dayData) return null;
 
-    // Resolve Hotel
+    // Resolve Hotel — check day-level hotelId first, then items array
     let hotel = null;
     if (dayData.hotelId) {
       hotel = await hotelDb.getHotelById(dayData.hotelId);
+    } else if (dayData.items) {
+      const hotelItem = dayData.items.find((item: any) => item.hotelId);
+      if (hotelItem?.hotelId) {
+        hotel = await hotelDb.getHotelById(hotelItem.hotelId);
+      }
     }
 
     // Resolve Experiences and Travel Destinations from items

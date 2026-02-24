@@ -136,7 +136,7 @@ export default async function TourDayPage({ params }: PageProps) {
                           </div>
 
                           <div className="flex-1 w-full">
-                            {item.type === "travel" ? (
+                            {item.type === "travel" && !item.hotelId && item.travel ? (
                               <div className="space-y-6">
                                 <div className="flex items-center gap-4 mb-4">
                                   <div className="p-2 bg-blue-50 rounded-full">
@@ -169,7 +169,7 @@ export default async function TourDayPage({ params }: PageProps) {
                                   </div>
                                 )}
                               </div>
-                            ) : (
+                            ) : item.hotelId ? null : (
                               <div className="space-y-8">
 
                                 <h4 className="flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.4em] text-amber-500 font-bold">
