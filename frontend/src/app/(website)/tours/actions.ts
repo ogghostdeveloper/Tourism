@@ -92,17 +92,23 @@ export async function getTourDay(
           const exp = await experienceDb.getExperienceById(item.experienceId);
           if (exp) themeExperiences.push(exp);
         }
-        if (item.type === "travel" && item.travel) {
-          // Resolve From Destination
-          if (item.travel.from && item.travel.from.length === 24) {
+        if (item.type === "travel" && item.travel && !item.hotelId) {
+          // Resolve From coordinates — new builder uses destinationFromId, legacy used travel.from as ID
+          if (item.destinationFromId) {
+            const dest = await destinationDb.getDestinationById(item.destinationFromId);
+            if (dest?.coordinates) item.travel.fromCoordinates = dest.coordinates;
+          } else if (item.travel.from && item.travel.from.length === 24) {
             const dest = await destinationDb.getDestinationById(item.travel.from);
             if (dest) {
               item.travel.from = dest.name;
               if (dest.coordinates) item.travel.fromCoordinates = dest.coordinates;
             }
           }
-          // Resolve To Destination
-          if (item.travel.to && item.travel.to.length === 24) {
+          // Resolve To coordinates — new builder uses destinationToId, legacy used travel.to as ID
+          if (item.destinationToId) {
+            const dest = await destinationDb.getDestinationById(item.destinationToId);
+            if (dest?.coordinates) item.travel.toCoordinates = dest.coordinates;
+          } else if (item.travel.to && item.travel.to.length === 24) {
             const dest = await destinationDb.getDestinationById(item.travel.to);
             if (dest) {
               item.travel.to = dest.name;
