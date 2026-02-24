@@ -3,13 +3,27 @@ import { z } from "zod";
 export const travelSchema = z.object({
     from: z.string(),
     to: z.string(),
+    duration: z.number().optional(),
 });
 
 export const itineraryItemSchema = z.object({
+    id: z.string().optional(),
     type: z.enum(["experience", "travel"]),
-    experienceId: z.string().optional(), // Link to an Experience entity
-    travel: travelSchema.optional(),
     order: z.number(),
+    experienceId: z.string().optional(),
+    experience: z.object({
+        title: z.string(),
+        duration: z.string().optional(),
+        image: z.string().optional(),
+    }).optional(),
+    hotelId: z.string().optional(),
+    hotel: z.object({
+        name: z.string(),
+        image: z.string().optional(),
+    }).optional(),
+    destinationFromId: z.string().optional(),
+    destinationToId: z.string().optional(),
+    travel: travelSchema.optional(),
 });
 
 export const tourDaySchema = z.object({

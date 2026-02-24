@@ -16,6 +16,7 @@ import * as settingsDb from "@/lib/data/settings";
 export interface PlanMyTripData {
     packages: Tour[];
     destinations: Destination[];
+    allDestinations: Destination[];
     experiences: Experience[];
     hotels: Hotel[];
     costs: Cost[];
@@ -23,9 +24,10 @@ export interface PlanMyTripData {
 
 export async function getPlanMyTripData(): Promise<PlanMyTripData> {
     try {
-        const [allTours, entryPointDestinations, allExperiences, allHotels, allCosts] = await Promise.all([
+        const [allTours, entryPointDestinations, allDestinations, allExperiences, allHotels, allCosts] = await Promise.all([
             tourDb.getAllTours(),
             destinationDb.getEntryPointDestinations(),
+            destinationDb.getAllDestinations(),
             experienceDb.getAllExperiences(),
             hotelDb.getAllHotels(),
             settingsDb.getAllCosts()
@@ -40,6 +42,7 @@ export async function getPlanMyTripData(): Promise<PlanMyTripData> {
         return {
             packages: finalPackages,
             destinations: entryPointDestinations as Destination[],
+            allDestinations: allDestinations as Destination[],
             experiences: allExperiences as Experience[],
             hotels: allHotels as Hotel[],
             costs: allCosts as Cost[]
@@ -50,6 +53,7 @@ export async function getPlanMyTripData(): Promise<PlanMyTripData> {
         return {
             packages: [],
             destinations: [],
+            allDestinations: [],
             experiences: [],
             hotels: [],
             costs: []

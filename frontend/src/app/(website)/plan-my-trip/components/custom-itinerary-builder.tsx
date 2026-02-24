@@ -27,6 +27,7 @@ function generateId() {
 interface CustomItineraryBuilderProps {
     experiences: Experience[];
     destinations: Destination[];
+    allDestinations: Destination[];
     hotels: Hotel[];
     costs: Cost[];
     onBack: () => void;
@@ -37,6 +38,7 @@ type BuilderStep = "INFORMATION" | "ENTRY_POINT" | "BUILDER" | "SUCCESS";
 export function CustomItineraryBuilder({
     experiences = [],
     destinations = [],
+    allDestinations = [],
     hotels = [],
     costs = [],
     onBack
@@ -156,6 +158,7 @@ export function CustomItineraryBuilder({
 
     const getDestinationAtPoint = (dayIndex: number, itemIndex?: number) => {
         // Search backwards from the specified point
+        const allDests = allDestinations.length > 0 ? allDestinations : destinations;
         for (let i = dayIndex; i >= 0; i--) {
             const items = days[i].items;
             const startSearch = (i === dayIndex && itemIndex !== undefined) ? itemIndex - 1 : items.length - 1;
@@ -163,7 +166,7 @@ export function CustomItineraryBuilder({
             for (let j = startSearch; j >= 0; j--) {
                 const item = items[j];
                 if (item.type === "travel" && item.travel?.to) {
-                    return destinations.find(d => d.name === item.travel?.to) || null;
+                    return allDests.find(d => d.name === item.travel?.to) || null;
                 }
             }
         }
@@ -736,7 +739,7 @@ export function CustomItineraryBuilder({
                                 {/* Content */}
                                 <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        {destinations
+                                        {(allDestinations.length > 0 ? allDestinations : destinations)
                                             .filter(d => d._id !== activeDestination?._id)
                                             .filter(d => d.name.toLowerCase().includes(destinationSearch.toLowerCase()))
                                             .map((dest, index) => (

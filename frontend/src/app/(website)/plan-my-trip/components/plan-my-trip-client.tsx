@@ -18,6 +18,7 @@ type PlanningStep = "mode_selection" | "package_list" | "custom_builder" | "inqu
 interface PlanMyTripPageProps {
     packages: Tour[];
     destinations: Destination[];
+    allDestinations: Destination[];
     experiences: Experience[];
     hotels: Hotel[];
     costs: Cost[];
@@ -26,6 +27,7 @@ interface PlanMyTripPageProps {
 export default function PlanMyTripClient({
     packages = [],
     destinations = [],
+    allDestinations = [],
     experiences = [],
     hotels = [],
     costs = []
@@ -188,6 +190,7 @@ export default function PlanMyTripClient({
                                 <CustomItineraryBuilder
                                     experiences={experiences}
                                     destinations={destinations}
+                                    allDestinations={allDestinations}
                                     hotels={hotels}
                                     costs={costs}
                                     onBack={() => setStep("mode_selection")}

@@ -209,26 +209,29 @@ export async function getCategoriesForDropdown(): Promise<{ value: string; label
     }
 }
 
-export async function getExperiencesForDropdown(): Promise<{ value: string; label: string; price?: number }[]> {
+export async function getExperiencesForDropdown(): Promise<{ value: string; label: string; price?: number; duration?: string; image?: string }[]> {
     try {
         const experiences = await experienceDb.getAllExperiences();
         return experiences.map((exp: any) => ({
             value: exp._id,
             label: exp.title,
             price: exp.price != null ? Number(exp.price) : 0,
+            duration: exp.duration || "2 Hours",
+            image: exp.image || "",
         }));
     } catch (error) {
         return [];
     }
 }
 
-export async function getHotelsForDropdown(): Promise<{ value: string; label: string; price?: number }[]> {
+export async function getHotelsForDropdown(): Promise<{ value: string; label: string; price?: number; image?: string }[]> {
     try {
         const hotels = await hotelDb.getAllHotels();
         return hotels.map((hotel: any) => ({
             value: hotel._id,
             label: hotel.name,
             price: hotel.price != null ? Number(hotel.price) : 0,
+            image: hotel.image || "",
         }));
     } catch (error) {
         return [];
@@ -241,6 +244,20 @@ export async function getDestinationsForDropdown(): Promise<{ value: string; lab
         return destinations.map((dest: any) => ({
             value: dest._id,
             label: dest.name,
+        }));
+    } catch (error) {
+        return [];
+    }
+}
+
+export async function getAllDestinationObjects(): Promise<{ _id: string; name: string; image?: string; slug?: string }[]> {
+    try {
+        const destinations = await destinationDb.getAllDestinations();
+        return destinations.map((dest: any) => ({
+            _id: dest._id,
+            name: dest.name,
+            image: dest.image || "",
+            slug: dest.slug || "",
         }));
     } catch (error) {
         return [];
