@@ -1,16 +1,16 @@
-import { Hero } from "@/components/home/hero";
 import { getBestHotels } from "./hotels/actions";
 import { BestHotels } from "@/components/home/hotels";
 import { getTopPriorityTours } from "./tours/actions";
-import { Experiences } from "@/components/home/experiences";
 import { FeaturedItinerary } from "@/components/home/tours";
-import { Destinations } from "@/components/home/destinations";
 import CallToAction from "@/components/common/call-to-action";
 // import { LuxuryBridge } from "@/components/home/luxury-bridge";
 import { CompanyIntro } from "@/components/home/company-intro";
 import { getFeaturedDestinations } from "./destinations/actions";
 import { ExperienceTypes } from "@/components/home/experience-types";
 import { getFeaturedExperiences, getExperienceTypes } from "./experiences/actions";
+import { Experiences } from "@/components/home/Experiences";
+import { Destinations } from "@/components/home/Destinations";
+import { Hero } from "@/components/home/Hero";
 
 export default async function Home() {
   const featuredTours = await getTopPriorityTours(5);
