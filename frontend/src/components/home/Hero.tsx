@@ -18,7 +18,7 @@ export function Hero() {
           className="w-full h-full object-cover"
         >
           <source
-            src="/videos/marketing_video.mp4"
+            src="/videos/landing_video.mp4"
             type="video/mp4"
           />
           Your browser does not support the video tag.
