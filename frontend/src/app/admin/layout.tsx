@@ -1,4 +1,6 @@
 import * as React from "react";
+
+export const dynamic = "force-dynamic";
 import "./admin.css";
 import { AdminBreadcrumbs } from "@/components/admin/admin-bread-crumbs";
 import { redirect } from "next/navigation";

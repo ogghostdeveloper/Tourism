@@ -1,16 +1,14 @@
 "use server";
 
-import { destinationsData } from "./data/destinations-data";
-import { experiencesData } from "./data/experiences-data";
-import { packagesData } from "./data/packages-data";
+import * as destinationDb from "@/lib/data/destinations";
+import * as experienceDb from "@/lib/data/experiences";
+import { packages as packagesData } from "@/lib/data/packages";
 
 
 export async function getTopDestinations(limit: number = 4) {
   try {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    return destinationsData.slice(0, limit);
+    const all = await destinationDb.getAllDestinations();
+    return all.slice(0, limit);
   } catch (error) {
     console.error("Error fetching top destinations:", error);
     return [];
@@ -19,10 +17,8 @@ export async function getTopDestinations(limit: number = 4) {
 
 export async function getTopExperiences(limit: number = 3) {
   try {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    return experiencesData.slice(0, limit);
+    const all = await experienceDb.getAllExperiences();
+    return all.slice(0, limit);
   } catch (error) {
     console.error("Error fetching top experiences:", error);
     return [];
